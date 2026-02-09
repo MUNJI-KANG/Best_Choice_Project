@@ -1,0 +1,171 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'board/css/board_list.css' %}" />
+{% endblock %}
+
+{% block script1 %}
+<script src="{% static 'board/js/board_list.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+{{ b_name }} - 할래말래
+{% endblock %}
+
+{% block contents %}
+
+<!-- Hero 섹션 -->
+<div class="board-hero event-hero">
+    <h2>{{ b_name }}</h2>
+</div>
+
+<div class="sub-container page-board-list">
+    <div class="sub-content">
+
+        <!-- 검색 섹션 -->
+        <section class="search-section">
+            <div class="search-controls">
+                <select class="search-dropdown" id="searchType">
+                    <option value="all">전체</option>
+                    <option value="title">제목</option>
+                    <option value="author">작성자</option>
+                </select>
+            </div>
+
+            <div class="search-input-group">
+                <input type="text" class="search-input" id="searchKeyword" placeholder="검색어를 입력하세요">
+                <button type="button" class="search-btn" id="searchBtn">
+                    <span>🔍</span> 검색
+                </button>
+            </div>
+        </section>
+
+        <!-- 게시글 리스트 영역 -->
+        <section class="search-list-section">
+
+            <!-- 고정 게시글 -->
+            {% if board_id == 2 and noticeList %}
+            <div class="pinned-section" id="pinnedSection">
+                <h3 class="pinned-title">📌 고정 게시글</h3>
+
+                <div class="facility-list" id="pinnedList">
+                    <ul>
+                        {% for item in noticeList %}
+                        <li class="facility-item pinned-item">
+                            <span class="pinned-badge">고정</span>
+                            <span class="facility-order">{{ forloop.counter }}</span>
+
+                            <!-- 이벤트 상세 URL -->
+                            <a href="{% url 'board:detail' board_name item.id %}" class="facility-title">
+                                {{ item.title }}({{ item.comment_count }})
+                            </a>
+
+                            <span class="facility-author">
+                                {{ item.author }}{% if item.is_admin %} 👑{% endif %}
+                            </span>
+                            <span class="facility-date">{{ item.date }}</span>
+                            <span class="facility-views">{{ item.views }}</span>
+                        </li>
+
+                        {% empty %}
+                        <li class="no-pinned">고정된 게시글이 없습니다.</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            {% if noticeList %}
+            <hr class="dividing-line">
+            {% endif %}
+            {% endif %}
+            <!-- 일반 게시글 -->
+            <div class="facility-list" id="facilityList">
+
+                <div class="facility-header">
+                    <span class="facility-title">번호</span>
+                    <span class="facility-title">제목</span>
+                    <span class="facility-title">작성자</span>
+                    <span class="facility-title">작성날짜</span>
+                    <span class="facility-title">조회수</span>
+                </div>
+
+                <ul>
+                    {% for article in page_obj %}
+                    <li class="facility-item">
+
+                        <span class="facility-order">
+                            {# {{ page_start|add:-forloop.counter0 }} #}
+                             {{ page_start|add:forloop.counter0 }}
+                        </span>
+
+                        <!-- 이벤트 상세 URL -->
+                        <a href="{% url 'board:detail' board_name article.article_id %}" class="facility-title">
+                            {{ article.title }} ({{ article.comment_count }})
+                        </a>
+
+                        <span class="facility-author {% if article.member_id.manager_yn == 1 %}admin-badge{% endif %}">
+                            {{ article.member_id.nickname|default:"알 수 없음" }}{% if article.member_id.manager_yn == 1 %}
+                            👑{% endif %}
+                        </span>
+
+                        <span class="facility-date">{{ article.reg_date|date:"Y-m-d" }}</span>
+                        <span class="facility-views">{{ article.view_cnt }}</span>
+                    </li>
+
+                    {% empty %}
+                    <li class="facility-empty">등록된 이벤트가 없습니다.</li>
+                    {% endfor %}
+                </ul>
+
+            </div>
+
+        </section>
+        {% if board_id == 4 %}
+            {% if is_manager %}
+            <div class="write-btn-container">
+                <a href="{% url 'manager:board_list' board_id %}" class="write-btn">관리자 페이지로 가기</a>
+            </div>
+            {% else %}
+            <div class="write-btn-container">
+                <a href="{% url 'board:write' board_name %}" class="write-btn">작성하기</a>
+            </div>
+            {% endif %}
+        {% else %}
+            {% if is_manager %}
+            <div class="write-btn-container">
+                <a href="{% url 'manager:board_list' board_id %}" class="write-btn">관리자 페이지로 가기</a>
+            </div>
+            {% endif %}
+        {% endif %}
+        <!-- Pagination -->
+        <div class="pagination">
+
+            {% if block_start > 1 %}
+            <a href="?page={{ block_start|add:-1 }}&per_page={{ per_page }}&sort={{ sort }}" class="page-btn arrow">◀
+                이전</a>
+            {% else %}
+            <span class="page-btn arrow disabled">◀ 이전</span>
+            {% endif %}
+
+            {% for num in block_range %}
+            {% if num == page_obj.number %}
+            <span class="page-btn active">{{ num }}</span>
+            {% else %}
+            <a href="?page={{ num }}&per_page={{ per_page }}&sort={{ sort }}" class="page-btn">{{ num }}</a>
+            {% endif %}
+            {% endfor %}
+
+            {% if block_end < paginator.num_pages %} <a
+                href="?page={{ block_end|add:1 }}&per_page={{ per_page }}&sort={{ sort }}" class="page-btn arrow">다음
+                ▶</a>
+                {% else %}
+                <span class="page-btn arrow disabled">다음 ▶</span>
+                {% endif %}
+
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

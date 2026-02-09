@@ -1,0 +1,150 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}시설 상세보기{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'manager/css/facility_detail_manager.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="facility-detail-container">
+
+    <!-- 상단: 이미지 + 상세정보 -->
+    <section class="detail-top-wrapper">
+
+        <section class="detail-image-wrap">
+            {% if facilityInfo.photo %}
+            <img src="{{ facilityInfo.photo.url }}" alt="{{ facilityInfo.faci_nm }}">
+            {% else %}
+            <img src="/media/uploads/facility/photo/default.png" alt="사진 없음">
+            {% endif %}
+        </section>
+
+        <section class="detail-info-wrap">
+
+            <!-- <h3>{{ facilityInfo.faci_nm }}</h3>{% if facilityInfo.rs_posible == 1 %}<span class="status-active">활성</span>{% else %} <span class="status-inactive">비활성</span>{% endif %} -->
+            <div class="title-row">
+                <h3>{{ facilityInfo.faci_nm }}</h3>
+                {% if facilityInfo.rs_posible == 1 %}
+                <span class="status-active">활성</span>
+                {% else %}
+                <span class="status-inactive">비활성</span>
+                {% endif %}
+            </div>
+
+
+            <section class="detail-info-row">
+                <b>업종명 :</b> <span>{{ facility.fcob_nm }}</span>
+            </section>
+
+            <section class="detail-info-row">
+                <b>주소 :</b> <span>{{ facilityInfo.address }}</span>
+            </section>
+
+            {% if facilityInfo.tel %}
+            <section class="detail-info-row">
+                <b>전화번호 :</b> <span>{{ facilityInfo.tel }}</span>
+            </section>
+            {% endif %}
+
+            {% if facilityInfo.homepage %}
+            <section class="detail-info-row">
+                <b>홈페이지 :</b>
+                <a href="{{ facilityInfo.homepage }}">
+                    <span>{{ facilityInfo.homepage }}</span>
+                </a>
+            </section>
+            {% endif %}
+
+            <section class="detail-info-row">
+                <b>운영상태 :</b> <span>{{ facility.faci_stat_nm }}</span>
+            </section>
+
+            <section class="detail-info-row">
+                <b>안전등급 :</b> <span>{{ facility.schk_tot_grd_nm }}</span>
+            </section>
+
+            {% if downloadable_files %}
+            <section class="file-section">
+                <b>첨부파일</b>
+
+                <ul class="file-list">
+                {% for f in downloadable_files %}
+                    <li class="file-item">
+                        <a href="{% url 'manager:download' f.add_info_id %}">
+                            📄 {{ f.file_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            <section class="detail-info-row timetable {% if facilityInfo.rs_posible == 0 %} hidden {% endif %}">
+                <b>시간표 :</b>
+
+                <div class="timetable-list">
+                    {% for r in reservation_list %}
+                    <div class="timetable-item {% if r.active %}active{% endif %}">
+                        <span class="day">{{ r.day_kr }}</span>
+
+                        {% if r.active %}
+                        <span class="time">{{ r.open }} ~ {{ r.close }}</span>
+                        <span class="interval">({{ r.interval }}분)</span>
+                        <span class="payment"> ₩ {{ r.payment }}</span>
+                        {% else %}
+                        <span class="time disabled">운영 안함</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+
+
+            <section class="detail-buttons">
+                <a href="{% url 'manager:facility_list' %}" class="btn-reserve">목록으로</a>
+                <a href="{% url 'manager:facility_modify' facilityInfo.id %}" class="btn-modify">수정하기</a>
+            </section>
+
+        </section>
+    </section>
+
+    <!-- 아래: 댓글 영역 (flex 밖으로 분리됨) -->
+    <section class="comment-section">
+        <h3 class="section-title">댓글 ({{ comments|length }})</h3>
+
+        <ul class="comment-list">
+            {% for comment in comments %}
+            <li class="comment-item {% if comment.is_deleted %}comment-deleted{% endif %}">
+                <div class="comment-meta">
+                    <span class="comment-writer {% if comment.is_admin %}admin-badge{% elif comment.is_author %}author-badge{% endif %}">
+                        {{ comment.author }}{% if comment.is_admin %} 👑{% elif comment.is_author %} (작성자) {% endif %}
+                    </span>
+                    <span class="comment-date">
+                        {{ comment.reg_date|date:"Y-m-d H:i" }}
+                    </span>
+
+                    {% if not comment.is_deleted %}
+                    <button type="button"
+                            class="comment-delete-btn"
+                            data-comment-id="{{ comment.comment_id }}">
+                        삭제
+                    </button>
+                    {% endif %}
+                </div>
+
+                <p class="comment-content">{{ comment.comment|linebreaksbr }}</p>
+            </li>
+            {% empty %}
+            <li class="comment-empty">아직 등록된 댓글이 없습니다.</li>
+            {% endfor %}
+        </ul>
+
+    </section>
+
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'manager/js/comment_delete.js' %}"></script>
+{% endblock %}

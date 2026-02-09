@@ -1,0 +1,207 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'facility/css/facility_list.css' %}" />
+<link rel="stylesheet" href="{% static 'facility/css/facility_detail.css' %}" />
+{% endblock %}
+
+{% block script1 %}
+<!-- 카카오 지도 JS -->
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey={{ KAKAO_SCRIPT_KEY }}"></script>
+
+{{ facility|json_script:"facility-data" }}
+
+<script>
+    // Django에서 json_script로 넘긴 데이터 파싱
+    const facilityData = JSON.parse(document.getElementById("facility-data").textContent);
+</script>
+{% endblock %}
+
+{% block title %}
+시설 상세보기 - 할래말래
+{% endblock %}
+
+{% block contents %}
+
+<div class="board-hero facility-hero">
+    <h2>시설안내</h2>
+</div>
+
+<div class="sub-container">
+    <div class="sub-content">
+
+        <section class="detail-top-wrapper">
+
+            <section class="detail-image-wrap">
+                {% if facility.image_url %}
+                <img src="{{ facility.image_url }}" alt="{{ facility.name }}">
+                {% else %}
+                <img src="{% static '/media/uploads/facility/photo/default.png' %}" alt="사진 없음">
+                {% endif %}
+            </section>
+
+            <section class="detail-info-wrap">
+                <h3>{{ facility.name }}</h3>
+
+                <section class="detail-info-row">
+                    <b>업종명 :</b> <span>{{ facility.fcob_nm }}</span>
+                </section>
+
+                <section class="detail-info-row">
+                    <b>주소 :</b> <span>{{ facility.address }}</span>
+                </section>
+                {% if files %}
+                <section class="detail-info-row">
+                    <b>첨부파일 :</b>
+                    <span>
+                        <ul class="files-list">
+                            {% for file in files %}
+                                <li class="file-item">
+                                    <a href="{% url 'board:download' file.id %}" download>
+                                        {{ file.name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </span>
+                </section>
+                {% endif %}
+
+                {% if facility.phone %}
+                <section class="detail-info-row">
+                    <b>전화번호 :</b> <span>{{ facility.phone }}</span>
+                </section>
+                {% endif %}
+
+                <section class="detail-info-row">
+                    <b>운영상태 :</b> <span>{{ facility.faci_stat_nm }}</span>
+                </section>
+
+                <section class="detail-info-row">
+                    <b>안전등급 :</b> <span>{{ facility.schk_tot_grd_nm }}</span>
+                </section>
+
+                <section class="detail-info-row">
+                    <b>예약가능 :</b>
+                    <span>
+                        {% if can_reserve %}
+                        가능
+                        {% else %}
+                        해당 시설에 문의해주세요
+                        {% endif %}
+                    </span>
+                </section>
+
+                <section class="detail-buttons">
+                    {% if can_reserve %}
+                    <a href="{% url 'reservation:reservation_detail' facility.id %}" class="btn-reserve">
+                        예약하기
+                    </a>
+                    {% endif %}
+                    {% if can_recruit %}
+                    <a href="{% url 'recruitment:recruitment_list' %}?search_type=facility&keyword={{ facility.name|urlencode }}"
+                       class="btn-recruit">모집글가기</a>
+                    {% endif %}
+                    <a href="javascript:history.back();" class="back-btn">리스트로 돌아가기</a>
+                </section>
+
+            </section>
+        </section>
+
+        <section class="map">
+            <div id="map" style="width:100%; height:400px; border-radius:10px;"></div>
+        </section>
+
+    </div>
+
+    <hr>
+
+    <!-- 댓글 -->
+    <section class="comment-section">
+        <h3 class="section-title">댓글 ({{ comments|length }})</h3>
+
+        <ul class="comment-list">
+            {% for comment in comments %}
+            <li class="comment-item {% if comment.is_deleted %}comment-deleted{% endif %}">
+                <div class="comment-meta">
+                    <span class="comment-writer {% if comment.is_admin %}admin-badge{% endif %}">
+                        {{ comment.author }}{% if comment.is_admin %} 👑{% endif %}
+                    </span>
+                    <span class="comment-date">{{ comment.reg_date|date:"Y-m-d H:i" }}</span>
+                </div>
+                <p class="comment-content">{{ comment.comment|linebreaksbr }}</p>
+            </li>
+            {% empty %}
+            <li class="comment-empty">아직 등록된 댓글이 없습니다.</li>
+            {% endfor %}
+        </ul>
+        {% if user_id %}
+        <form method="post" action="{% url 'facility:facility_comment' facility_id %}" class="comment-form">
+            {% csrf_token %}
+            <label for="comment">댓글 쓰기</label>
+            <textarea id="comment" name="content" class="comment-textarea" rows="3" required></textarea>
+            <div class="comment-btn-box">
+                <button type="submit" class="btn btn-submit">등록</button>
+            </div>
+        </form>
+        {% endif %}
+    </section>
+
+</div>
+
+{% endblock %}
+
+{% block script3 %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const container = document.getElementById("map");
+    if (!container || typeof kakao === "undefined") return;
+
+    const map = new kakao.maps.Map(container, {
+        center: new kakao.maps.LatLng(37.5665, 126.9780),
+        level: 3,
+        draggable: false,
+        scrollwheel: false,
+        disableDoubleClickZoom: true,
+        keyboardShortcuts: false
+    });
+
+    const lat = parseFloat(facilityData.lat);
+    const lng = parseFloat(facilityData.lng);
+
+    if (isNaN(lat) || isNaN(lng)) {
+        console.warn("좌표 없음 → 기본 지도 위치");
+        return;
+    }
+
+    const pos = new kakao.maps.LatLng(lat, lng);
+
+    /* ===== marker ===== */
+    const marker = new kakao.maps.Marker({
+        map: map,
+        position: pos
+    });
+
+    /* ===== CustomOverlay (항상 표시) ===== */
+    const overlay = new kakao.maps.CustomOverlay({
+        position: pos,
+        content: `
+          <div class="customoverlay">
+            <span class="title">${facilityData.name}</span>
+          </div>
+        `,
+        xAnchor: 0.5,
+        yAnchor: 2.2,   // 🔥 마커 안 가리면서 바로 위
+        clickable: false
+    });
+
+    overlay.setMap(map);
+
+    map.setCenter(pos);
+    map.setLevel(2);
+});
+</script>
+
+{% endblock %}

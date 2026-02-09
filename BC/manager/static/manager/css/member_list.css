@@ -1,0 +1,265 @@
+/* -----------------------------
+   검색 영역
+------------------------------ */
+.search-row {
+    display: flex;
+    gap: 1rem;
+}
+
+.search-select {
+    padding: 0.6rem 1rem;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 8px;
+    font-size: 14px;
+    background: var(--color-card-box);
+    color: var(--color-text-primary);
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.7rem 1rem;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.search-input:focus {
+    border-color: var(--color-deep-blue);
+    outline: none;
+}
+
+/* 검색 버튼 */
+.member-search-form button {
+    padding: 6px 12px;
+    font-size: 13px;
+    background: #2F5C9C;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.member-search-form button:hover {
+    background: #3E6FB3;
+}
+
+.member-list{
+    text-align: center;
+}
+
+/* -----------------------------
+   필터 영역
+------------------------------ */
+.filter-container {
+    padding: 0.8rem 0;
+}
+
+.per-page-wrap {
+    margin-left: auto;
+}
+
+.filter-select {
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #cdd3da;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+}
+
+/* -----------------------------
+   테이블 영역
+------------------------------ */
+.member-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 15px;
+}
+
+.member-table th {
+    background: #f1f5f9;
+    padding: 0.9rem;
+    text-align: center;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-soft-gray-line);
+}
+
+.member-table td {
+    padding: 0.9rem;
+    border-bottom: 1px solid var(--color-soft-gray-line);
+    color: var(--color-text-secondary);
+}
+
+.member-table tr:hover {
+    background: rgba(146, 184, 216, 0.08);
+}
+
+/* 체크박스 정렬 */
+.member-table th.checkbox-cell,
+.member-table td.checkbox-cell {
+    width: 40px;
+    padding: 0;
+    text-align: center;
+}
+
+.member-table td.checkbox-cell input {
+    margin: 0;
+}
+
+/* -----------------------------
+   회원 상태 색상 (글씨만 변경)
+------------------------------ */
+.status-active {
+    color: #2F9E44;   /* 초록 - 현재 회원 */
+    font-weight: 600;
+}
+
+.status-withdraw {
+    color: #F08C00;   /* 주황 - 탈퇴 회원 */
+    font-weight: 600;
+}
+
+.status-deleted {
+    color: #D6336C;   /* 빨강/보라 - 관리자 삭제 */
+    font-weight: 600;
+}
+
+/* -----------------------------
+   버튼 영역
+------------------------------ */
+.btn-wrap {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.delete-btn {
+    padding: 8px 14px;
+    background: #d9534f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+.delete-btn:hover {
+    background: #b52b27;
+}
+
+.restore-btn {
+    padding: 8px 14px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s ease;
+}
+.restore-btn:hover {
+    background: #1d4ed8;
+}
+
+/* -----------------------------
+   페이징
+------------------------------ */
+.pagination {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    background: white;
+    border: 1px solid #cdd3da;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.page-btn.active {
+    background: #2F5C9C;
+    color: white;
+    border-color: #2F5C9C;
+}
+
+.page-btn.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.withdraw-row {
+    cursor: pointer;
+}
+
+
+
+
+.small-modal {
+    max-width: 800px;
+    padding: 50px 72px;    
+    width: 460px;
+}
+
+.small-modal .modal-header h3 {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 32px;
+    text-align: center;
+    color: var(--color-text-primary);
+}
+
+
+.small-modal .modal-body {
+    padding: 24px 0;
+}
+
+.small-modal .modal-body p {
+    font-size: 24px;
+    line-height: 1.7;
+    color: red;
+    text-align: center;
+    word-break: keep-all;
+    font-weight: bold;
+}
+
+.small-modal .modal-footer {
+    padding-top: 40px;
+    display: flex;
+    justify-content: flex-end;       
+}
+
+.small-modal .modal-footer .btn {
+    padding: 0.6rem 1.6rem;         
+    font-size: 14px;
+    border-radius: 999px;
+}
+
+
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: none;
+}
+
+.modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: var(--color-card-box);
+    border-radius: 16px;
+    border: 1px solid var(--color-soft-gray-line);
+    box-shadow: var(--shadow-medium);
+}

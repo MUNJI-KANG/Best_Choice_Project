@@ -1,0 +1,168 @@
+/* 회원가입(마이페이지) 컨테이너 - 가운데 정렬 제거하고, header랑 폭 맞추기 */
+.register-container {
+  min-height: calc(100vh - 200px);
+  max-width: 1200px;          /* header 안쪽 폭이랑 맞추고 */
+  margin: 0 auto;             /* 화면 가운데 위치 */
+  padding: var(--spacing-2xl) var(--spacing-lg);
+  /* display, align-items, justify-content 제거 */
+}
+
+/* 레이아웃: 왼쪽 사이드바(초록 박스) + 오른쪽 내용 */
+.register-wrapper {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 280px 1fr; /* 왼쪽 사이드바 폭 */
+  gap: var(--spacing-2xl);
+}
+
+/* PC에서 사이드바 스타일 */
+@media (min-width: 1024px) {
+  .register-wrapper {
+    grid-template-columns: 280px 1fr;
+    gap: var(--spacing-2xl);
+    max-width: 1200px;
+    align-items: stretch;   /* ✅ 추가: 양쪽 컬럼 높이 맞추기 */
+  }
+
+  .register-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--spacing-2xl);
+    background: #F0F4FF;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 16px;
+
+    height: 100%;        /* ✅ 그리드 셀 전체 높이 채우기 */
+    height: 420px;   /* ✅ 높이 통일  */
+  }
+  .register-brand h2 {
+    font-size: 36px;
+    font-weight: 900;
+    margin-bottom: var(--spacing-lg);
+    color: #1E2A3A;
+  }
+
+  .register-brand-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+  }
+
+  .register-brand-features li a {
+    display: block;
+    font-size: 16px;
+    text-decoration: none;
+    color: #1E2A3A;
+    padding: 10px 16px;
+    border-radius: 8px;
+    transition: all var(--transition-base);
+    position: relative;
+  }
+
+  .register-brand-features li a:hover {
+    background: rgba(58, 122, 254, 0.1);
+    text-decoration: none;
+  }
+
+  /* 활성 메뉴 스타일 */
+  .register-brand-features li a.active {
+    background: #3A7AFE;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(58, 122, 254, 0.3);
+  }
+
+  .register-brand-features li a.active::before {
+    display: none;
+  }
+  .mypage-menu-toggle {
+    display: none;
+  }
+
+}
+
+
+
+
+
+
+
+/* ----------------------------------------------------- */
+/* 모바일에서 사이드바 숨기지 말고 LOGIN */
+/* 모바일에서는 여전히 사이드바 숨기기 */
+/* 모바일에서는 사이드바를 토글로 열고 닫기 */
+@media (max-width: 1023px) {
+
+  .register-wrapper {
+    grid-template-columns: 1fr;
+    position: relative;
+  }
+
+  /* 사이드바: 기본은 화면 밖에 숨겨두고, 토글로 슬라이드 */
+  .register-brand {
+    position: fixed;
+    top: 60px;              /* 헤더 높이에 맞게 조절 */
+    left: 0;
+    width: 260px;
+    height: calc(100vh - 60px);
+    z-index: 1000;
+
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+
+    display: flex;          /* 모바일에서도 보이게 */
+    border-radius: 0 16px 16px 0;
+    background: #F0F4FF;
+    border: 1px solid var(--color-soft-gray-line);
+    padding: var(--spacing-2xl);
+  }
+
+  .register-brand h2 {
+    color: #1E2A3A;
+  }
+
+  .register-brand-features li a {
+    color: #1E2A3A;
+  }
+
+  .register-brand-features li a:hover {
+    background: rgba(58, 122, 254, 0.1);
+  }
+
+  .register-brand-features li a.active {
+    background: #3A7AFE;
+    color: #fff;
+    font-weight: 600;
+  }
+
+  /* 열렸을 때 */
+  .register-brand.is-open {
+    transform: translateX(0);
+  }
+
+  /* 토글 버튼 (모바일에서만 보이게) */
+  .mypage-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    margin-bottom: var(--spacing-md);
+
+    font-size: 14px;
+    border-radius: 999px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    cursor: pointer;
+  }
+
+  .mypage-menu-toggle span {
+    margin-left: 4px;
+  }
+
+  /* 데스크탑에서는 토글 버튼 숨김 */
+}
+

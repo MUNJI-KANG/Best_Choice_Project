@@ -1,0 +1,95 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}예약 상세{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'reservation/css/reservation_detail.css' %}">
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css' rel='stylesheet' />
+{% endblock %}
+
+{% block contents %}
+
+<div class="facility-detail-container">
+
+    <input type="hidden" id="facility-id" value="{{ facility.facility_id }}">
+    <input type="hidden" id="rs-possible" value="{{ facility.rs_posible }}">
+    <!-- 기본 정보 -->
+    <div class="facility-top">
+        <div class="facility-photo">
+            {% if facility.photo %}
+                <img src="{{ facility.photo.url }}" alt="facility image">
+            {% else %}
+                <div class="no-photo">사진 없음</div>
+            {% endif %}
+        </div>
+
+        <div class="facility-info">
+            <h2>{{ facility.faci_nm }}</h2>
+            <ul class="info-list">
+                <li>주소: {{ facility.address }}</li>
+                <li>연락처: {{ facility.tel }}</li>
+                {% if facility.homepage %}
+                <li>홈페이지: <a href="{{ facility.homepage }}" target="_blank">{{ facility.homepage }}</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="divider"></div>
+
+    {% if facility.rs_posible == 1 %}
+        <!-- 기존 예약 UI 전체 시작 -->
+        <div class="reservation-section">
+            <div class="calendar-box">
+                <div id="calendar"></div>
+            </div>
+
+            <div class="time-slot-box">
+                <div class="time-slot-title">시간 선택</div>
+                <div class="slot-grid" id="time-slot-grid"></div>
+            </div>
+        </div>
+
+        <div class="result-box">
+            <div>선택된 날짜: <strong id="selected-date">-</strong></div>
+            <div>선택된 시간: <strong id="selected-time">-</strong></div>
+
+            <div class="total-price">
+                총 결제금액: <span id="total-price">0원</span>
+            </div>
+        </div>
+
+        <div class="reservation-buttons">
+            <button class="btn-reserve" id="reserve-button">예약하기</button>
+            <a href="{% url 'reservation:reservation_list' %}" class="btn-back">목록으로 돌아가기</a>
+        </div>
+        <!-- 기존 예약 UI 전체 끝 -->
+
+    {% else %}
+        <div style="padding: 3rem; text-align: center; font-size: 1.6rem; color: #b30000; font-weight: 700;">
+            예약이 불가능한 시설입니다.
+        </div>
+        <div class="reservation-buttons">
+            <a href="{% url 'reservation:reservation_list' %}" class="btn-back">목록으로 돌아가기</a>
+        </div>
+    {% endif %}
+
+
+
+</div>
+
+<script id="reservation-json" type="application/json">
+    {{ reservation_time_json|safe }}
+</script>
+
+<script id="reserved-json" type="application/json">
+    {{ reserved_json|safe }}
+</script>
+
+{% endblock %}
+
+{% block script3 %}
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+<script src="{% static 'reservation/js/reservation_detail.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,264 @@
+/* =========================================
+   메인 컨테이너
+========================================= */
+.facility-detail-container {
+    width: 100%;
+    margin-top: var(--spacing-xl);
+    padding: 0 var(--spacing-lg);
+}
+
+/* =========================================
+   상단 레이아웃 (이미지 + 정보)
+========================================= */
+.detail-top-wrapper {
+    display: flex;
+    gap: var(--spacing-2xl);
+    align-items: flex-start;
+    margin-bottom: var(--spacing-2xl);
+}
+
+/* 좌측 이미지 */
+.detail-image-wrap {
+    flex: 0 0 65%;
+    height: 450px;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #f3f4f6;
+}
+
+.detail-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 우측 정보 */
+.detail-info-wrap {
+    flex: 0 0 35%;
+    padding: var(--spacing-md) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.detail-info-wrap h3 {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-primary);
+}
+
+/* 정보 라인 */
+.detail-info-row {
+    display: flex;
+    gap: 10px;
+    font-size: 15px;
+    line-height: 1.6;
+    align-items: flex-start;
+}
+
+.detail-info-row b {
+    min-width: 80px;
+    font-weight: 700;
+    color: var(--color-text-secondary);
+}
+
+/* =========================================
+   시간표 스타일
+========================================= */
+.timetable {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.timetable-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-left: 5px;
+}
+
+/* 한 줄(요일 + 시간) */
+.timetable-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--color-text-primary);
+    padding: 1px 0;
+}
+
+.timetable-item .day {
+    width: 70px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.timetable-item .time {
+    min-width: 140px;
+}
+
+/* 운영 없음 */
+.timetable-item .time.disabled {
+    color: var(--color-text-secondary);
+}
+
+/* 간격 */
+.timetable-item .interval {
+    color: var(--color-text-secondary);
+}
+
+/* 운영 중 요일 강조 */
+.timetable-item.active .day,
+.timetable-item.active .time {
+    color: var(--color-deep-blue);
+    font-weight: 700;
+}
+
+/* =========================================
+   버튼 스타일
+========================================= */
+.detail-buttons {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.detail-buttons a {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: #fff;
+    transition: background 150ms ease, color 150ms ease;
+}
+
+.detail-buttons a:hover {
+    background: var(--color-deep-blue);
+    color: #fff;
+}
+
+/* =========================================
+   댓글 영역
+========================================= */
+.comment-section {
+    padding-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-soft-gray-line);
+    margin-top: var(--spacing-xl);
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-primary);
+}
+
+/* 댓글 리스트 */
+.comment-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* 댓글 한 줄 */
+.comment-item {
+    padding: var(--spacing-md) 0;
+    border-bottom: 1px solid var(--color-soft-gray-line);
+}
+
+.comment-item:last-child {
+    border-bottom: none;
+}
+
+/* 메타 */
+.comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.comment-writer {
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.admin-badge {
+    color: var(--color-deep-green);
+}
+
+.comment-date {
+    font-size: 12px;
+    color: var(--color-text-secondary);
+}
+
+/* 내용 */
+.comment-content {
+    font-size: 14px;
+    color: var(--color-text-primary);
+    line-height: 1.6;
+}
+
+/* 빈 댓글 */
+.comment-empty {
+    text-align: center;
+    padding: var(--spacing-xl) 0;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+.title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* 제목과 배지 간 간격 */
+}
+
+.status-active {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1dbf36;  /* 초록색 */
+    background: #e8fbe8;
+    padding: 2px 6px;
+    border-radius: 12px;
+    margin-right: 6px;
+}
+
+.status-inactive {
+    font-size: 12px;
+    font-weight: 700;
+    color: #e53935;  /* 빨강 */
+    background: #fdeaea;
+    padding: 2px 6px;
+    border-radius: 12px;
+    margin-right: 6px;
+}
+
+
+.hidden{
+    display: none;
+}
+
+.file-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 6px;
+}
+
+.file-item {
+    margin-bottom: 6px;
+}
+
+.file-item a {
+    color: #2b5eff;
+    text-decoration: none;
+}
+
+.file-item a:hover {
+    text-decoration: underline;
+}

@@ -1,0 +1,133 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'common/css/login.css' %}" />
+<style>
+.message-area {
+    margin-bottom: var(--spacing-lg);
+}
+
+.alert {
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+</style>
+{% endblock %}
+{% block title %}
+로그인 - 할래말래
+{% endblock %}
+{% block contents %}
+ <!-- 로그인 컨테이너 -->
+  <div class="login-container">
+    <div class="login-wrapper">
+      <!-- 브랜딩 영역 (PC만 표시) -->
+      <div class="login-brand">
+        <h2>할래말래</h2>
+        <p>스포츠 시설을 쉽고 빠르게 예약하세요</p>
+        <ul class="login-brand-features">
+          <li>간편한 온라인 예약</li>
+          <li>다양한 스포츠 시설</li>
+          <li>실시간 예약 현황</li>
+          <li>안전한 결제 시스템</li>
+        </ul>
+      </div>
+      
+      <!-- 로그인 카드 -->
+      <div class="login-card">
+      <div class="login-header">
+        <h1>로그인</h1>
+        <p>할래말래에 오신 것을 환영합니다</p>
+      </div>
+      {% if messages %}
+        <div class="message-area" style="display:none;">
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+      
+      <form class="login-form" method="post" action="/login/">
+        {% csrf_token %}
+        {% if next %}
+        <input type="hidden" name="next" value="{{ next }}">
+        {% endif %}
+        <div class="form-group">
+          <label class="form-label" for="username">아이디</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            class="form-input" 
+            placeholder="아이디를 입력하세요"
+            required
+          />
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label" for="password">비밀번호</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            class="form-input" 
+            placeholder="비밀번호를 입력하세요"
+            required
+          />
+        </div>
+        
+        <div class="form-options">
+          <label class="form-checkbox">
+            <input type="checkbox" name="remember" />
+            <span>로그인 상태 유지</span>
+          </label>
+          <div class="form-links">
+            <a href="{% url 'common:findID' %}" class="form-link">ID 찾기</a>
+            <span class="form-link-divider"></span>
+            <a href="{% url 'common:findPW' %}" class="form-link">비밀번호 찾기</a>
+          </div>
+        </div>
+        
+        <button type="submit" class="login-btn">로그인</button>
+      </form>
+      
+      <div class="divider">또는</div>
+      
+      <div class="social-login">
+        <!-- 카카오 로그인: 공식 이미지 버튼만 사용 -->
+        <a href="{% url 'common:kakao_login' %}{% if next %}?next={{ next|urlencode }}{% endif %}" class="kakao-login-link" aria-label="카카오로 로그인">
+          <img src="{% static 'common/img/kakao-icon.png' %}" alt="카카오 로그인" class="kakao-login-img" />
+        </a>
+      </div>
+      
+      <div class="signup-link">
+        아직 회원이 아니신가요?
+        <a href="{% url 'common:terms' %}">회원가입</a>
+      </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+
+ 

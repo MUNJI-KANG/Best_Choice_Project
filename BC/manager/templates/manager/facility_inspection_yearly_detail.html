@@ -1,0 +1,255 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}연도별 안전점검 추세 상세{% endblock %}
+
+{% block extra_head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <!-- 메인 콘텐츠 -->
+    <div class="admin-main">
+        <h1 class="box-header" style="text-align: center;">연도별 안전점검 추세 상세</h1>
+
+        <!-- 필터 -->
+        <div class="filter-section">
+            <form method="GET" class="filter-form">
+                <!-- 연도 선택 -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">연도 선택</label>
+                    <select name="year" class="filter-select">
+                        <option value="">전체 연도</option>
+                        {% for year in years %}
+                        <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>
+                            {{ year }}년
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- 지역 선택 -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">지역 선택</label>
+                    <select name="region" class="filter-select">
+                        <option value="">전체 지역</option>
+                        {% for region in regions %}
+                        <option value="{{ region }}" {% if selected_region == region %}selected{% endif %}>
+                            {{ region }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <!-- 종목 선택 -->
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 600; color: #2c3e50;">종목 선택</label>
+                    <select name="sport" class="filter-select">
+                        <option value="">전체 종목</option>
+                        {% for sport in sports %}
+                        <option value="{{ sport }}" {% if selected_sport == sport %}selected{% endif %}>
+                            {{ sport }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <button type="submit" class="filter-btn">적용</button>
+            </form>
+            <!-- 뒤로가기 버튼 -->
+            <div style="display: flex; gap: 15px;">
+                <a href="{% url 'manager:facility_inspection_stats' %}" class="filter-btn" style="text-decoration: none; display: inline-block; padding: 12px 30px;">
+                    뒤로가기
+                </a>
+            </div>
+        </div>
+
+        <!-- 요약 통계 -->
+        <div class="stats-summary">
+            <div class="stat-box">
+                <h4>총 점검 건수</h4>
+                <div class="stat-value">{{ summary_stats.total_inspections|default:0 }}</div>
+            </div>
+            <div class="stat-box">
+                <h4>연평균 점검 건수</h4>
+                <div class="stat-value">{{ summary_stats.avg_per_year|default:0 }}</div>
+            </div>
+            <div class="stat-box">
+                <h4>최대 점검 연도</h4>
+                <div class="stat-value">{{ summary_stats.max_year|default:'-' }}</div>
+            </div>
+            <div class="stat-box">
+                <h4>최소 점검 연도</h4>
+                <div class="stat-value">{{ summary_stats.min_year|default:'-' }}</div>
+            </div>
+        </div>
+
+        <!-- 차트 -->
+        <div class="charts-section">
+            <!-- 연도별 점검 건수 추이 -->
+            <div class="chart-card">
+                <h3>연도별 점검 건수 추이</h3>
+                <canvas id="yearlyTrendChart"></canvas>
+            </div>
+            
+            <!-- 연도별 등급별 분포 -->
+            <div class="chart-card">
+                <h3>연도별 등급별 분포</h3>
+                <canvas id="gradeByYearChart"></canvas>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script>
+        // 1. 연도별 점검 건수 추이 (라인 차트)
+        const statsData = {{ stats_data|safe }};
+        const gradeByYear = {{ grade_by_year|safe }};
+        
+        const yearlyTrendCtx = document.getElementById('yearlyTrendChart');
+        if (yearlyTrendCtx) {
+            const labels = Object.keys(statsData).sort();
+            const data = labels.map(key => statsData[key] || 0);
+            
+            new Chart(yearlyTrendCtx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: '점검 건수',
+                        data: data,
+                        borderColor: 'rgb(52, 152, 219)',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: 'rgb(52, 152, 219)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                afterLabel: function(context) {
+                                    const year = context.label;
+                                    const gradeData = gradeByYear[year] || {};
+                                    if (Object.keys(gradeData).length > 0) {
+                                        let gradeInfo = '\n등급별: ';
+                                        const gradeLabels = [];
+                                        if (gradeData['양호']) gradeLabels.push(`양호: ${gradeData['양호']}`);
+                                        if (gradeData['주의']) gradeLabels.push(`주의: ${gradeData['주의']}`);
+                                        if (gradeData['경고']) gradeLabels.push(`경고: ${gradeData['경고']}`);
+                                        return gradeInfo + gradeLabels.join(', ');
+                                    }
+                                    return '';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '점검 건수'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: '연도'
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            });
+        }
+        
+        // 2. 연도별 등급별 분포 (스택 바 차트)
+        const gradeByYearCtx = document.getElementById('gradeByYearChart');
+        if (gradeByYearCtx) {
+            const labels = Object.keys(gradeByYear).sort();
+            
+            // 등급별 데이터셋 생성
+            const allGrades = new Set();
+            labels.forEach(year => {
+                Object.keys(gradeByYear[year] || {}).forEach(grade => allGrades.add(grade));
+            });
+            const gradeList = Array.from(allGrades);
+            
+            const gradeColors = {
+                '양호': 'rgba(46, 204, 113, 0.8)',
+                '주의': 'rgba(241, 196, 15, 0.8)',
+                '경고': 'rgba(231, 76, 60, 0.8)'
+            };
+            
+            const datasets = gradeList.map(grade => ({
+                label: grade,
+                data: labels.map(year => (gradeByYear[year] && gradeByYear[year][grade]) || 0),
+                backgroundColor: gradeColors[grade] || 'rgba(149, 165, 166, 0.8)',
+                borderColor: gradeColors[grade] || 'rgba(149, 165, 166, 1)',
+                borderWidth: 1
+            }));
+            
+            new Chart(gradeByYearCtx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: true,
+                            title: {
+                                display: true,
+                                text: '연도'
+                            }
+                        },
+                        y: {
+                            stacked: true,
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: '시설 수'
+                            }
+                        }
+                    },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false
+                    }
+                }
+            });
+        }
+    </script>
+{% endblock %}
+

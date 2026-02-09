@@ -1,0 +1,433 @@
+/* =========================================================
+   Recruitment List CSS (FULL)
+   - 8-column grid 맞춤 (번호/제목/모집인원/마감여부/마감날짜/작성자/조회수/작성날짜)
+   - 중첩 span(마감날짜) 구조에도 레이아웃 안 깨지게 보정
+   ========================================================= */
+
+/* -----------------------------
+   Hero 섹션
+------------------------------ */
+.board-hero {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: var(--spacing-xl) auto var(--spacing-2xl);
+    padding: var(--spacing-2xl) 0;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 0;
+}
+
+.board-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.10);
+    z-index: 1;
+}
+
+.board-hero h2 {
+    font-size: 56px;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -2px;
+    line-height: 1;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 14px 30px rgba(15, 23, 42, 0.55);
+}
+
+/* 모집할래 페이지 전용 hero */
+.recruitment-hero {
+    background-image: url('/static/board/img/recruitment_hero.png');
+}
+
+/* Hero 이미지 모바일 */
+@media (max-width: 768px) {
+    .board-hero {
+        padding: var(--spacing-xl) var(--spacing-md);
+        min-height: 200px;
+        flex-direction: column;
+        text-align: center;
+        margin: var(--spacing-lg) auto var(--spacing-xl);
+    }
+
+    .board-hero h2 {
+        font-size: 28px;
+        text-align: center;
+    }
+}
+
+/* -----------------------------
+   서브 레이아웃
+------------------------------ */
+.sub-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: var(--spacing-2xl) auto 0;
+    padding: var(--spacing-lg);
+}
+
+.sub-content {
+    width: 100%;
+    background: var(--color-card-box);
+    padding: var(--spacing-xl);
+    min-height: 400px;
+    border: 1px solid var(--color-soft-gray-line);
+    overflow: visible;
+    border-radius: 12px;
+}
+
+/* -----------------------------
+   검색 바
+------------------------------ */
+.search-section {
+    margin-bottom: var(--spacing-2xl);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.search-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+.search-dropdown {
+    padding: 12px 16px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    font-size: 14px;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    min-width: 140px;
+    transition: var(--transition-base);
+    border-radius: 10px;
+}
+
+.search-dropdown:hover {
+    border-color: var(--color-deep-blue);
+}
+
+.search-dropdown:focus {
+    outline: none;
+    border-color: var(--color-deep-blue);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+}
+
+.search-input-group {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--spacing-xs);
+    min-width: 280px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 16px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    font-size: 14px;
+    transition: var(--transition-base);
+    border-radius: 10px;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-deep-blue);
+    box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+}
+
+.search-btn,
+.write-btn {
+    padding: 12px 18px;
+    background: var(--color-deep-blue);
+    color: var(--color-card-box);
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: var(--transition-base);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    text-decoration: none;
+    border-radius: 10px;
+    white-space: nowrap;
+}
+
+.search-btn:hover,
+.write-btn:hover {
+    background: var(--color-deep-blue-hover);
+}
+
+.search-list-section {
+    margin-top: var(--spacing-2xl);
+}
+
+.write-btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--spacing-xl);
+}
+
+/* -----------------------------
+   정렬/페이지 수
+------------------------------ */
+.sort-page-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.sort-left-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.sort-right-group {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.sort-page-container .search-dropdown {
+    min-width: 140px;
+}
+
+.dividing-line {
+    border: 0;
+    border-top: 2px solid var(--color-muted-blue);
+    margin: 20px 0;
+}
+
+/* =========================================================
+   리스트 (8컬럼 고정)
+   ========================================================= */
+.page-recruitment .facility-list {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    background: var(--color-card-box);
+    border-radius: 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    overflow: hidden;
+}
+
+.page-recruitment .facility-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* ✅ 핵심: 헤더/행 동일 8컬럼 */
+.facility-header,
+.facility-list .facility-item {
+    display: grid;
+    grid-template-columns:
+        1fr    /* 번호 */
+        6fr    /* 제목 */
+        1.6fr  /* 모집인원 */
+        1.6fr  /* 마감여부 */
+        2fr    /* 마감날짜 */
+        1.8fr  /* 작성자 */
+        1.2fr  /* 조회수 */
+        1.8fr; /* 작성날짜 */
+    align-items: center;
+    column-gap: 10px;
+}
+
+/* 각 칼럼 공통 */
+.facility-col {
+    font-size: 0.9rem;
+    padding: 12px 12px;
+    min-width: 0; /* grid에서 말줄임 필수 */
+}
+
+/* 헤더 */
+.facility-header {
+    background-color: #f4f7fb;
+    border-top: 1px solid #dde3ec;
+    border-bottom: 1px solid #dde3ec;
+    font-weight: 800;
+    color: #1a2a43;
+}
+
+.facility-header .facility-col {
+    font-size: 0.86rem;
+}
+
+/* 행 */
+.facility-list .facility-item {
+    border-bottom: 1px solid #edf1f6;
+    background-color: #ffffff;
+}
+
+.facility-list .facility-item:hover {
+    background-color: #f9fbff;
+}
+
+/* 제목 */
+.col-title {
+    min-width: 0;
+}
+
+.col-title a {
+    display: block;
+    min-width: 0;
+    text-decoration: none;
+    color: var(--color-text-primary);
+    font-size: 0.92rem;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.col-title a:hover {
+    text-decoration: underline;
+}
+
+/* 중앙 정렬들 */
+.col-no,
+.col-num,
+.col-status,
+.col-writer,
+.col-views,
+.col-date {
+    text-align: center;
+}
+
+/* ✅ HTML에서 마감날짜 부분이 span 중첩이라도 깨지지 않게
+   (col-status 안에 col-date가 들어가 있음) */
+.col-status .col-date {
+    padding: 0;
+    font-size: 0.86rem;
+    display: inline-block;
+}
+
+/* 배지 */
+.badge {
+    display: inline-block;
+    padding: 5px 12px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #ffffff;
+    white-space: nowrap;
+    letter-spacing: -0.2px;
+}
+
+.badge-open {
+    background-color: #32a852;
+}
+
+.badge-end {
+    background-color: #e53935;
+}
+
+/* 빈 목록 */
+.facility-empty {
+    padding: 24px 16px;
+    text-align: center;
+    color: var(--color-text-secondary);
+}
+
+/* =========================================================
+   페이징
+   ========================================================= */
+.pagination {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    flex-wrap: wrap;
+}
+
+.page-btn {
+    padding: 7px 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 10px;
+    background: var(--color-card-box);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition-base);
+    user-select: none;
+}
+
+.page-btn:hover {
+    background: var(--color-muted-blue);
+    color: white;
+}
+
+.page-btn.active {
+    background: var(--color-deep-blue);
+    color: white;
+    border-color: var(--color-deep-blue);
+    font-weight: 800;
+}
+
+.page-btn.arrow {
+    font-weight: 700;
+}
+
+.page-btn.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+/* =========================================================
+   반응형: 작은 화면에서는 가독성 우선
+   - 가로 스크롤 허용(테이블 느낌 유지)
+   ========================================================= */
+@media (max-width: 1024px) {
+    .sub-container {
+        padding: var(--spacing-md);
+    }
+    .sub-content {
+        padding: var(--spacing-lg);
+    }
+
+    .page-recruitment .facility-list {
+        overflow-x: auto;
+    }
+
+    .facility-header,
+    .facility-list .facility-item {
+        min-width: 980px; /* 8컬럼 유지 */
+    }
+}
+
+@media (max-width: 640px) {
+    .search-input-group {
+        min-width: 100%;
+    }
+    .search-dropdown {
+        min-width: 120px;
+        padding: 10px 12px;
+    }
+    .search-input {
+        padding: 10px 12px;
+    }
+    .search-btn,
+    .write-btn {
+        padding: 10px 12px;
+    }
+}

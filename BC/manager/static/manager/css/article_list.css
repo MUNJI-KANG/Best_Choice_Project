@@ -1,0 +1,219 @@
+/*****************************************
+    공통 필터 영역
+*****************************************/
+.filter-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+    margin-top: 0;
+}
+
+.filter-select {
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #cdd3da;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+}
+
+/*****************************************
+    게시판 전체 박스
+*****************************************/
+.article-box {
+    background: #fff;
+    border: 1px solid #cdd3da;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+}
+
+/*****************************************
+    제목
+*****************************************/
+.box-header {
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--color-soft-gray-line);
+    margin-bottom: 40px;
+    letter-spacing: -0.5px;
+}
+
+/*****************************************
+    페이지 개수 선택
+*****************************************/
+#perPageSelect {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    padding: 6px 10px;
+}
+
+/*****************************************
+    게시글 리스트 테이블
+*****************************************/
+.article-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border: 1px solid #d6dce3;
+    font-size: 15px;
+}
+
+.article-table-header th {
+    background: #F5F7FA;
+    color: #1A2A43;
+    border-bottom: 2px solid #d6dce3;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.article-table td {
+    border-bottom: 1px solid #e5e9f0;
+    padding: 12px 10px;
+    color: #4c5c68;
+}
+
+.article-table td:nth-child(1),
+.article-table td:nth-child(2) {
+    text-align: center;
+    color: #1A2A43;
+    font-weight: 600;
+}
+
+.article-table td:nth-child(3) {
+    font-weight: 600;
+    color: #1A2A43;
+}
+
+.article-table tbody tr:hover {
+    background: #F0F7FF;
+    transition: 0.1s;
+}
+
+.article-table tbody tr:nth-child(odd) {
+    background: #FAFCFF;
+}
+
+/*****************************************
+    체크박스
+*****************************************/
+.article-table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+}
+
+/*****************************************
+    페이징
+*****************************************/
+.pagination {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.page-btn {
+    padding: 6px 13px;
+    border: 1px solid #d0d6dd;
+    border-radius: 6px;
+    background: white;
+    color: #1A2A43;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.page-btn:hover {
+    background: #92B8D8;
+    color: white;
+}
+
+.page-btn.active {
+    background: #2F5C9C;
+    color: white;
+    border-color: #2F5C9C;
+    font-weight: 700;
+}
+
+.page-btn.disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+
+/*****************************************
+    액션 버튼 묶음 (영구삭제 / 복구 / 삭제)
+*****************************************/
+.action-buttons {
+    position: absolute;
+    bottom: 20px;
+    right: 140px;  /* 작성하기 왼쪽에 전체 버튼 묶음 배치 */
+    display: flex;
+    gap: 8px;
+}
+
+.hard-delete-btn,
+.restore-btn,
+.delete-btn {
+    padding: 10px 18px;
+    border-radius: 7px;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 70px;
+    color: white;
+}
+
+/* 개별 색상 */
+.hard-delete-btn {
+    background: #8A1915;
+}
+.hard-delete-btn:hover {
+    background: #6E0F0C;
+}
+
+.restore-btn {
+    background: #5B8F3B;
+}
+.restore-btn:hover {
+    background: #47772E;
+}
+
+.delete-btn {
+    background: #d9534f;
+}
+.delete-btn:hover {
+    background: #b52b27;
+}
+
+/*****************************************
+    작성하기 버튼 (단독 위치)
+*****************************************/
+.register-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 22px;
+    background: #2F5C9C;
+    border-radius: 7px;
+    border: none;
+    cursor: pointer;
+    color: white;
+    font-size: 15px;
+}
+.register-btn:hover {
+    background: #3E6FB3;
+}

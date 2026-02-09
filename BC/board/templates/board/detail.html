@@ -1,0 +1,143 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'board/css/board_list.css' %}" />
+<link rel="stylesheet" href="{% static 'board/css/board_detail.css' %}" />
+{% endblock %}
+
+{% block script1 %}
+<script src="{% static 'board/js/board_detail.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+{{ b_name }}
+{% endblock %}
+
+{% block contents %}
+
+<!-- Hero 섹션 -->
+<div
+    class="board-hero {% if board_type == 'notice' %}notice-hero{% elif board_type == 'event' %}event-hero{% else %}post-hero{% endif %}">
+    <h2>{{ b_name }}</h2>
+</div>
+
+<!-- 서브 컨테이너 -->
+<div class="sub-container">
+    <div class="sub-content">
+
+        <!-- 게시글 정보 -->
+        <section class="article-header {% if is_deleted %}deleted-post{% endif %}">
+            <h1 class="article-title">{{ article.title }}</h1>
+
+            <div class="article-meta">
+                <div class="article-meta-left">
+                    <span class="article-author {% if article.is_admin %}admin-badge{% endif %}">
+                        작성자: {{ article.author }}{% if article.is_admin %} 👑{% endif %}
+                    </span>
+                    <span class="article-date">{{ article.date }}</span>
+                    <span class="article-views">조회수: {{ article.views }}</span>
+                </div>
+                {% if article.files %}
+                <div class="article-files-box">
+                    <h4 class="files-title">첨부파일</h4>
+                    <ul class="files-list">
+                        {% for file in article.files %}
+                        <li class="file-item">
+                            <a href="{% url 'board:download' file.id %}" download class="file-link">
+                                <span class="file-icon">{% if file.is_image %}🖼️{% else %}📎{% endif %}</span>
+                                <span class="file-name">{{ file.name }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <hr class="article-divider">
+
+        <!-- 게시글 내용 -->
+        <section class="article-content">
+            <div class="article-body">
+                {{ article.contents|safe }}
+                
+            </div>
+        </section>
+
+        <!-- 버튼 영역 (여기에 수정 버튼 추가됨) -->
+        <div class="article-actions">
+            {% if is_author %}
+                <a href="{% url 'board:update' board_name article.article_id %}" class="btn btn-edit">수정하기</a>
+            {% endif %}
+            {% if is_manager %}
+            <a href="{% url 'manager:board_detail' article.article_id %}" class="btn btn-edit">관리자 페이지로 가기</a>
+            {% endif %}
+            <a href="{% url 'board:list' board_name %}" class="btn btn-list">목록으로</a>
+        </div>
+
+        <hr class="article-divider">
+
+      
+        
+
+        <!-- 댓글 섹션 -->
+        <section class="comment-section">
+            <h3 class="section-title">댓글 ({{ comments|length }})</h3>
+
+            <!-- 댓글 리스트 -->
+            <ul class="comment-list">
+                {% for comment in comments %}
+                <li class="comment-item {% if comment.is_deleted %}comment-deleted{% endif %}">
+                    <div class="comment-meta">
+                        <span
+                            class="comment-writer {% if comment.is_admin %}admin-badge{% elif comment.is_author %}author-badge{% endif %}">
+                            {{ comment.author }}{% if comment.is_admin %} 👑{% elif comment.is_author %} (작성자) 
+                            {% endif %}
+                        </span>
+                        <span class="comment-date">
+                            {{ comment.reg_date|date:"Y-m-d H:i" }}
+                        </span>
+
+                        {% if is_manager and not comment.is_deleted %}
+                        <button type="button" class="comment-delete-btn" data-comment-id="{{ comment.comment_id }}">
+                            삭제
+                        </button>
+                        {% endif %}
+                    </div>
+
+                   
+                        {% if comment.is_deleted %}
+                            <p class="comment-content-delete">
+                                관리자에 의해 삭제된 댓글입니다.
+                                {% if is_manager %}
+                                    {{ comment.comment|linebreaksbr }}
+                                {% endif %}
+                            </p>
+                        {% else %}
+                            <p class="comment-content">{{ comment.comment|linebreaksbr }}</p>
+                        {% endif %}
+                  
+                </li>
+                {% empty %}
+                <li class="comment-empty">아직 등록된 댓글이 없습니다.</li>
+                {% endfor %}
+            </ul>
+
+            <!-- 댓글 작성 폼 -->
+             
+            <form method="post" action="{% url 'board:comment' board_name article.article_id %}" class="comment-form">
+                {% csrf_token %}
+                <label for="comment" class="form-label">댓글 쓰기</label>
+                <textarea id="comment" name="content" class="comment-textarea" rows="3" placeholder="댓글을 입력하세요"
+                    required></textarea>
+                <div class="comment-btn-box">
+                    <button type="submit" class="btn btn-submit">등록</button>
+                </div>
+            </form>
+        </section>
+    </div>
+</div>
+
+{% endblock %}

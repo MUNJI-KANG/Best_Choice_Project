@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% load static %}
+    <link rel="icon" href="{% static 'favicon.ico' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'common/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'common/favicon-16x16.png' %}">
+    <!-- 웹폰트: LINE Seed Sans KR (로고 톤과 어울리는 둥근 산세리프) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/naver/LINESeedKR/LINESeedKR.css" />
+    <link rel="stylesheet" href="{% static 'common/css/common.css' %}">
+    <link rel="stylesheet" href="{% static 'common/css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'common/css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'common/css/toast.css' %}">
+    {% block css %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'common/css/responsive.css' %}">
+    {% block template_css %}{% endblock %}
+
+    <script src="{% static 'common/js/menu.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="{% static 'common/js/toast.js' %}"></script>
+
+    {% block script1 %}{% endblock %}
+
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body data-url-name="{{ request.resolver_match.url_name }}">
+
+    <!-- 헤더 -->
+    <div class="layout-header-wrapper">
+        {% include 'common/layout/header.html' %}
+    </div>
+
+    <!-- 메시지 표시 영역 (모든 페이지에서 일관되게 표시, 로그인/공지/이벤트/메인 페이지/관리자 상세 페이지 제외) -->
+    {% if messages %}
+        {% if request.resolver_match.url_name != 'login' and request.resolver_match.url_name != 'notice' and request.resolver_match.url_name != 'event' and request.resolver_match.url_name != 'index' and request.resolver_match.url_name != 'manager_post_detail' and request.resolver_match.url_name != 'manager_notice_detail' and request.resolver_match.url_name != 'manager_event_detail' %}
+            <div class="message-area" style="max-width: 1400px; margin: 20px auto; padding: 0 20px;">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}" style="padding: 12px 16px; margin-bottom: 10px; border-radius: 4px; background-color: {% if message.tags == 'success' %}#d4edda{% elif message.tags == 'error' %}#f8d7da{% else %}#d1ecf1{% endif %}; color: {% if message.tags == 'success' %}#155724{% elif message.tags == 'error' %}#721c24{% else %}#0c5460{% endif %}; border: 1px solid {% if message.tags == 'success' %}#c3e6cb{% elif message.tags == 'error' %}#f5c6cb{% else %}#bee5eb{% endif %};">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- 메시지 소비만 하기 (표시하지 않음) -->
+            {% for message in messages %}{% endfor %}
+        {% endif %}
+    {% endif %}
+
+    <!-- 페이지 컨텐츠 -->
+    {% block contents %}{% endblock %}
+
+    <!-- 카카오 재가입 안내 팝업 -->
+    {% if request.session.kakao_rejoin_message %}
+    <div id="kakaoRejoinModal" class="rejoin-modal" style="display: flex;">
+        <div class="rejoin-modal-backdrop"></div>
+        <div class="rejoin-modal-content">
+            <h3>재가입 안내</h3>
+            <p>탈퇴한 이력이 있어 자동으로 재가입 처리 되었습니다.</p>
+            <button type="button" id="closeRejoinModal" class="btn-close-rejoin">확인</button>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modal = document.getElementById('kakaoRejoinModal');
+            const closeBtn = document.getElementById('closeRejoinModal');
+            const backdrop = modal.querySelector('.rejoin-modal-backdrop');
+            
+            function closeModal() {
+                modal.style.display = 'none';
+                // 세션에서 플래그 제거를 위해 서버에 요청 (선택사항)
+                fetch('/member/clear-rejoin-message/', {method: 'POST', headers: {'X-CSRFToken': '{{ csrf_token }}'}})
+                    .catch(err => console.log('세션 정리 실패:', err));
+            }
+            
+            if (closeBtn) closeBtn.addEventListener('click', closeModal);
+            if (backdrop) backdrop.addEventListener('click', closeModal);
+        });
+    </script>
+    {% endif %}
+
+    <!-- 푸터 -->
+    <div class="layout-footer-wrapper">
+        {% include 'common/layout/footer.html' %}
+    </div>
+
+    {% block script3 %}{% endblock %}
+</body>
+</html>

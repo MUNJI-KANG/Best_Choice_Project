@@ -1,0 +1,271 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'member/css/mypage_base.css' %}" />
+<link rel="stylesheet" href="{% static 'member/css/mypage_info_edit.css' %}" />
+<style>
+.btn-edit-complete:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* 정보 입력 안내 모달 */
+.profile-complete-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-complete-modal.show {
+    display: flex;
+}
+
+.profile-complete-modal-content {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    animation: modalSlideIn 0.3s ease-out;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.profile-complete-modal-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.profile-complete-modal-icon {
+    width: 40px;
+    height: 40px;
+    background: #4A90E2;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.profile-complete-modal-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #1A2A43;
+    margin: 0;
+}
+
+.profile-complete-modal-body {
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 25px;
+}
+
+.profile-complete-modal-body ul {
+    margin: 15px 0;
+    padding-left: 25px;
+}
+
+.profile-complete-modal-body li {
+    margin: 8px 0;
+}
+
+.profile-complete-modal-footer {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.profile-complete-modal-btn {
+    background: #4A90E2;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.profile-complete-modal-btn:hover {
+    background: #357ABD;
+}
+</style>
+{% endblock %}
+
+{% block script1 %}
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    const MEMBER_EDIT_URL = '{% url "member:edit" %}';
+    const MEMBER_INFO_URL = '{% url "member:info" %}';
+    const SHOW_PROFILE_MODAL = {{ show_profile_complete_modal|yesno:"true,false" }};
+</script>
+<script src="{% static 'member/js/info_edit.js' %}"></script>
+{% endblock %}
+
+{% block contents %}
+<!-- 정보 입력 안내 모달 -->
+<div id="profileCompleteModal" class="profile-complete-modal">
+    <div class="profile-complete-modal-content">
+        <div class="profile-complete-modal-header">
+            <div class="profile-complete-modal-icon">ℹ️</div>
+            <h3 class="profile-complete-modal-title">추가 정보 입력이 필요합니다</h3>
+        </div>
+        <div class="profile-complete-modal-body">
+            <p>카카오 로그인으로 가입하신 것을 환영합니다!</p>
+            <p>서비스를 원활하게 이용하시려면 아래 정보를 입력해주세요:</p>
+            <ul>
+                <li><strong>닉네임</strong>: 다른 사용자에게 표시될 이름</li>
+                <li><strong>생년월일</strong>: 서비스 이용을 위한 필수 정보</li>
+                <li><strong>성별</strong>: 맞춤 서비스 제공을 위한 정보</li>
+                <li><strong>주소</strong>: 시설 예약 및 모집글 작성 시 필요</li>
+                <li><strong>전화번호</strong>: 예약 확인 및 연락을 위한 정보</li>
+            </ul>
+            <p>정보를 입력하신 후 수정 완료 버튼을 눌러주세요.</p>
+        </div>
+        <div class="profile-complete-modal-footer">
+            <button type="button" class="profile-complete-modal-btn" onclick="closeProfileModal()">확인</button>
+        </div>
+    </div>
+</div>
+
+<div class="register-container">
+  <div class="register-wrapper">
+
+    <div class="register-brand">
+      <h2>My Page</h2>
+      <ul class="register-brand-features">
+        <li><a href="{% url 'member:info' %}" class="{% if request.path == '/member/info/' or request.path == '/member/edit/' %}active{% endif %}">내 정보</a></li>
+        <li><a href="{% url 'member:myreservation' %}">내 예약 내역</a></li>
+        <li><a href="{% url 'member:myrecruitment' %}">내 모집글</a></li>
+        <li><a href="{% url 'member:myarticle' %}">내 게시글</a></li>
+        <li><a href="{% url 'member:myjoin' %}">내 참여 내역</a></li>
+      </ul>
+    </div>
+
+    <main class="main">
+    <h2>마이페이지 > 정보 수정</h2>
+
+    <section class="mypage-profile">
+        <form class="mypage-form" method="post" action="{% url 'member:edit' %}">
+            {% csrf_token %}
+
+            <div class="info-group">
+                <label>이름</label>
+                <input type="text" name="name" value="{{ name }}" readonly>
+            </div>
+
+            <div class="info-group">
+                <label>아이디</label>
+                <input type="text" name="user_id" value="{{ user_id }}" readonly>
+            </div>
+
+            <div class="info-group">
+                <label>닉네임</label>
+                <input type="text" name="nickname" value="{{ nickname }}">
+            </div>
+
+            <div class="info-group">
+                <label>생년월일</label>
+                <input type="text" name="birthday" value="{{ birthday }}" readonly>
+            </div>
+
+            <!-- 전화번호 3개 input -->
+            <div class="info-group">
+                <label>전화번호</label>
+                    <div class="info-group-phone">
+                        <input type="text" id="phone1" maxlength="3" class="form-input"
+                            value="{{ phone_num|slice:':3' }}">-
+                        <input type="text" id="phone2" maxlength="4" class="form-input"
+                            value="{{ phone_num|slice:'4:8' }}">-
+                        <input type="text" id="phone3" maxlength="4" class="form-input"
+                            value="{{ phone_num|slice:'9:' }}">
+                    </div>
+                <input type="hidden" id="phone" name="phone" value="{{ phone_num }}">
+            </div>
+
+            <!-- 주소 영역 (주인님 파일 그대로 유지) -->
+            <div class="info-group info-group-address">
+                <label>주소</label>
+                <div class="address-row">
+                    <div class="form-row" style="margin-bottom: 10px;">
+                        <input type="text" id="address" name="address" class="form-input"
+                           placeholder="주소 검색 버튼을 눌러주세요"
+                           value="{% if addr1 %}{{ addr1 }}{% if addr2 %} {{ addr2 }}{% endif %}{% endif %}"
+                           readonly/>
+                        <button type="button" id="addressSearchBtn" class="check-btn small-btn">
+                            주소 검색
+                        </button>
+                    </div>
+
+                    <input type="text" id="address_detail" name="address_detail"
+                           class="form-input" placeholder="상세주소" value="{{ addr3 }}" style="margin-bottom:10px;">
+
+                    <input type="hidden" id="address_data" name="address_data" value="">
+                    <input type="hidden" id="addr1" name="addr1" value="{{ addr1 }}">
+                    <input type="hidden" id="addr2" name="addr2" value="{{ addr2 }}">
+                    <input type="hidden" id="addr3" name="addr3" value="{{ addr3 }}">
+
+                </div>
+            </div>
+
+            <div class="mypage-btn-box">
+                <button type="submit" class="btn-edit-complete">수정 완료</button>
+            </div>
+        </form>
+    </section>
+
+    </main>
+
+  </div>
+</div>
+
+<script>
+// 페이지 로드 시 모달 표시
+if (SHOW_PROFILE_MODAL) {
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('profileCompleteModal');
+        if (modal) {
+            modal.classList.add('show');
+        }
+    });
+}
+
+// 모달 닫기 함수
+function closeProfileModal() {
+    const modal = document.getElementById('profileCompleteModal');
+    if (modal) {
+        modal.classList.remove('show');
+    }
+}
+
+// 모달 배경 클릭 시 닫기
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('profileCompleteModal');
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeProfileModal();
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

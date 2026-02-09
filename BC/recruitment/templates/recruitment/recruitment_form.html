@@ -1,0 +1,368 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'recruitment/css/recruitment_list.css' %}" />
+<link rel="stylesheet" href="{% static 'recruitment/css/recruitment_write.css' %}" />
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+{% endblock %}
+
+
+{% block title %}
+모집할래 - 할래말래
+{% endblock %}
+
+{% block script1 %}
+<script>
+    {% if mode == "edit" %}
+        // 수정 모드 → 기존 내용 주입
+        window.initialContent = `{{ recruit.contents|escapejs }}`;
+    {% else %}
+        // 작성 모드 → 빈값
+        window.initialContent = ``;
+    {% endif %}
+    
+</script>
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="{% static 'recruitment/js/recruitment_write.js' %}"></script>
+<script src="{% static 'recruitment/js/recruitment_update.js' %}"></script>
+<script src="{% static 'common/js/board/editor.js' %}"></script>
+{% endblock %}
+
+{% block contents %}
+
+
+<!-- Hero 섹션 -->
+<div class="board-hero recruitment-hero">
+  {% if mode == 'create' %}
+  <h2>모집할래 작성</h2>
+  {% else %}
+  <h2>모집할래 수정</h2>
+  {% endif %}
+</div>
+
+
+
+
+<!-- 서브 컨테이너 -->
+<div class="sub-container">
+  <div class="sub-content">
+
+    <!-- 작성 폼 -->
+    <form id="recruit-form"
+          class="recruitmnent-write-form"
+          method="POST"
+          action="{% if mode == 'create' %}{% url 'recruitment:recruitment_write' %}
+                {% else %}{% url 'recruitment:recruitment_update' recruit.community_id %}{% endif %}" 
+          enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <div class="form-wrapper">
+        <!-- 1. 제목 -->
+        <div class="form-group full-row">
+          <label class="form-label">제목</label>
+          <input type="text" class="form-input" name="title"
+            value="{% if mode == 'edit' %}{{recruit.title}}{% endif %}"
+            {% if mode == "edit" %} readonly {% endif %} 
+            required>
+        </div>
+
+        <!-- 2. 구 / 종목 / 모집인원 / 비용 -->
+        <div class="form-row">
+          <!-- 시/도 -->
+          <div class="form-group small">
+            <label class="form-label">시 / 도</label>
+
+            {% if mode == "edit" %}
+              <input type="text"
+                     class="form-input"
+                     name="region"
+                     value="{{ recruit.region }}"
+                     readonly>
+            {% else %}
+              <select id="sido"
+                      class="form-input"
+                      name="sido"
+                      required>
+                <option value="">시/도 선택</option>
+              </select>
+            {% endif %}
+          </div>
+
+          <!-- 구/군 -->
+          <div class="form-group small">
+            <label class="form-label">구 / 군</label>
+
+            {% if mode == "edit" %}
+              <input type="text"
+                     class="form-input"
+                     name="region2"
+                     value="{{ recruit.region2 }}"
+                     readonly>
+            {% else %}
+              <select id="sigungu"
+                      class="form-input"
+                      name="sigungu"
+                      required>
+                <option value="">구/군 선택</option>
+              </select>
+            {% endif %}
+          </div>
+
+          <!-- 종목 -->
+          <div class="form-group small">
+            <label class="form-label">종목</label>
+
+            {% if mode == "edit" %}
+              <input type="text"
+                     class="form-input"
+                     name="sport_type"
+                     value="{{ recruit.sport_type }}"
+                     readonly>
+            {% else %}
+              <input type="text"
+                     class="form-input"
+                     name="sport"
+                     required>
+            {% endif %}
+          </div>
+
+          <!-- 모집 인원 -->
+          <div class="form-group small">
+            <label class="form-label">모집 인원</label>
+
+            {% if mode == "edit" %}
+              <input type="number"
+                     class="form-input"
+                     name="num_member"
+                     value="{{ recruit.num_member }}"
+                     readonly>
+            {% else %}
+              <input type="number"
+                     class="form-input"
+                     name="personnel"
+                     min="1"
+                     required>
+            {% endif %}
+          </div>
+        </div>
+        
+
+
+
+        <!-- 2-1. 마감날짜 (작성/수정 모두 표시) -->
+        <div class="form-row">
+          <div class="form-group small">
+            <label class="form-label">마감날짜</label>
+
+            <div class="radio-group">
+
+              <!-- 마감일 설정 -->
+              <label>
+                <input type="radio"
+                      name="end_type"
+                      value="date"
+                      {% if mode == "edit" %}
+                          {% if not is_always_open %}checked{% endif %}
+                          disabled
+                      {% else %}
+                          checked
+                      {% endif %}>
+                마감일 설정
+              </label>
+
+              <!-- 상시 모집 -->
+              <label style="margin-left: 10px;">
+                <input type="radio"
+                      name="end_type"
+                      value="always"
+                      {% if mode == "edit" and is_always_open %}
+                          checked
+                      {% endif %}
+                      {% if mode == "edit" %}disabled{% endif %}>
+                상시 모집
+              </label>
+            </div>
+
+            <!-- 날짜 입력 -->
+            <input type="date"
+                  name="end_set_date"
+                  class="form-input"
+                  id="endDateInput"
+
+                  {% if mode == "edit" %}
+                        {% if not is_always_open %}
+                            value="{{ end_status.end_set_date|date:'Y-m-d' }}"
+                        {% endif %}
+                        disabled
+                  {% else %}
+                        min="{{ today }}"
+                        required
+                  {% endif %}
+            >
+          </div>
+        </div>
+
+
+        <!-- 3. 시설 -->
+        <div class="form-group full-row">
+          <label class="form-label">시설</label>
+          <select name="reservation_choice"
+                  id="reservation_choice"
+                  class="form-input">
+            <option value="">시설 선택</option>
+
+            {% for grp in my_reservation_slots %}
+              <option value="{{ grp.reservation.reservation_id }}"
+                {% if mode == "edit" and grp.reservation.reservation_id == current_reservation_id %}
+                  selected
+                {% endif %}>
+                {{ grp.facility_name }}
+                ( {{ grp.date }}
+                  {% for t in grp.times %}
+                    {{ t.start_time }}~{{ t.end_time }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                )
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+
+
+        <!-- 4. 내용 -->
+        <div class="form-group full-row">
+          <label class="form-label">내용</label>
+          <div id="editor"></div>
+          <input type="hidden" name="content" id="contentInput" required>
+        </div>
+
+        <!-- 5. 오픈카톡 URL -->
+        <div class="form-group full-row">
+          <label class="form-label">오픈카톡 URL</label>
+
+          {% if mode == "edit" %}
+            <!-- update 뷰에서는 현재 chat_url 파라미터를 안 쓰고 있긴 하지만,
+                 기존 템플릿과 호환 위해 name 그대로 유지 -->
+            <input type="text"
+                   class="form-input"
+                   name="chat_url"
+                   value="{{ recruit.chat_url }}">
+          {% else %}
+            <input type="text"
+                   class="form-input"
+                   name="openchat_url">
+          {% endif %}
+        </div>
+
+
+        <!-- 6-1. 기존 첨부파일 (수정 모드에서만) -->
+        {% if mode == "edit" and existing_files %}
+        <section class="attachment-section">
+          <h3 class="section-title">현재 첨부파일</h3>
+          <ul class="attachment-list">
+            {% for f in existing_files %}
+              <li class="attachment-item">
+                <a href="{{ MEDIA_URL }}{{ f.path }}"
+                   target="_blank"
+                   class="attachment-link">
+                  📎 {{ f.file_name }}
+                </a>
+                <label class="attachment-delete">
+                  <input type="checkbox"
+                         name="delete_files"
+                         value="{{ f.pk }}">
+                  삭제
+                </label>
+              </li>
+            {% endfor %}
+          </ul>
+        </section>
+        {% endif %}
+
+        <!-- 6-2. 신규 첨부파일 업로드 -->
+        <section class="attachment-upload-section">
+          <label class="form-label">첨부파일</label>
+          <div class="file-upload-wrapper">
+            <input type="file"
+                   name="files"
+                   {% if mode == "edit" %}
+                     id="updateFileInput"
+                   {% else %}
+                     id="fileInput"
+                   {% endif %}
+                   class="file-input"
+                   multiple>
+
+            <label for="{% if mode == 'edit' %}updateFileInput{% else %}fileInput{% endif %}"
+                   class="file-upload-btn">
+              <span>📎 파일 선택</span>
+            </label>
+
+            <div class="file-list"
+                 id="{% if mode == 'edit' %}updateFileList{% else %}fileList{% endif %}"></div>
+          </div>
+        </section>
+
+        <!-- 7. 버튼 -->
+        <div class="btn-row">
+          <button type="submit"
+                  class="btn {% if mode == 'create' %}btn-submit{% else %} btn-update {% endif %}">
+            {% if mode == "edit" %}수정{% else %}작성{% endif %}
+          </button>
+          <button type="button" class="btn btn-list">목록</button>
+        </div>
+
+      </div>
+    </form>
+
+  </div>
+</div>
+
+
+{% endblock %}
+{% block script3 %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const fileInput = document.querySelector('input[type="file"]');
+    if (!fileInput) return;
+
+    fileInput.addEventListener("change", function() {
+        const maxSize = 2 * 1024 * 1024; // 2MB
+        const files = this.files;
+
+        for (let f of files) {
+            if (f.size > maxSize) {
+                alert(`"${f.name}" 은(는) 2MB를 초과하여 업로드할 수 없습니다.`);
+                this.value = "";  // 선택한 파일 전체 초기화
+                return;
+            }
+        }
+    });
+
+    const radios = document.querySelectorAll('input[name="end_type"]');
+    const endDateInput = document.getElementById("endDateInput");
+
+    function toggleEndDate() {
+      const val = document.querySelector('input[name="end_type"]:checked').value;
+      if (val === "always") {
+        endDateInput.disabled = true;
+        endDateInput.required =  false;
+        endDateInput.value = "";
+      } else {
+        endDateInput.disabled = false;
+        endDateInput.required =  true;
+      }
+    }
+
+    radios.forEach(r => r.addEventListener("change", toggleEndDate));
+    toggleEndDate();
+
+
+    
+
+});
+
+</script>
+
+
+{% endblock %}

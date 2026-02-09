@@ -1,0 +1,176 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}회원 관리{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'manager/css/member_list.css' %}">
+{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        alert("{{ msg }}");
+    {% endfor %}
+</script>
+{% endif %}
+
+
+<div class="page-section">
+
+    <div class="page-title-section">
+        <h1 class="page-title">회원 관리</h1>
+        <p class="page-subtitle">전체 회원 조회 및 검색</p>
+    </div>
+
+    <!-- 검색 영역 -->
+    <div class="card" style="margin-bottom: 1.2rem;">
+        <form method="get" class="member-search-form">
+            <div class="search-row">
+                <select name="search" class="search-select">
+                    <option value="user_id" {% if search == 'user_id' %}selected{% endif %}>아이디</option>
+                    <option value="name" {% if search == 'name' %}selected{% endif %}>이름</option>
+                    <option value="nickname" {% if search == 'nickname' %}selected{% endif %}>닉네임</option>
+                </select>
+
+                <input type="text" name="q" class="search-input"
+                       placeholder="검색어를 입력하세요" value="{{ q }}">
+
+                <button class="btn-search">검색</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div class="filter-container">
+        <div class="search-row">
+
+            <select name="member_type"
+                    class="search-select"
+                    onchange="document.location = '?member_type=' + this.value + '&search={{ search }}&q={{ q }}'">
+                <option value="" {% if not member_type %}selected{% endif %}>전체</option>
+                <option value="normal" {% if member_type == 'normal' %}selected{% endif %}>일반회원</option>
+                <option value="kakao" {% if member_type == 'kakao' %}selected{% endif %}>카카오회원</option>
+                <option value="withdraw" {% if member_type == 'withdraw' %}selected{% endif %}>탈퇴회원</option>
+            </select>
+
+            <div class="per-page-wrap">
+                <select id="perPageSelect" class="filter-select" data-current="{{ per_page }}">
+                    <option value="15">15개</option>
+                    <option value="30">30개</option>
+                    <option value="50">50개</option>
+                    <option value="100">100개</option>
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 회원 리스트 테이블 -->
+    <div class="card">
+        <form id="deleteForm" method="post" action="{% url 'manager:member_delete' %}">
+            {% csrf_token %}
+
+            <table class="member-table">
+                <thead>
+                    <tr>
+                        <th class="checkbox-cell"><input type="checkbox" id="checkAll"></th>
+                        <th>아이디</th>
+                        <th>이름</th>
+                        <th>닉네임</th>
+                        <th>연락처</th>
+                        <th>주소</th>
+                        <th>상태</th>
+                    </tr>
+                </thead>
+
+                <tbody class="member-list">
+                    {% for user in member_list %}
+                    <tr class="{% if user.delete_yn == 1 %}withdraw-row{% elif user.delete_yn == 2 %}deleted-row{% endif %}"{% if user.delete_yn == 1 %}data-reason="{{ user.delete_reason|default:'사유 없음' }}"{% endif %}>
+                        <td class="checkbox-cell">
+                            <input type="checkbox" name="ids" value="{{ user.member_id }}" data-status="{{ user.delete_yn }}">
+                        </td>
+                        <td>{{ user.user_id }}</td>
+                        <td>{{ user.name }}</td>
+                        <td>{{ user.nickname }}</td>
+                        <td>{{ user.phone_num }}</td>
+                        <td>{{ user.full_address }}</td>
+                        <td>
+                            {% if user.delete_yn == 0 %}
+                                <span class="status-active">현재 회원</span>
+                            {% elif user.delete_yn == 1 %}
+                                <span class="status-withdraw">회원 탈퇴</span>
+                            {% elif user.delete_yn == 2 %}
+                                <span class="status-deleted">관리자 탈퇴</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- 삭제 버튼 -->
+            <div class="btn-wrap">
+                <button type="button" class="restore-btn" id="restoreBtn">회원 복구</button>
+                <button type="submit" class="delete-btn">회원 삭제</button>
+            </div>
+        </form>
+
+         <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a class="page-btn"
+                href="?page={{ page_obj.previous_page_number }}&search={{ search }}&q={{ q }}&member_type={{ member_type }}&per_page={{ per_page }}">◀ 이전</a>
+            {% else %}
+                <span class="page-btn disabled">◀ 이전</span>
+            {% endif %}
+
+            {% for num in page_range %}
+                {% if num == page_obj.number %}
+                    <span class="page-btn active">{{ num }}</span>
+                {% else %}
+                    <a class="page-btn"
+                    href="?page={{ num }}&search={{ search }}&q={{ q }}&member_type={{ member_type }}&per_page={{ per_page }}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a class="page-btn"
+                href="?page={{ page_obj.next_page_number }}&search={{ search }}&q={{ q }}&member_type={{ member_type }}&per_page={{ per_page }}">다음 ▶</a>
+            {% else %}
+                <span class="page-btn disabled">다음 ▶</span>
+            {% endif %}
+        </div>
+
+    </div>
+
+
+    <div id="reasonModal" class="modal" style="display:none;">
+        <div class="modal-overlay"></div>
+
+        <div class="modal-box small-modal">
+            <div class="modal-header">
+                <h3>회원 탈퇴 사유</h3>
+            </div>
+
+            <div class="modal-body">
+                <p id="reasonText" style="white-space:pre-wrap;"></p>
+            </div>
+
+            <div class="modal-footer">
+                    <button type="button" class="btn btn--outline" id="closeReasonModal">닫기</button>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+<script src="{% static 'manager/js/member_list.js' %}"></script>
+{% endblock %}

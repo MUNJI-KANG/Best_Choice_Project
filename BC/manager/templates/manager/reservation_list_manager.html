@@ -1,0 +1,178 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}예약 목록 관리{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'manager/css/facility_add_manager.css' %}">
+    <link rel="stylesheet" href="{% static 'manager/css/reservation_list.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="facility-box">
+        <h1 class="box-header">
+            {% if facility_info %}
+                {{ facility_info.faci_nm }} - 
+            {% endif %}
+            {% if reservation_type == 'today' %}
+                금일 활성 예약
+            {% else %}
+                누적 예약
+            {% endif %}
+        </h1>
+        
+        {% if facility_info %}
+        <div style="margin-bottom: 20px;">
+            <a href="{% url 'manager:facility_list' %}" class="btn-back" style="display: inline-block; padding: 8px 16px; background: #f0f0f0; border-radius: 4px; text-decoration: none; color: #333;">← 시설 목록으로</a>
+        </div>
+        {% endif %}
+        
+        <!-- 검색 영역 -->
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+            <select id="searchTypeSelect" class="filter-select" style="width: 120px;">
+                <option value="reservation_num" {% if search_type == 'reservation_num' %}selected{% endif %}>예약번호</option>
+                <option value="member_id" {% if search_type == 'member_id' %}selected{% endif %}>회원 ID</option>
+                <option value="member_name" {% if search_type == 'member_name' %}selected{% endif %}>회원명</option>
+            </select>
+            <input type="text" id="searchKeywordInput" class="filter-select" placeholder="검색어를 입력하세요" value="{{ search_keyword }}" style="flex: 1; padding: 8px 12px;">
+            <button id="searchBtn" class="filter-select" style="padding: 8px 20px; background: #3b7cff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                검색
+            </button>
+            {% if search_keyword %}
+            <button id="clearSearchBtn" class="filter-select" style="padding: 8px 20px; background: #999; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">
+                초기화
+            </button>
+            {% endif %}
+        </div>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 20px;">
+            <div style="display: flex; align-items: center; gap: 12px;">
+                {% if reservation_type == 'all' %}
+                <select id="statusSelect" class="filter-select">
+                    <option value="active" {% if status == 'active' %}selected{% endif %}>예약완료</option>
+                    <option value="cancelled" {% if status == 'cancelled' %}selected{% endif %}>예약취소</option>
+                </select>
+                {% endif %}
+            </div>
+            
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <select id="sortSelect" class="filter-select">
+                    <option value="reg_date" {% if sort_by == 'reg_date' %}selected{% endif %}>예약 발생 시간 순</option>
+                    <option value="timeslot" {% if sort_by == 'timeslot' %}selected{% endif %}>시설 예약 시간 순</option>
+                </select>
+                
+                <select id="perPageSelect" class="filter-select">
+                    <option value="15">15개</option>
+                    <option value="30">30개</option>
+                    <option value="50">50개</option>
+                    <option value="100">100개</option>
+                </select>
+            </div>
+        </div>
+        
+        <script id="reservationData" type="application/json">{{ reservation_json|safe }}</script>
+        
+        <table class="facility-table">
+            <thead class="facility-table-header">
+                <tr>
+                    <th style="width: 50px;">번호</th>
+                    <th style="width: 120px;">예약번호</th>
+                    <th style="width: 120px;">종목</th>
+                    <th>이용 시간</th>
+                    <th style="width: 120px;">회원 ID</th>
+                    <th style="width: 200px;">회원 전화번호</th>
+                    <th style="width: 180px;">예약 일자</th>
+                    {% if reservation_type == 'all' and status == 'cancelled' %}
+                    <th style="width: 180px;">취소 일자</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody id="reservationList"></tbody>
+        </table>
+
+        <!-- 페이징 -->
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a class="page-btn arrow"
+                   href="?page={{ page_obj.previous_page_number }}&per_page={{ per_page }}&facility_id={{ facility_id }}&type={{ reservation_type }}&sort={{ sort_by }}{% if reservation_type == 'all' %}&status={{ status }}{% endif %}{% if search_keyword %}&search_type={{ search_type }}&search_keyword={{ search_keyword }}{% endif %}">◀ 이전</a>
+            {% else %}
+                <span class="page-btn arrow disabled">◀ 이전</span>
+            {% endif %}
+
+            {% for num in block_range %}
+                {% if num == page_obj.number %}
+                    <span class="page-btn active">{{ num }}</span>
+                {% else %}
+                    <a class="page-btn"
+                       href="?page={{ num }}&per_page={{ per_page }}&facility_id={{ facility_id }}&type={{ reservation_type }}&sort={{ sort_by }}{% if reservation_type == 'all' %}&status={{ status }}{% endif %}{% if search_keyword %}&search_type={{ search_type }}&search_keyword={{ search_keyword }}{% endif %}">{{ num }}</a>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+                <a class="page-btn arrow"
+                   href="?page={{ page_obj.next_page_number }}&per_page={{ per_page }}&facility_id={{ facility_id }}&type={{ reservation_type }}&sort={{ sort_by }}{% if reservation_type == 'all' %}&status={{ status }}{% endif %}{% if search_keyword %}&search_type={{ search_type }}&search_keyword={{ search_keyword }}{% endif %}">다음 ▶</a>
+            {% else %}
+                <span class="page-btn arrow disabled">다음 ▶</span>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- 예약 상세 팝업 모달 -->
+    <div id="reservationModal" class="reservation-modal">
+        <div class="modal-content" style="position: relative;">
+            <span class="close-modal" onclick="closeReservationModal()">&times;</span>
+            <div class="modal-header">예약 상세 정보</div>
+            
+            <div class="modal-row">
+                <span>예약번호:</span>
+                <div class="modal-value" id="modal-reservation-num"></div>
+            </div>
+            <div class="modal-row">
+                <span>시설명:</span>
+                <div class="modal-value" id="modal-facility-name"></div>
+            </div>
+            <div class="modal-row">
+                <span>주소:</span>
+                <div class="modal-value" id="modal-facility-address"></div>
+            </div>
+            <div class="modal-row">
+                <span>예약자:</span>
+                <div class="modal-value" id="modal-member"></div>
+            </div>
+            <div class="modal-row">
+                <span>예약자 연락처:</span>
+                <div class="modal-value" id="modal-member-tel"></div>
+            </div>
+
+            <div class="modal-row">
+                <span>예약한 날짜:</span>
+                <div class="modal-value" id="modal-reg-date"></div>
+            </div>
+            <div class="modal-row">
+                <span>이용 시간:</span>
+                <div class="modal-value" id="modal-time-slots"></div>
+            </div>
+            
+            <!-- 기본 버튼 -->
+            <div class="modal-buttons" id="modal-default-buttons">
+                <button class="modal-btn btn-ok" onclick="closeReservationModal()">확인</button>
+                <button class="modal-btn btn-cancel" onclick="startCancelMode()" id="startCancelBtn">예약 취소</button>
+            </div>
+            
+            <!-- 취소 모드 버튼 -->
+            <div class="modal-buttons" id="modal-cancel-buttons" style="display:none;">
+                <button class="modal-btn btn-ok" onclick="cancelSelectedSlots()">선택 취소 확정</button>
+                <button class="modal-btn btn-cancel" onclick="cancelCancelMode()">취소</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'manager/js/paging.js' %}"></script>
+<script src="{% static 'manager/js/reservation_list.js' %}"></script>
+{% endblock %}
+
+

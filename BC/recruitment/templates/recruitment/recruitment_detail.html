@@ -1,0 +1,367 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block title %}할래말래 - 모집글 상세{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'recruitment/css/recruitment_list.css' %}">
+<link rel="stylesheet" href="{% static 'recruitment/css/recruitment_detail.css' %}">
+{% endblock %}
+
+{% block script1 %}
+
+{% endblock %}
+
+{% block contents %}
+<!-- Hero 섹션 -->
+<div class="board-hero recruitment-hero">
+  <h2>모집할래</h2>
+</div>
+
+
+
+<!-- 리스트랑 동일 레이아웃 -->
+<div class="sub-container page-recruitment">
+  <div class="sub-content">
+
+
+    <!-- 제목 영역 -->
+    <div class="detail-title-box {% if is_deleted %}deleted-post{% endif %}">
+        <h1 class="detail-title-text">{{ recruit.title }}</h1>
+        {% if is_deleted %}
+        <div class="deleted-notice" style="background-color: #fff3cd; color: #856404; padding: 8px 12px; border-radius: 4px; margin-bottom: 10px; border: 1px solid #ffeaa7;">
+            ⚠️ 삭제된 게시글입니다. (삭제 일자: {{ recruit.delete_date|date:"Y-m-d H:i" }})
+        </div>
+        {% endif %}
+        <div class="detail-info-line">
+            <span>작성자: {{ recruit.member_id.nickname }}</span>
+            <span>{{ recruit.reg_date|date:"Y.m.d" }}</span>
+            <span>조회수: {{ recruit.view_cnt }}</span>
+        </div>
+        <br>  
+        
+        
+        
+        <div class="detail-meta">
+            <span class="detail-badge"># 지역 : {{ recruit.region }} {{ recruit.region2 }}</span>
+            <span class="detail-badge"># 운동 : {{ recruit.sport_type }}</span>
+
+            <span class="detail-badge {% if is_closed_or_full %}detail-badge-closed{% endif %}">
+                # 모집 인원 : {{ recruit.num_member }}명
+                {% if is_closed_or_full %}
+                    · 모집 마감
+                {% else %}
+                    {% if remaining_slots > 0 %}
+                        · 잔여 {{ remaining_slots }}명
+                    {% endif %}
+                {% endif %}
+            </span>
+
+
+
+
+            {% if reservation_slots %}
+            <span class="detail-badge"># 시설 : {{ reservation_slots.0.facility.faci_nm }}</span>
+            <!-- <div>{{ reservation_slots.0.facility.faci_nm }}</div> -->
+            {% for grp in reservation_slots %}
+                <span class="detail-badge">
+
+                    <div class="detail-reservation">
+                        
+                        <div>
+                            <div>{{ grp.date }}
+                            {% for t in grp.times %} {{ t.start_time }} ~ {{ t.end_time }} {% endfor %}</div>
+                        </div>
+                    </div>
+                </span>
+            {% endfor %}
+            
+            {% else %}
+            <span class="detail-badge">예약된 시설이 없습니다.</span>
+            {% endif %}            
+            
+            <span class="detail-badge">
+                # 마감일자 :
+                {% if is_always_open %}
+                    상시 모집
+                {% else %}
+                    {{ end_status.end_set_date|date:"Y-m-d" }}
+                {% endif %}
+            </span>
+
+        </div>
+
+    </div>
+
+    <hr class="detail-hr">
+
+    <!-- 본문 -->
+    <div class="detail-content-box">{{ recruit.contents|safe }}</div>
+
+    <section class="chat-section">
+        {% if recruit.chat_url %}
+        <div class="chat-box">
+            <a href="{{ recruit.chat_url }}" target="_blank" class="chat-link">
+                👉 오픈채팅 참여하기
+            </a>         
+        </div>
+        {% else %}
+        <!-- <div class="chat-box">
+        오픈 채팅이 없습니다.
+        </div> -->
+        {% endif %}
+    </section>
+
+    <!-- 첨부파일 섹션 -->
+        {% if add_info %}
+        <section class="detail-section attachment-section">
+        <h3 class="section-title">첨부파일</h3>
+
+        <ul class="attachment-list">
+            {% for f in add_info %}
+            <li class="attachment-item">
+                <a href="{{ f.path }}" class="attachment-link" download>
+                <span class="attachment-icon">📎</span>
+                <span class="attachment-name">
+                    {{ f.file_name }}
+                </span>
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        </section>
+        {% endif %}
+
+
+
+
+    
+<!-- 버튼(들) -->
+<div class="detail-btn-box">
+
+
+
+    {% if is_owner or is_manager %}
+        {# ✅ 모집 마감 버튼 (작성자 + 관리자) #}
+        {% if not is_deleted %}
+            {% if not is_closed %}
+                <form method="post"
+                      action="{% url 'recruitment:recruitment_close' recruit.community_id %}"
+                      class="detail-inline-form"
+                      onsubmit="return confirm('정말 모집을 마감하시겠습니까?');">
+                    {% csrf_token %}
+                    <button type="submit" class="detail-btn btn-close">
+                        모집 마감
+                    </button>
+                </form>
+            {% else %}
+                <span class="detail-btn btn-closed-label">
+                    모집 마감됨
+                </span>
+            {% endif %}
+        {% endif %}
+        
+        <!-- 작성자(대기,참여인원 0일때만) 관리자 삭제 -->
+        <form method="post"
+        action="{% url 'recruitment:recruitment_delete' recruit.community_id %}"
+        onsubmit="return confirm('정말 글을 삭제하시겠습니까?');">
+        {% csrf_token %}
+        <button type="submit" class="detail-btn btn-delete" id="btnCloseRecruit">
+            삭제하기
+        </button>
+        </form>
+        
+
+
+        {% if is_owner %}
+        <!-- 글 수정 -->
+        <a href="{% url 'recruitment:recruitment_update' recruit.community_id %}"
+        class="detail-btn btn-edit">수정하기</a>
+        {% endif %}
+            
+
+
+
+
+    {% else %}
+        {# 🔽 일반 사용자 영역 #}
+        {% if is_closed_or_full or is_closed %}
+            <span class="detail-btn btn-join btn-join-closed">
+                모집 마감
+            </span>
+
+        {% elif is_applied %}
+            {# 이미 참여 신청한 경우 - 상태별로 텍스트 분기 가능 #}
+            {% if my_join.join_status == 1 %}
+                <span class="detail-btn btn-join btn-join-disabled">
+                    승인됨
+                </span>
+            {% else %}
+                <span class="detail-btn btn-join btn-wait-tag"">
+                    대기중
+                </span>
+            {% endif %}
+
+        {% else %}
+            {# 아직 신청 안 한 경우만 참여하기 버튼 노출 #}
+            <a href="{% url 'recruitment:recruitment_join' recruit.community_id %}"
+               class="detail-btn btn-join">
+                참여하기
+            </a>
+        {% endif %}
+    {% endif %}
+
+    <a href="{% url 'recruitment:recruitment_list' %}" class="detail-btn btn-list">목록으로</a>
+</div>
+
+
+
+
+    
+    <!-- ✅ 참여 현황 요약 (배지 스타일) -->
+<div class="join-summary">
+    <span class="join-summary-label">참여 현황</span>
+
+    <span class="status-pill status-pill-approved">
+        참여 {{ approved_count }}명 / 정원 {{ capacity }}명
+    </span>
+
+    <span class="status-pill status-pill-waiting">
+        대기 {{ waiting_rejected_count }}명
+    </span>
+</div>
+
+
+
+    <!-- 참여 여부 -->
+    <!-- 버튼들 밑에, 댓글 섹션 위에 추가 -->
+    {% if is_owner or is_manager %}
+    <section class="join-section">
+        <h3 class="section-title">참여 신청 ({{ join_list|length }})</h3>
+
+        <ul class="join-list">
+            {% for join in join_list %}
+            <li class="join-item">
+                <span class="join-member">{{ join.member_id.nickname }}</span>
+                <span class="join-status
+                    {% if join.join_status == 0 %} status-waiting
+                    {% elif join.join_status == 1 %} status-approved
+                    {% elif join.join_status == 2 %} status-rejected
+                    {% endif %}
+                ">
+                    {% if join.join_status == 0 %}
+                        대기
+                    {% elif join.join_status == 1 %}
+                        참여
+                    {% elif join.join_status == 2 %}
+                        거절
+                    {% else %}
+                        기타
+                    {% endif %}
+                </span>
+
+                <!-- 상태 변경 버튼들 -->
+                <form method="post"
+                    action="{% url 'recruitment:recruitment_update_join_status' recruit.community_id join.id %}"
+                    class="join-status-form">
+                    {% csrf_token %}
+                    <button type="submit" name="status" value="1">승인</button>
+                    <button type="submit" name="status" value="2">거절</button>
+                    <button type="submit" name="status" value="0">대기</button>
+                </form>
+            </li>
+            {% empty %}
+            <li class="join-empty">아직 참여 신청한 사람이 없습니다.</li>
+            {% endfor %}
+        </ul>
+    </section>
+    {% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <hr class="detail-hr">
+
+
+
+    
+        <!-- 댓글 섹션 -->
+        <section class="comment-section">
+            <h3 class="section-title">댓글 ({{ comments|length }})</h3>
+
+            <!-- 댓글 리스트 -->
+            <ul class="comment-list">
+                {% for comment in comments %}
+                <li class="comment-item">
+                    <div class="comment-meta">
+                        <span class="comment-writer {% if comment.member_id.manager_yn %}admin-badge {% elif comment.member_id == recruit.member_id %} author-badge{% endif %}">
+                            {{ comment.member_id.nickname }}{% if comment.member_id.manager_yn %}👑{% elif comment.member_id == recruit.member_id %}(작성자){% endif %}
+                        </span>
+                        <span class="comment-date">{{ comment.reg_date|date:"Y-m-d H:i" }}</span>
+
+            {% if is_manager and comment.delete_date__isnull %}
+            <form method="post"
+                  action="{% url 'recruitment:delete_comment' recruit.community_id comment.comment_id %}"
+                  style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="comment-delete-btn">삭제</button>
+            </form>
+            {% endif %}
+
+                    </div>
+            
+            
+            {% if comment.delete_date %}
+                <p class="comment-content-delete">(관리자에 의해 삭제된 댓글입니다.){% if is_manager %}{{ comment.comment|linebreaksbr }}{% endif %}</p>
+            {% else %}
+                <p class="comment-content">{{ comment.comment|linebreaksbr }}</p>
+            {% endif %}
+
+            
+                </li>
+            {% empty %}
+            <li class="comment-empty">아직 등록된 댓글이 없습니다.</li>
+            {% endfor %}
+            </ul>
+
+
+
+
+
+            <!-- 댓글 입력 폼 -->
+            <form method="post"
+                action="{% url 'recruitment:recruitment_comment' recruit.community_id %}"
+                class="comment-form">                
+                {% csrf_token %}
+                <label for="comment" class="form-label">댓글 쓰기</label>
+                <textarea id="comment" name="content" class="comment-textarea" rows="3" placeholder="댓글을 입력하세요" required></textarea>
+                <div class="comment-btn-box">
+                    <button type="submit" class="btn btn-submit">등록</button>
+                </div>
+            </form>
+        </section>
+
+        
+
+
+
+
+
+
+
+</div>
+</div>
+
+{% endblock %}

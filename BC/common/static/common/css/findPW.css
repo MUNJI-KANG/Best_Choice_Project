@@ -1,0 +1,338 @@
+/* --------------------------------------------------------
+   Reset
+--------------------------------------------------------- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* --------------------------------------------------------
+   데스크탑에서 기존 네비게이션 숨기기
+--------------------------------------------------------- */
+/* 데스크탑에서 기존 네비게이션 숨기기 - 페이지 클래스로 구체성 확보 */
+@media (min-width: 769px) {
+  .findPW-page .header__nav {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+/* --------------------------------------------------------
+   헤더 버튼
+--------------------------------------------------------- */
+.header__findPW-btn {
+  padding: 10px 20px;
+  border: 1px solid var(--color-soft-gray-line);
+  background: var(--color-card-box);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 14px;
+  transition: var(--transition-base);
+}
+
+.header__findPW-btn:hover {
+  background: var(--color-deep-blue);
+  color: var(--color-card-box);
+}
+
+/* --------------------------------------------------------
+   전체 레이아웃
+--------------------------------------------------------- */
+.findPW-container {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
+.findPW-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+/* --------------------------------------------------------
+   카드
+--------------------------------------------------------- */
+.findPW-card {
+  background: var(--color-card-box);
+  border: 1px solid var(--color-soft-gray-line);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-2xl);
+  box-shadow: var(--shadow-xl);
+  max-width: 500px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* PC 전용 배치 */
+@media (min-width: 1024px) {
+  .findPW-wrapper {
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--spacing-2xl);
+    max-width: 1200px;
+  }
+
+  .findPW-card {
+    max-width: 100%;
+  }
+
+  .findPW-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--spacing-2xl);
+    background: linear-gradient(135deg, var(--color-muted-blue), var(--color-muted-green));
+    color: var(--color-card-box);
+  }
+
+  .findPW-brand h2 {
+    font-size: 48px;
+    font-weight: 900;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .findPW-brand p {
+    font-size: 18px;
+    line-height: 1.7;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .findPW-brand-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .findPW-brand-features li::before {
+    content: "✓";
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.25);
+    border-radius: 50%;
+    margin-right: var(--spacing-sm);
+  }
+}
+
+/* 모바일에서 브랜드 숨김 */
+@media (max-width: 1023px) {
+  .findPW-brand {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------------
+   Header Text
+--------------------------------------------------------- */
+.findPW-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.findPW-header h1 {
+  font-size: 32px;
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--color-deep-blue), var(--color-deep-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: var(--spacing-sm);
+}
+
+.findPW-header p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------
+   Form
+--------------------------------------------------------- */
+.findPW-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.form-input {
+  padding: 14px 18px;
+  border: 1px solid var(--color-soft-gray-line);
+  border-radius: var(--radius-lg);
+  font-size: 15px;
+  background: var(--color-card-box);
+  transition: var(--transition-base);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-deep-blue);
+}
+
+/* --------------------------------------------------------
+   임시 비밀번호 모달
+--------------------------------------------------------- */
+.pw-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.pw-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.pw-modal-content {
+  position: relative;
+  max-width: 420px;
+  width: 92%;
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-xl);
+  z-index: 1;
+}
+
+.pw-modal-content h2 {
+  font-size: 20px;
+  font-weight: 800;
+  margin-bottom: var(--spacing-sm);
+}
+
+.pw-modal-content p {
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
+}
+
+.pw-modal-inline {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-sm);
+}
+
+.pw-modal-inline .form-input {
+  flex: 1;
+}
+
+.pw-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-lg);
+}
+
+.findPW-btn.secondary {
+  background: var(--color-card-box);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-soft-gray-line);
+}
+
+/* --------------------------------------------------------
+   전화번호 인풋
+--------------------------------------------------------- */
+.phone-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 전화번호 입력 필드 - 페이지 클래스로 구체성 확보 */
+.findPW-card .phone1 {
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.findPW-card .phone2,
+.findPW-card .phone3 {
+  width: 145px;
+  flex-shrink: 0;
+}
+
+/* 모바일에서 전화번호 필드 반응형 조정 */
+@media (max-width: 768px) {
+  .findPW-card .phone-row {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .findPW-card .phone1 {
+    width: 80px;
+  }
+  
+  .findPW-card .phone2,
+  .findPW-card .phone3 {
+    width: calc((100% - 88px) / 2);
+  }
+}
+
+.phone-dash {
+  font-size: 18px;
+  color: var(--color-text-secondary);
+}
+
+/* --------------------------------------------------------
+   버튼
+--------------------------------------------------------- */
+.findPW-btn {
+  padding: 16px;
+  border: none;
+  background: var(--color-deep-blue);
+  color: var(--color-card-box);
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.findPW-btn:hover {
+  background: var(--color-deep-blue-hover);
+}
+
+/* --------------------------------------------------------
+   링크
+--------------------------------------------------------- */
+.findPW-links {
+  margin-top: var(--spacing-xl);
+  text-align: center;
+}
+
+.form-link {
+  color: var(--color-deep-blue);
+  font-weight: 600;
+  text-decoration: none;
+  margin: 0 6px;
+}
+
+.form-link:hover {
+  color: var(--color-deep-blue-hover);
+}
+
+.form-link-divider {
+  color: var(--color-soft-gray-line);
+  margin: 0 4px;
+}

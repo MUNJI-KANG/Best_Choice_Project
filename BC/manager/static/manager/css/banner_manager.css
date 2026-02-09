@@ -1,0 +1,30 @@
+/* -----------------------------------------------------
+   배너 관리 전용 테이블 스타일만 유지
+   (버튼, 페이징, 기본 헤더 스타일은 facility_add_manager.css에서 관리)
+------------------------------------------------------ */
+
+/* 등록일: 가운데 정렬 및 너비 지정 */
+.facility-table th:nth-child(4),
+.facility-table td:nth-child(4) {
+    width: 180px;
+    text-align: center;
+}
+
+/* 종료일: 가운데 정렬 및 너비 지정 */
+.facility-table th:nth-child(5),
+.facility-table td:nth-child(5) {
+    width: 180px;
+    text-align: center;
+}
+
+/* 링크 스타일 */
+.detail-link {
+    color: #1A2A43;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.detail-link:hover {
+    color: #2F5C9C;
+    text-decoration: underline;
+}

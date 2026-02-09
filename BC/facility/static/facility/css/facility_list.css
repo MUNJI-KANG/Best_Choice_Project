@@ -1,0 +1,423 @@
+/* -----------------------------
+   Hero 섹션 (전체 너비 - board와 동일한 포맷)
+------------------------------ */
+.board-hero {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: var(--spacing-xl) auto var(--spacing-2xl);
+    padding: var(--spacing-2xl) 0;
+    min-height: 300px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 0;
+}
+
+.board-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1;
+}
+
+.board-hero h2 {
+    font-size: 56px;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -2px;
+    line-height: 1;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 14px 30px rgba(15, 23, 42, 0.55);
+}
+
+/* 시설안내 페이지 전용 hero */
+.facility-hero {
+    background-image: url('/static/board/img/facility_hero.png');
+}
+
+/* Hero 이미지 모바일 반응형 */
+/* Hero 이미지 모바일 반응형 */
+@media (max-width: 768px) {
+    .board-hero {
+        padding: var(--spacing-xl) var(--spacing-md);
+        min-height: 200px;
+        flex-direction: column;
+        text-align: center;
+        margin: var(--spacing-lg) auto var(--spacing-xl);
+    }
+
+    .board-hero h2 {
+        font-size: 28px;
+        text-align: center;
+    }
+}
+
+/* 기타 모바일 반응형은 responsive.css에서 통합 관리 */
+
+/* 기타 모바일 반응형은 responsive.css에서 통합 관리 */
+
+
+/* -----------------------------
+   서브 레이아웃
+------------------------------ */
+.sub-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: var(--spacing-2xl) auto 0;
+    padding: var(--spacing-lg);
+}
+
+.sub-content {
+    width: 100%;
+    background: var(--color-card-box);
+    padding: var(--spacing-xl);
+    min-height: 400px;
+    border: 1px solid var(--color-soft-gray-line);
+    overflow: visible;
+}
+
+
+/* -----------------------------
+   검색 바
+------------------------------ */
+
+/* 모든 검색 요소를 한 줄로 */
+.search-section {
+    margin-bottom: var(--spacing-2xl);
+    width: 100%;
+}
+
+#facilitySearchForm {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    width: 100%;
+}
+
+.search-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-shrink: 0;
+}
+
+
+/* 드롭다운 공통 */
+.search-dropdown {
+    padding: 12px 20px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    font-size: 14px;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    min-width: 140px;
+    transition: var(--transition-base);
+    transform-origin: top;
+}
+
+.search-dropdown:hover {
+    border-color: var(--color-deep-blue);
+}
+
+.search-input-group {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    font-size: 14px;
+    transition: var(--transition-base);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-deep-blue);
+}
+
+.search-btn,
+.write-btn {
+    padding: 12px 24px;
+    background: var(--color-deep-blue);
+    color: var(--color-card-box);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    text-decoration: none;
+}
+
+.search-btn:hover,
+.write-btn:hover {
+    background: var(--color-deep-blue-hover);
+}
+
+
+/* 검색 리스트 섹션 */
+.search-list-section {
+    margin-top: var(--spacing-2xl);
+}
+
+.section-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+
+}
+
+
+.facility-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.write-btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--spacing-xl);
+}
+
+/* 리스트 컨테이너 */
+.facility-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 한 줄(한 게시글) 스타일 */
+.facility-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 10px;
+    border-bottom: 1px solid var(--color-soft-gray-line);
+    transition: background 0.25s ease;
+}
+
+/* 순번 */
+.facility-order {
+    width: 40px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
+/* 제목 */
+.facility-title {
+    flex: 1;
+    padding: 0 12px;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.facility-title a {
+    text-decoration: none;
+    color: var(--color-deep-blue);
+    font-weight: 700;
+    font-size: 16px;
+    transition: color 0.2s, text-shadow 0.2s;
+}
+
+.facility-title a:hover {
+    color: var(--color-deep-blue-hover);
+    text-shadow: 0 0 4px rgba(47, 92, 156, 0.25);
+}
+
+/* 전화번호 */
+.facility-meta {
+    min-width: 120px;
+    font-size: 14px;
+    text-align: right;
+    color: var(--color-text-secondary);
+}
+
+/* 날짜 + 조회수 영역 */
+.facility-meta {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-shrink: 0;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+}
+
+.facility-date {
+    min-width: 80px;
+    text-align: right;
+}
+
+.facility-views {
+    min-width: 80px;
+    text-align: right;
+}
+
+/* hover 시: 배경 크게 안 바꾸고 제목만 밑줄 */
+.facility-item:hover .facility-title {
+    background: rgba(146, 184, 216, 0.08);
+}
+
+.map-infowindow {
+    padding: 8px 12px;
+    background: #ffffff;
+    border: 1px solid var(--color-deep-blue);
+    border-radius: 10px;
+    font-size: 14px;
+    color: var(--color-text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.map-infowindow a {
+    text-decoration: none;
+    color: var(--color-deep-blue);
+}
+
+.map-infowindow a:hover {
+    color: var(--color-deep-blue-hover);
+}
+
+.page-selector {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--spacing-xs);
+}
+
+.pagination {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 6px;
+    background: var(--color-card-box);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.page-btn:hover {
+    background: var(--color-muted-blue);
+    color: white;
+}
+
+.page-btn.active {
+    background: var(--color-deep-blue);
+    color: white;
+    border-color: var(--color-deep-blue);
+    font-weight: 700;
+}
+
+.page-btn.arrow {
+    font-weight: 600;
+}
+
+.page-btn.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.page-dots {
+    padding: 6px 10px;
+    color: var(--color-text-secondary);
+}
+
+.sort-page-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.sort-page-container .search-dropdown {
+    min-width: 140px;
+}
+
+.page-selector {
+    display: flex;
+    justify-content: flex-end;
+    width: 150px;
+    /* 원하면 조절 가능 */
+}
+
+.dividing-line {
+    border: 0;
+    border-top: 2px solid var(--color-muted-blue);
+    margin: 20px 0;
+}
+
+/* ===========================
+   A안: 시각적 제거용 래퍼
+=========================== */
+.iw-visual {
+  position: relative;
+  height: 0;                 /* 🔥 시각적 높이 0 */
+  pointer-events: none;      /* 빈 영역 클릭 안 먹게 */
+}
+
+
+.customoverlay {
+  display: inline-flex;
+  align-items: stretch;
+
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: #d95050;
+  box-shadow: 0 1px 2px #888;
+
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.customoverlay .title {
+  background: #fff;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.customoverlay::after {
+  content: '›';
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #d95050;
+  color: #fff;
+  font-size: 18px;
+  font-weight: bold;
+}

@@ -1,0 +1,80 @@
+/* 푸터 전체 (100% 가로) */
+.layout-footer-wrapper {
+    width: 100%;
+    margin-top: var(--spacing-2xl);
+    background: linear-gradient(135deg, var(--color-deep-blue) 0%, var(--color-deep-green) 100%);
+}
+
+/* 내부 컨테이너 */
+.footer {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    color: #fff;
+}
+
+.footer .tit {
+  font-size: 42px;
+  font-weight: 300;
+  margin-bottom: 15px;
+}
+
+.footer .txt {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.footer .more a {
+  display: block;
+  margin-top: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+}
+
+/* Footer 하단 섹션 */
+.footer-bottom {
+  margin-top: 40px;
+  padding-top: 0px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.footer-bottom .service-name {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.footer-links {
+  margin-bottom: 15px;
+}
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  opacity: 0.9;
+  transition: opacity 0.3s;
+}
+
+.footer-links a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
+
+.footer-bottom .developer {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-bottom: 10px;
+  color: #fff;
+}
+
+.footer-bottom .copyright {
+  font-size: 12px;
+  opacity: 0.7;
+  color: #fff;
+}

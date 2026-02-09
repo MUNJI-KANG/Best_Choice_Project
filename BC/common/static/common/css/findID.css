@@ -1,0 +1,294 @@
+/* ==========================================
+   findID.css
+   - login.css 디자인 기반
+   - 색상, 폰트, 여백 완전 동일
+   - findID에 필요한 요소만 남김
+========================================== */
+
+/* 페이지 전체 컨테이너 */
+.findID-container {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
+/* wrapper */
+.findID-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+/* 데스크탑에서 네비게이션 숨기기 - 페이지 클래스로 구체성 확보 */
+@media (min-width: 769px) {
+  .findID-page .header__nav {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+/* 카드 영역 */
+.findID-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  background: var(--color-card-box);
+  padding: var(--spacing-2xl);
+  border: 1px solid var(--color-soft-gray-line);
+}
+
+/* 브랜드 영역 (PC only) */
+@media (min-width: 1024px) {
+  .findID-wrapper {
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--spacing-2xl);
+    max-width: 1200px;
+  }
+
+  .findID-card {
+    max-width: 100%;
+    padding: var(--spacing-2xl);
+  }
+
+  .findID-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: var(--spacing-2xl);
+    background: linear-gradient(
+      135deg,
+      var(--color-muted-blue) 0%,
+      var(--color-muted-green) 100%
+    );
+    color: var(--color-card-box);
+  }
+
+  .findID-brand h2 {
+    font-size: 48px;
+    font-weight: 900;
+    margin-bottom: var(--spacing-lg);
+  }
+
+  .findID-brand p {
+    font-size: 18px;
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .findID-brand-features {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+    padding: 0;
+  }
+
+  .findID-brand-features li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 16px;
+  }
+
+  .findID-brand-features li::before {
+    content: "✓";
+    font-size: 20px;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+  }
+}
+
+/* 모바일에서는 브랜드 제거 */
+@media (max-width: 1023px) {
+  .findID-brand {
+    display: none;
+  }
+}
+
+/* ============================
+   헤더
+============================ */
+.findID-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.findID-header h1 {
+  font-size: 32px;
+  font-weight: 900;
+  margin-bottom: var(--spacing-sm);
+  background: linear-gradient(
+    135deg,
+    var(--color-deep-blue) 0%,
+    var(--color-deep-green) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.findID-header p {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+@media (min-width: 1024px) {
+  .findID-header h1 { font-size: 40px; }
+  .findID-header p { font-size: 16px; }
+}
+
+/* ============================
+   form
+============================ */
+.findID-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.form-input {
+  padding: 14px 18px;
+  border: 1px solid var(--color-soft-gray-line);
+  background: var(--color-card-box);
+  font-size: 15px;
+  transition: all var(--transition-base);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-deep-blue);
+}
+
+/* ============================
+   버튼
+============================ */
+.findID-btn {
+  padding: 16px;
+  background: var(--color-deep-blue);
+  color: var(--color-card-box);
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-top: var(--spacing-sm);
+}
+
+.findID-btn:hover {
+  background: var(--color-deep-blue-hover);
+}
+
+/* ============================
+   하단 링크 버튼
+============================ */
+/* 텍스트 링크 컨테이너 */
+.findID-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xl);
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+/* 링크 스타일 (login.css 동일) */
+.form-link {
+  color: var(--color-deep-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-base);
+}
+
+.form-link:hover {
+  color: var(--color-deep-blue-hover);
+}
+
+/* Divider | 모양 */
+.form-link-divider {
+  width: 1px;
+  height: 14px;
+  background: var(--color-soft-gray-line);
+}
+.sub-btn {   
+  text-align: center;
+  padding: 12px;
+  border: 1px solid var(--color-soft-gray-line);
+  background: var(--color-card-box);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  transition: all var(--transition-base);
+  text-decoration: none;
+}
+
+.sub-btn:hover {
+  background: var(--color-background);
+  border-color: var(--color-deep-blue);
+  color: var(--color-deep-blue);
+}
+
+/* 전화번호 3칸 정렬 */
+.phone-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 첫 번째 전화번호 (010) */
+.findID-card .phone1 {
+  width: 100px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* 두 번째 + 세 번째 전화번호 */
+.findID-card .phone2,
+.findID-card .phone3 {
+  width: 145px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* 모바일에서 전화번호 필드 반응형 조정 */
+@media (max-width: 768px) {
+  .findID-card .phone-row {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  
+  .findID-card .phone1 {
+    width: 80px;
+  }
+  
+  .findID-card .phone2,
+  .findID-card .phone3 {
+    width: calc((100% - 88px) / 2);
+  }
+}
+
+/* 중간 하이픈 */
+.phone-dash {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}

@@ -1,0 +1,290 @@
+/* ============================================
+   헤더 스타일
+   ============================================ */
+/* 헤더 전체 영역 (100% 가로) */
+.layout-header-wrapper {
+    width: 100%;
+    background: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index: 1001; /* 모바일 오버레이(z-index: 998)보다 위에 표시 */
+    border-bottom: 1px solid var(--color-soft-gray-line);
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+}
+
+/* 실제 헤더 컨텐츠 내부 (1200px 중앙 박스) */
+.header {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-md) var(--spacing-lg);
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
+}
+.header__left {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-shrink: 0;
+}
+
+.header__logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.header__logo img {
+    max-height: 100px;
+    max-width: 400px;
+    height: auto;
+    width: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.header__menu-btn {
+    display: none;
+    flex-direction: column;
+    justify-content: space-around;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 101;
+    grid-column: 3;
+    justify-self: end;
+}
+
+.header__menu-btn span {
+    width: 100%;
+    height: 3px;
+    background: var(--color-text-primary);
+    border-radius: 3px;
+    transition: all var(--transition-slow);
+    transform-origin: center;
+}
+
+.header__menu-btn.active span:nth-child(1) {
+    transform: rotate(45deg) translate(8px, 8px);
+}
+
+.header__menu-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.header__menu-btn.active span:nth-child(3) {
+    transform: rotate(-45deg) translate(8px, -8px);
+}
+
+.header__nav {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header__nav-list {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.header__nav-item {
+    position: relative;
+}
+
+.header__nav-link {
+    display: block;
+    padding: var(--spacing-md) var(--spacing-lg);
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    font-size: 18px;
+    transition: all var(--transition-base);
+    white-space: nowrap;
+    position: relative;
+}
+
+.header__nav-link:hover {
+    color: var(--color-deep-blue);
+}
+
+/* 네비게이션 언더라인 애니메이션 */
+.header__nav-link::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    width: 0;
+    height: 2px;
+    background: var(--color-deep-blue);
+    transition: width 200ms ease, left 200ms ease;
+}
+
+.header__nav-link:hover::after,
+.header__nav-link--active::after {
+    width: 60%;
+    left: 20%;
+}
+
+.header__nav-link--active {
+    color: var(--color-deep-blue);
+    font-weight: 700;
+}
+
+.header__submenu {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    margin-top: 0;
+    list-style: none;
+    padding: var(--spacing-md);
+    background: var(--color-card-box);
+    min-width: 220px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base);
+    z-index: 1000;
+    border: 1px solid var(--color-soft-gray-line);
+    white-space: nowrap;
+}
+
+/* 서브메뉴가 화면 밖으로 벗어나지 않도록 조정 */
+.header__nav-item.has-submenu {
+    position: relative;
+}
+
+.header__nav-item.has-submenu:hover .header__submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+.header__submenu li a {
+    display: block;
+    padding: 14px 20px;
+    text-decoration: none;
+    color: var(--color-text-secondary);
+    font-weight: 500;
+    font-size: 16px;
+    transition: all var(--transition-fast);
+}
+
+.header__submenu li a:hover {
+    background: var(--color-background);
+    color: var(--color-deep-blue);
+}
+
+.header__submenu li a.header__submenu-link--active {
+    color: var(--color-deep-blue);
+    font-weight: 600;
+}
+
+.header__login-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border: 1px solid var(--color-deep-blue);
+    background: #ffffff;
+    color: var(--color-deep-blue);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    font-size: 14px;
+    flex-shrink: 0;
+    text-decoration: none;
+    border-radius: 999px;
+    box-shadow: 0 4px 12px rgba(47, 92, 156, 0.18);
+}
+
+.header__login-btn:hover {
+    background: var(--color-deep-blue);
+    color: #ffffff;
+    border-color: var(--color-deep-blue);
+    box-shadow: 0 8px 20px rgba(47, 92, 156, 0.35);
+}
+
+/* 모바일 메뉴 로그인 섹션 (데스크탑에서는 숨김) */
+.mobile-menu-login {
+    display: none;
+}
+
+.mobile-menu-divider {
+    display: none;
+}
+
+.mobile-login-link {
+    display: block;
+    padding: var(--spacing-md) var(--spacing-xl);
+    text-decoration: none;
+    color: var(--color-text-primary);
+    font-weight: 600;
+    font-size: 16px;
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+.mobile-login-link:hover {
+    background: var(--color-background);
+    color: var(--color-deep-blue);
+}
+
+.mobile-user-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+.mobile-user-link {
+    display: block;
+    padding: var(--spacing-md) var(--spacing-xl);
+    text-decoration: none;
+    color: var(--color-text-primary);
+    font-weight: 500;
+    font-size: 15px;
+    text-align: center;
+    transition: all var(--transition-base);
+    border-bottom: 1px solid var(--color-soft-gray-line);
+}
+
+.mobile-user-link:hover {
+    background: var(--color-background);
+    color: var(--color-deep-blue);
+}
+
+.mobile-user-link:last-child {
+    border-bottom: none;
+}
+
+/* ============================================
+   모바일 메뉴 오버레이
+   ============================================ */
+.mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99;
+    opacity: 0;
+    transition: opacity var(--transition-slow);
+}
+
+.mobile-menu-overlay.active {
+    opacity: 1;
+}
+
+/* 반응형 스타일은 responsive.css에서 관리 */

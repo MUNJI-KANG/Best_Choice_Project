@@ -1,0 +1,214 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}등급별 안전점검 상세{% endblock %}
+
+{% block content %}
+    <!-- 메인 콘텐츠 -->
+    <div class="admin-main">
+        <h1 class="box-header" style="text-align: center;">등급별 안전점검 상세</h1>
+
+        <!-- 필터 -->
+        <div class="filter-section">
+            <form method="GET" class="filter-form">
+                <select name="year" class="filter-select">
+                    <option value="">전체 연도</option>
+                    {% for year in years %}
+                    <option value="{{ year }}" {% if selected_year == year %}selected{% endif %}>
+                        {{ year }}년
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <select name="region" class="filter-select">
+                    <option value="">전체 지역</option>
+                    {% for region in regions %}
+                    <option value="{{ region }}" {% if selected_region == region %}selected{% endif %}>
+                        {{ region }}
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <select name="sport" class="filter-select">
+                    <option value="">전체 종목</option>
+                    {% for sport in sports %}
+                    <option value="{{ sport }}" {% if selected_sport == sport %}selected{% endif %}>
+                        {{ sport }}
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <select name="grade" class="filter-select">
+                    <option value="">전체 등급</option>
+                    {% for grade in grades %}
+                    <option value="{{ grade }}" {% if selected_grade == grade %}selected{% endif %}>
+                        {{ grade }}
+                    </option>
+                    {% endfor %}
+                </select>
+                
+                <button type="submit" class="filter-btn">적용</button>
+            </form>
+            <!-- 뒤로가기 버튼 -->
+            <div style="display: flex; gap: 15px;">
+                <a href="{% url 'manager:facility_inspection_stats' %}" class="filter-btn" style="text-decoration: none; display: inline-block; padding: 12px 30px;">
+                    뒤로가기
+                </a>
+            </div>
+        </div>
+
+        <!-- 시설 목록 -->
+        <div class="table-section">
+            <div class="table-header">
+                <h3>시설 목록 (총 {{ paginator.count }}개)</h3>
+                <select id="perPageSelect" class="filter-select" style="width: auto; margin-left: 20px;">
+                    <option value="15" {% if per_page == 15 %}selected{% endif %}>15개</option>
+                    <option value="30" {% if per_page == 30 %}selected{% endif %}>30개</option>
+                    <option value="50" {% if per_page == 50 %}selected{% endif %}>50개</option>
+                    <option value="100" {% if per_page == 100 %}selected{% endif %}>100개</option>
+                </select>
+            </div>
+            
+            {% if facilities_list %}
+            <table class="facility-table">
+                <thead>
+                    <tr>
+                        <th style="width: 80px;">번호</th>
+                        <th>시설명</th>
+                        <th style="width: 120px;">지역</th>
+                        <th style="width: 120px;">종목</th>
+                        <th style="width: 150px;">주소</th>
+                        <th style="width: 120px;">점검일자</th>
+                        <th style="width: 80px;">등급</th>
+                        <th style="width: 100px;">시설 상태</th>
+                        <th style="width: 120px;">전화번호</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for facility in facilities_list %}
+                    <tr>
+                        <td>{{ facility.row_no }}</td>
+                        <td>{{ facility.faci_nm }}</td>
+                        <td>{{ facility.cp_nm }}</td>
+                        <td>{{ facility.fcob_nm }}</td>
+                        <td>{{ facility.faci_road_addr }}</td>
+                        <td>{{ facility.schk_visit_ymd }}</td>
+                        <td>
+                            {% if facility.schk_tot_grd_nm == '양호' %}
+                                <span style="color: #2ecc71; font-weight: 600;">{{ facility.schk_tot_grd_nm }}</span>
+                            {% elif facility.schk_tot_grd_nm == '주의' %}
+                                <span style="color: #f39c12; font-weight: 600;">{{ facility.schk_tot_grd_nm }}</span>
+                            {% elif facility.schk_tot_grd_nm == '경고' %}
+                                <span style="color: #e74c3c; font-weight: 600;">{{ facility.schk_tot_grd_nm }}</span>
+                            {% else %}
+                                {{ facility.schk_tot_grd_nm }}
+                            {% endif %}
+                        </td>
+                        <td>{{ facility.faci_stat_nm }}</td>
+                        <td>{{ facility.faci_tel_no }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            
+            <!-- 페이징 -->
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a class="page-btn arrow"
+                        href="?page={{ page_obj.previous_page_number }}&per_page={{ per_page }}&year={{ selected_year }}&region={{ selected_region }}&sport={{ selected_sport }}&grade={{ selected_grade }}">◀ 이전</a>
+                {% else %}
+                    <span class="page-btn arrow disabled">◀ 이전</span>
+                {% endif %}
+
+                {% for num in block_range %}
+                    {% if num == page_obj.number %}
+                        <span class="page-btn active">{{ num }}</span>
+                    {% else %}
+                        <a class="page-btn"
+                           href="?page={{ num }}&per_page={{ per_page }}&year={{ selected_year }}&region={{ selected_region }}&sport={{ selected_sport }}&grade={{ selected_grade }}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a class="page-btn arrow"
+                       href="?page={{ page_obj.next_page_number }}&per_page={{ per_page }}&year={{ selected_year }}&region={{ selected_region }}&sport={{ selected_sport }}&grade={{ selected_grade }}">다음 ▶</a>
+                {% else %}
+                    <span class="page-btn arrow disabled">다음 ▶</span>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="no-data">
+                <p>조건에 맞는 시설이 없습니다.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'manager/css/facility_add_manager.css' %}">
+<style>
+.table-section {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-top: 20px;
+}
+
+.table-header {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.table-header h3 {
+    margin: 0;
+    color: #2c3e50;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.facility-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.facility-table th,
+.facility-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.facility-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.facility-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.no-data {
+    text-align: center;
+    padding: 40px;
+    color: #7f8c8d;
+}
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // per_page 변경 시 페이지 이동
+    document.getElementById('perPageSelect').addEventListener('change', function() {
+        const perPage = this.value;
+        const url = new URL(window.location.href);
+        url.searchParams.set('per_page', perPage);
+        url.searchParams.set('page', '1');  // 페이지는 1로 리셋
+        window.location.href = url.toString();
+    });
+</script>
+{% endblock %}
+

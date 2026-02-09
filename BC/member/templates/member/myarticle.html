@@ -1,0 +1,180 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'member/css/mypage_base.css' %}" />
+<link rel="stylesheet" href="{% static 'member/css/mypage.css' %}" />
+{% endblock %}
+{% block mypagecss %}
+{% endblock %}
+
+{% block script1 %}
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="{% static 'member/js/mypage_list.js' %}"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    /* CSRF 토큰 가져오기 */
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    const deleteArticleUrl = '{% url "member:delete_my_article" %}';
+
+});
+</script>
+{% endblock %}
+{% block title %}
+mypage base
+{% endblock %}
+{% block contents %}
+<!-- 회원가입 컨테이너 -->
+<div class="register-container">
+  <div class="register-wrapper">
+
+    <!-- PC 브랜딩 -->
+    <div class="register-brand">
+      <h2>My Page</h2>
+      <ul class="register-brand-features">
+        <li><a href="{% url 'member:info' %}" class="{% if request.path == '/member/info/' or request.path == '/member/edit/' %}active{% endif %}">내 정보</a></li>
+        <li><a href="{% url 'member:myreservation' %}" class="{% if request.path == '/member/myreservation/' %}active{% endif %}">내 예약 내역</a></li>
+        <li><a href="{% url 'member:myrecruitment' %}" class="{% if request.path == '/member/myrecruitment/' %}active{% endif %}">내 모집글</a></li>
+        <li><a href="{% url 'member:myarticle' %}" class="{% if request.path == '/member/myarticle/' %}active{% endif %}">내 게시글</a></li>
+        <li><a href="{% url 'member:myjoin' %}" class="{% if request.path == '/member/myjoin/' %}active{% endif %}">내 참여 내역</a></li>
+      </ul>
+    </div>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <!-- mypage내용 담을 container -->
+    <main class="main">
+
+    <h2>나의 자유게시판</h2>
+
+
+
+<section class="mypage-board">
+
+  <!-- 상단 정렬/개수 선택 -->
+  <div class="mypage-board-top">
+      <div class="mypage-board-top-left">
+        <select class="mypage-select" name="order">
+          <option value="recent">최신순</option>
+          <option value="title">제목순</option>
+          <option value="views">조회수순</option>
+        </select>
+      </div>
+
+      <div class="mypage-board-top-right">
+        <select class="mypage-select" name="page_size">
+          <option value="15">15개</option>
+          <option value="30">30개</option>
+          <option value="50">50개</option>
+        </select>
+      </div>
+    </div>
+  <!-- 목록 영역 -->
+  <div class="mypage-board-list">
+
+      <!-- 헤더 -->
+      <div class="mypage-board-header">
+          <span class="col-number">번호</span>
+          <span class="col-title">제목</span>
+          <span class="col-date">날짜</span>
+          <span class="col-views">조회수</span>
+      </div>
+
+      {% for post in page_obj %}
+          {% if post.delete_date %}
+              <!-- 삭제된 글 -->
+              <div class="mypage-board-row-wrapper deleted-row">
+                  <div class="mypage-board-row no-link">
+                      <span class="col-number">{{ forloop.counter0|add:page_obj.start_index }}</span>
+                      <span class="col-title deleted-title">관리자에 의해 삭제된 글입니다.</span>
+                      <span class="col-date">{{ post.delete_date|date:"Y-m-d" }}</span>
+                      <span class="col-views">조회수 {{ post.view_cnt }}</span>
+                  </div>
+              </div>
+          {% else %}
+              <!-- 정상 글 -->
+              <div class="mypage-board-row-wrapper">
+                  <a href="{% url 'board:detail' 'post' post.article_id%}" class="mypage-board-row">
+                      <span class="col-number">{{ forloop.counter0|add:page_obj.start_index }}</span>
+                      <span class="col-title">{{ post.title }}</span>
+                      <span class="col-date">{{ post.reg_date|date:'Y-m-d' }}</span>
+                      <span class="col-views">조회수 {{ post.view_cnt }}</span>
+                  </a>
+              </div>
+          {% endif %}
+      {% empty %}
+          <div class="mypage-board-empty">
+              작성한 게시글이 없습니다.
+          </div>
+      {% endfor %}
+
+  </div>
+
+
+</section>
+
+
+
+
+
+    <!-- 페이징 번호 -->
+
+    <div class="pagination">
+
+        <!-- 🔹 이전 블록 -->
+        {% if block_start > 1 %}
+            <a href="?page={{ block_start|add:-1 }}&per_page={{ per_page }}&sort={{ sort }}" class="page-btn arrow">◀ 이전</a>
+        {% else %}
+            <span class="page-btn arrow disabled">◀ 이전</span>
+        {% endif %}
+
+        <!-- 🔹 페이지 번호 5개씩 블록 -->
+        {% for num in block_range %}
+            {% if num == page_obj.number %}
+                <span class="page-btn active">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}&per_page={{ per_page }}&sort={{ sort }}" class="page-btn">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        <!-- 🔹 다음 블록 -->
+        {% if block_end < paginator.num_pages %}
+            <a href="?page={{ block_end|add:1 }}&per_page={{ per_page }}&sort={{ sort }}" class="page-btn arrow">다음 ▶</a>
+        {% else %}
+            <span class="page-btn arrow disabled">다음 ▶</span>
+        {% endif %}
+
+    </div>
+
+
+    </main>
+
+
+
+
+
+
+  </div> <!-- register-wrapper -->
+</div> <!-- register-container -->
+
+
+{% endblock %}

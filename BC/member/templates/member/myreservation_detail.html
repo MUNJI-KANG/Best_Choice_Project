@@ -1,0 +1,130 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}예약 상세{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'member/css/myreservation_detail.css' %}" />
+{% endblock %}
+
+{% block contents %}
+<div class="detail-wrapper">
+    <div class="detail-box">
+
+        <div class="detail-header">예약 상세 정보</div>
+
+        <div class="detail-row"><span>시설명:</span> {{ facility_name }}</div>
+        <div class="detail-row"><span>주소:</span> {{ facility_address }}</div>
+        <div class="detail-row"><span>연락처:</span> {{ facility_tel }}</div>
+
+        <div class="detail-row"><span>예약번호:</span> {{ reservation_num }}</div>
+        <div class="detail-row"><span>예약한 날짜:</span> {{ reg_date }}</div>
+        <div class="detail-row"><span>결제 금액:</span> {{ payment|intcomma }}원</div>
+
+        <div class="detail-row">
+            <span>이용 시간:</span>
+            <div class="detail-value">
+                {% for slot in slot_list %}
+                    <div class="time-line {% if slot.is_cancelled %}cancelled{% endif %}">
+                        {{ slot.date }} | {{ slot.start }} ~ {{ slot.end }}
+
+                        {% if not slot.is_cancelled %}
+                            <input type="checkbox"
+                                class="slot-checkbox"
+                                data-date="{{ slot.date }}"
+                                data-start="{{ slot.start }}"
+                                data-end="{{ slot.end }}"
+                                style="display:none; margin-left:10px;">
+                        {% else %}
+                            <span class="cancel-tag">(취소됨)</span>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- 기본 버튼 -->
+        <div class="detail-buttons" id="default-buttons">
+
+            <button class="detail-btn btn-ok"
+                    onclick="location.href='/member/myreservation/'">확인</button>
+
+            {% if not all_cancelled and not is_past %}
+            <button class="detail-btn btn-cancel"
+                    onclick="startCancelMode()">예약 취소</button>
+            {% endif %}
+        </div>
+
+        <!-- 취소 모드 버튼 -->
+        <div class="detail-buttons" id="cancel-buttons" style="display:none;">
+            <button class="detail-btn btn-ok" onclick="cancelSelectedSlots('{{ reservation_num }}')">선택 취소 확정</button>
+            <button class="detail-btn btn-cancel" onclick="cancelCancelMode()">취소</button>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block script3 %}
+<script>
+/*--------------------------------------*/
+/* 1) 체크박스 보이기 */
+/*--------------------------------------*/
+function startCancelMode() {
+    document.querySelectorAll(".slot-checkbox").forEach(cb => {
+        cb.style.display = "inline-block";
+    });
+    document.getElementById("default-buttons").style.display = "none";
+    document.getElementById("cancel-buttons").style.display = "block";
+}
+
+/*--------------------------------------*/
+/* 2) 취소 모드 종료 */
+/*--------------------------------------*/
+function cancelCancelMode() {
+    document.querySelectorAll(".slot-checkbox").forEach(cb => {
+        cb.checked = false;
+        cb.style.display = "none";
+    });
+    document.getElementById("default-buttons").style.display = "block";
+    document.getElementById("cancel-buttons").style.display = "none";
+}
+
+/*--------------------------------------*/
+/* 3) 선택한 시간대 취소 */
+/*--------------------------------------*/
+function cancelSelectedSlots(resNum) {
+    const selected = Array.from(document.querySelectorAll(".slot-checkbox:checked"))
+        .map(el => ({
+            date: el.dataset.date,
+            start: el.dataset.start,
+            end: el.dataset.end
+        }));
+
+    if (selected.length === 0) {
+        alert("취소할 시간을 선택하세요.");
+        return;
+    }
+
+    if (!confirm("선택한 시간대를 취소하시겠습니까?")) return;
+
+    fetch(`/member/cancel-timeslot/${resNum}/`, {
+        method: "POST",
+        headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ slots: selected })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.msg);
+        location.reload();
+    })
+    .catch(err => {
+        alert("서버 오류 발생");
+    });
+}
+</script>
+{% endblock %}

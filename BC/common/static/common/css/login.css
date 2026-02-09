@@ -1,0 +1,350 @@
+.login-container {
+  min-height: calc(100vh - 200px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-2xl) var(--spacing-lg);
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 1000px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+/* 로그인 페이지에서 데스크탑/태블릿 네비게이션 완전히 숨기기 - 페이지 클래스로 구체성 확보 */
+@media (min-width: 769px) {
+  .login-page .header__nav {
+    display: none;
+    visibility: hidden;
+  }
+}
+
+.login-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  background: var(--color-card-box);
+  padding: var(--spacing-2xl);
+  border: 1px solid var(--color-soft-gray-line);
+}
+
+@media (min-width: 1024px) {
+  .login-wrapper {
+    grid-template-columns: 1.2fr 1fr;
+    gap: var(--spacing-2xl);
+    max-width: 1200px;
+  }
+  
+  .login-card {
+    max-width: 100%;
+    padding: var(--spacing-2xl) var(--spacing-2xl);
+  }
+  
+  .login-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: var(--spacing-2xl);
+    background: linear-gradient(135deg, var(--color-muted-blue) 0%, var(--color-muted-green) 100%);
+    color: var(--color-card-box);
+  }
+  
+  .login-brand h2 {
+    font-size: 48px;
+    font-weight: 900;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-card-box);
+    line-height: 1.2;
+  }
+  
+  .login-brand p {
+    font-size: 18px;
+    line-height: 1.8;
+    opacity: 0.95;
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  .login-brand-features {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+  
+  .login-brand-features li {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: 16px;
+  }
+  
+  .login-brand-features li::before {
+    content: '✓';
+    font-size: 20px;
+    font-weight: 900;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 1023px) {
+  .login-brand {
+    display: none;
+  }
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.login-header h1 {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--color-text-primary);
+  margin-bottom: var(--spacing-sm);
+  background: linear-gradient(135deg, var(--color-deep-blue) 0%, var(--color-deep-green) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.login-header p {
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+@media (min-width: 1024px) {
+  .login-header h1 {
+    font-size: 40px;
+  }
+  
+  .login-header p {
+    font-size: 16px;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.form-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.form-input {
+  padding: 14px 18px;
+  border: 1px solid var(--color-soft-gray-line);
+  font-size: 15px;
+  transition: all var(--transition-base);
+  background: var(--color-card-box);
+}
+
+@media (min-width: 1024px) {
+  .form-label {
+    font-size: 15px;
+  }
+  
+  .form-input {
+    padding: 16px 20px;
+    font-size: 16px;
+  }
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--color-deep-blue);
+}
+
+.form-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.form-links {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+}
+
+.form-link-divider {
+  width: 1px;
+  height: 12px;
+  background: var(--color-soft-gray-line);
+}
+
+.form-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  cursor: pointer;
+}
+
+.form-checkbox input {
+  cursor: pointer;
+}
+
+.form-link {
+  color: var(--color-deep-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color var(--transition-base);
+}
+
+.form-link:hover {
+  color: var(--color-deep-blue-hover);
+}
+
+.login-btn {
+  padding: 16px;
+  background: var(--color-deep-blue);
+  color: white;
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  margin-top: var(--spacing-sm);
+}
+
+@media (min-width: 1024px) {
+  .login-btn {
+    padding: 18px;
+    font-size: 17px;
+  }
+}
+
+.login-btn:hover {
+  background: var(--color-deep-blue-hover);
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin: var(--spacing-xl) 0;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-soft-gray-line);
+}
+
+.social-login {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  max-width: 360px;      /* 소셜 로그인 영역 공통 너비 */
+  margin: 0 auto;        /* 카드 안에서 가운데 정렬 */
+  width: 100%;
+}
+
+/* 텍스트형 소셜 버튼 (네이버 등) */
+.social-btn {
+  padding: 16px;
+  border: 1px solid var(--color-soft-gray-line);
+  background: var(--color-card-box);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  text-decoration: none;
+  color: inherit;
+  border-radius: 4px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (min-width: 1024px) {
+  .social-btn {
+    padding: 18px;
+    font-size: 17px;
+  }
+}
+
+.social-btn:hover {
+  border-color: var(--color-deep-blue);
+  background: var(--color-background);
+  transform: translateY(-1px);
+  text-decoration: none;
+  color: inherit;
+}
+
+.social-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.social-btn:disabled:hover {
+  transform: none;
+  border-color: var(--color-soft-gray-line);
+  background: var(--color-card-box);
+}
+
+/* 카카오 로그인: 이미지 전용 링크 (공식 버튼 PNG 사용) */
+.kakao-login-link {
+  display: block;
+  width: 100%;
+}
+
+.kakao-login-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.signup-link {
+  text-align: center;
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--color-soft-gray-line);
+  font-size: 14px;
+  color: var(--color-text-secondary);
+}
+
+.signup-link a {
+  color: var(--color-deep-blue);
+  text-decoration: none;
+  font-weight: 700;
+  margin-left: var(--spacing-xs);
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+

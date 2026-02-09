@@ -1,0 +1,221 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}시설 정보 수정{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'manager/css/facility_modify.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="modify-container">
+
+    <h1 class="modify-header">시설 정보 수정</h1>
+
+    <form id="modifyForm" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="facility-info-box">
+            <h2 class="section-title">기본 정보</h2>
+
+            <div class="info-row">
+                <span class="info-label">시설명</span>
+                <span class="info-value">{{ info.faci_nm }}</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">주소</span>
+                <span class="info-value">{{ info.address }}</span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">전화번호</span>
+                <span class="info-value">
+                    <input type="text" name="tel" value="{{ info.tel }}">
+                </span>
+            </div>
+
+            <div class="info-row">
+                <span class="info-label">홈페이지</span>
+                <span class="info-value">
+                    <input type="text" name="homepage" value="{{ info.homepage }}">
+                </span>
+            </div>
+        </div>
+
+        <div class="photo-box">
+            <h2 class="section-title">대표 이미지</h2>
+
+            <div class="photo-flex">
+
+                <div id="previewArea">
+                    {% if info.photo %}
+                    <img src="{{ info.photo.url }}" class="facility-photo" id="previewImage">
+                    {% else %}
+                    <div class="photo-placeholder" id="previewPlaceholder">이미지 없음</div>
+                    <img id="previewImage" class="facility-photo" style="display:none;">
+                    {% endif %}
+                </div>
+
+                <div class="photo-upload-area">
+                    <input type="file" name="photo" id="photoInput" class="photo-input" accept="image/*">
+                </div>
+
+            </div>
+        </div>
+
+        <div class="file-box">
+            <h2 class="section-title">첨부파일</h2>
+
+            <!-- 기존 파일 목록 -->
+            {% if files %}
+            <ul class="attached-list">
+                {% for f in files %}
+                <li class="attached-item" data-id="{{ f.add_info_id }}">
+                    <span class="file-name">{{ f.file_name }}</span>
+
+                    <button type="button"
+                            class="delete-existing-btn"
+                            data-file-id="{{ f.add_info_id }}"
+                            style="background:#ff4d4d; color:white; border:none; padding:2px 6px; cursor:pointer; border-radius:3px;">
+                        X
+                    </button>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>첨부된 파일이 없습니다.</p>
+            {% endif %}
+
+            <!-- 새 파일 업로드 UI -->
+            <div class="file-upload-wrapper">
+                <input type="file" name="file" id="fileInput" class="file-input" multiple>
+                <label for="newFileInput" class="file-upload-btn">📎 파일 선택</label>
+                <div class="file-list" id="fileList"></div> 
+            </div>
+        </div>
+
+        <div class="reserve-posible" style="margin-bottom:20px;">
+            <label for="rsPosible">예약하기 활성화</label>
+            <input type="checkbox"
+                   id="rsPosible"
+                   name="rs_posible"
+                   value="1"
+                   {% if info.rs_posible == 1 %}checked{% endif %}>
+        </div>
+
+
+
+        <div id="timeSettingBox" class="time-setting-box {% if info.rs_posible == 0 %}time-disabled{% endif %}">
+            <h2 class="time-setting-title">예약 가능 시간 설정</h2>
+
+            <div class="time-setting-layout">
+                <!-- 좌측: 요일별 가능한 시간 -->
+                <div class="weekly-time-panel">
+                    <h3 class="panel-title">요일별 가능한 시간</h3>
+                    
+                    <div class="weekly-time-content">
+                        <!-- 요일 탭 (세로) -->
+                        <div class="day-tabs">
+                            <button type="button" class="day-tab" data-day="monday">월</button>
+                            <button type="button" class="day-tab" data-day="tuesday">화</button>
+                            <button type="button" class="day-tab" data-day="wednesday">수</button>
+                            <button type="button" class="day-tab" data-day="thursday">목</button>
+                            <button type="button" class="day-tab" data-day="friday">금</button>
+                            <button type="button" class="day-tab" data-day="saturday">토</button>
+                            <button type="button" class="day-tab" data-day="sunday">일</button>
+                        </div>
+
+                        <!-- 선택된 요일의 시간 구간 편집 영역 -->
+                        <div class="time-slots-editor">
+                            <!-- 단일 요일 선택 시 시간 + 요금 추가 UI -->
+                            <div class="single-day-add-section" id="singleDayAddSection" style="display: none;">
+                                <div class="single-day-time-payment-section">
+                                    <label>시간 및 요금 추가:</label>
+                                    <div class="single-day-inputs-group">
+                                        <div class="single-day-time-inputs">
+                                            <input type="time" id="singleStartTime" value="10:00">
+                                            <span class="time-separator">~</span>
+                                            <input type="time" id="singleEndTime" value="19:00">
+                                        </div>
+                                        <div class="single-day-payment-input-wrapper">
+                                            <input type="text" id="singlePayment" placeholder="요금 (기본: 0원)" class="single-payment-input" value="0">
+                                        </div>
+                                        <button type="button" class="btn-single-add" id="btnSingleAdd">추가</button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 다중 선택 정보 및 일괄 작업 -->
+                            <div class="multi-select-actions" id="multiSelectActions" style="display: none;">
+                                <div class="selected-days-info">
+                                    <span id="selectedDaysCount">0</span>개 요일 선택됨
+                                </div>
+                                <div class="batch-actions">
+                                    <div class="batch-time-payment-section">
+                                        <label>일괄 시간 및 요금 추가:</label>
+                                        <div class="batch-inputs-group">
+                                            <div class="batch-time-inputs">
+                                                <input type="time" id="batchStartTime" value="10:00">
+                                                <span class="time-separator">~</span>
+                                                <input type="time" id="batchEndTime" value="19:00">
+                                            </div>
+                                            <div class="batch-payment-input-wrapper">
+                                                <input type="text" id="batchPayment" placeholder="요금 (기본: 0원)" class="batch-payment-input" value="0">
+                                            </div>
+                                            <button type="button" class="btn-batch-add" id="btnBatchAdd">추가</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="time-slots-list" id="timeSlotsList">
+                                <!-- 시간 구간들이 여기에 동적으로 추가됨 -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 우측: 활성화된 요일과 시간 표시 -->
+                <div class="active-time-panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">활성화된 요일과 시간</h3>
+                    </div>
+                    <p class="panel-description">
+                        현재 설정된 요일별 예약 가능 시간을 확인할 수 있습니다.
+                    </p>
+                    
+                    <div class="active-days-summary" id="activeDaysSummary">
+                        <!-- 활성화된 요일과 시간이 여기에 동적으로 표시됨 -->
+                    </div>
+                </div>
+            </div>
+
+            <input type="hidden" id="reservationTimeInput" name="reservation_time">
+        </div>
+
+
+        <div class="btn-bottom-area">
+            <a href="{% url 'manager:facility_list' %}" class="btn-back">← 목록으로</a>
+            <button type="submit" class="btn-save-all">전체 저장</button>
+        </div>
+        
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script id="timeJson" type="application/json">
+    {{ time_json|safe }}
+</script>
+
+<!-- 기존 JS -->
+<script src="{% static 'manager/js/facility_modify.js' %}"></script>
+<script src="{% static 'common/js/board/fileupload.js' %}"></script>
+
+{% endblock %}

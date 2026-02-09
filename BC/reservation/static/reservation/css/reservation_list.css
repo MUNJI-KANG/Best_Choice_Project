@@ -1,0 +1,293 @@
+/* ============================================
+   서브 페이지 스타일
+   ============================================ */
+.sub-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: var(--spacing-2xl) auto 0;
+    padding: var(--spacing-lg);
+}
+
+.sub-content {
+    width: 100%;
+    background: var(--color-card-box);
+    padding: var(--spacing-xl);
+    min-height: 400px;
+    border: 1px solid var(--color-soft-gray-line);
+}
+
+/* -----------------------------
+   Hero 섹션
+------------------------------ */
+.board-hero {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: var(--spacing-xl) auto var(--spacing-2xl);
+    padding: var(--spacing-2xl) 0;
+    min-height: 300px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.board-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1;
+}
+
+.board-hero h2 {
+    font-size: 56px;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -2px;
+    line-height: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.reservation-hero {
+    background-image: url('/static/board/img/reservation_hero.png');
+}
+
+@media (max-width: 768px) {
+    .board-hero {
+        padding: var(--spacing-xl) var(--spacing-md);
+        min-height: 200px;
+        flex-direction: column;
+        text-align: center;
+        margin: var(--spacing-lg) auto var(--spacing-xl);
+    }
+
+    .board-hero h2 {
+        font-size: 28px;
+        text-align: center;
+    }
+}
+
+/* ============================================
+   검색 섹션
+============================================ */
+.search-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+/* 지역 + 검색 한 줄 정렬 */
+.search-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: var(--spacing-lg);
+}
+
+/* 왼쪽 지역 선택 */
+.region-group {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+/* 🔥 오른쪽 검색박스 확장 */
+.search-inline-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex: 1; /* 오른쪽 영역을 전체 확장 */
+}
+
+/* 드롭다운 스타일 */
+.search-dropdown {
+    padding: 12px 20px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    font-size: 14px;
+    min-width: 150px;
+    cursor: pointer;
+    transition: all var(--transition-base);
+}
+
+.search-dropdown:hover {
+    border-color: var(--color-deep-blue);
+}
+
+/* 🔥 검색창 크게 늘림 */
+.keyword-input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    font-size: 14px;
+}
+
+.keyword-input:focus {
+    outline: none;
+    border-color: var(--color-deep-blue);
+}
+
+/* 검색 버튼 */
+.search-btn {
+    padding: 12px 24px;
+    background: var(--color-deep-blue);
+    color: white;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.search-btn:hover {
+    background: var(--color-deep-blue-hover);
+}
+
+/* ============================================
+   종목
+============================================ */
+.filter-group {
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-xl);
+}
+
+.filter-label {
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: var(--spacing-md);
+}
+
+.filter-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: var(--spacing-md);
+}
+
+.filter-radio {
+    display: flex;
+    align-items: center;
+    padding: 12px 16px;
+    background: white;
+    border: 1px solid var(--color-soft-gray-line);
+    cursor: pointer;
+}
+
+.filter-radio:hover {
+    border-color: var(--color-deep-blue);
+}
+
+/* ============================================
+   리스트
+============================================ */
+.search-list-section {
+    margin-top: var(--spacing-xl);
+}
+
+.page-reservation .facility-list {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    background: white;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* 헤더 */
+.page-reservation .facility-header {
+    display: grid;
+    grid-template-columns: 20% 20% auto 10%;
+    padding: 1rem;
+    background: #F5F7FA;
+    border-bottom: 1px solid var(--color-soft-gray-line);
+    font-weight: 600;
+}
+
+/* 아이템 */
+.page-reservation .facility-item {
+    display: grid;
+    grid-template-columns: 20% 20% auto 10%;
+    padding: 1rem;
+    border-bottom: 1px solid var(--color-soft-gray-line);
+    transition: background 0.2s;
+}
+
+.page-reservation .facility-item:hover {
+    background: #F9FBFF;
+}
+
+/* 조회수 → 가운데 정렬 */
+.page-reservation .facility-views {
+    text-align: center;
+    color: var(--color-text-secondary);
+}
+
+/* 시설 없음 */
+.page-reservation .facility-empty {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    padding: 2rem;
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 1rem;
+}
+
+/* ============================================
+   페이지네이션
+============================================ */
+.pagination {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 6px;
+    background: white;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.page-btn:hover {
+    background: var(--color-muted-blue);
+    color: white;
+}
+
+.page-btn.active {
+    background: var(--color-deep-blue);
+    color: white;
+}
+
+.page-btn.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.sort-page-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--spacing-md);
+}
+
+.page-selector {
+    display: flex;
+    justify-content: flex-end;
+    width: 150px;
+}
+
+.dividing-line {
+    border: 0;
+    border-top: 2px solid var(--color-muted-blue);
+    margin: 20px 0;
+}

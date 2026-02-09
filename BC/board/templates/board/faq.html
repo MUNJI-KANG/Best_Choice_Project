@@ -1,0 +1,66 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'board/css/board_list.css' %}" />
+<link rel="stylesheet" href="{% static 'board/css/faq.css' %}" />
+{% endblock %}
+
+{% block script1 %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const faqQuestions = document.querySelectorAll(".faq-question");
+
+    faqQuestions.forEach((question) => {
+      question.addEventListener("click", function () {
+        const faqItem = this.parentElement;
+        const isActive = faqItem.classList.contains("active");
+
+        // 모든 FAQ 아이템 닫기
+        document.querySelectorAll(".faq-item").forEach((item) => {
+          item.classList.remove("active");
+        });
+
+        // 클릭한 아이템만 열기/닫기 토글
+        if (!isActive) {
+          faqItem.classList.add("active");
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}
+
+{% block title %}
+FAQ - 할래말래
+{% endblock %}
+
+{% block contents %}
+
+<!-- Hero 섹션 -->
+<div class="board-hero faq-hero">
+  <h2>FAQ</h2>
+</div>
+
+<!-- 서브 컨테이너 -->
+<div class="sub-container">
+  <div class="sub-content">
+    <!-- FAQ 리스트 -->
+    <div class="faq-list">
+      {% for article in page_obj %}
+      <div class="faq-item">
+        <button class="faq-question">
+          Q. {{ article.title }}
+          <span class="arrow">▼</span>
+        </button>
+        <div class="faq-answer">
+          <pre>{{ article.contents }}</pre>
+        </div>
+      </div>
+      {% endfor %}
+
+
+    </div>
+  </div>
+</div>
+{% endblock %}

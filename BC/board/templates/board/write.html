@@ -1,0 +1,106 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'board/css/board_list.css' %}" />
+<link rel="stylesheet" href="{% static 'board/css/board_write.css' %}" />
+<link rel="stylesheet" href="https://uicdn.toast.com/editor/latest/toastui-editor.min.css" />
+{% endblock %}
+
+{% block script1 %}
+<script>
+    window.initialContent = `{% if is_edit %}{{ article.contents|escapejs }}{% endif %}`;
+</script>
+<script src="https://uicdn.toast.com/editor/latest/toastui-editor-all.min.js"></script>
+<script src="{% static 'board/js/board_write.js' %}"></script>
+<script src="{% static 'common/js/board/editor.js' %}"></script>
+<script src="{% static 'common/js/board/fileupload.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+{{ b_name }}게시글 작성 - 할래말래
+{% endblock %}
+
+{% block contents %}
+
+<div class="board-hero post-hero">
+    <h2>게시글 작성</h2>
+</div>
+
+<div class="sub-container">
+    <div class="sub-content">
+        <div class="form-wrapper">
+            <form method="post" action="{% if is_edit %}
+                    {% url 'board:update' board_name article.article_id %}
+                {% else %}
+                    {% url 'board:write' board_name %}
+                {% endif %}"
+                enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="form-group full-row">
+                    <label class="form-label">제목</label>
+                    <input type="text" name="title" class="form-input"
+                        value="{% if is_edit %}{{ article.title }}{% endif %}"
+                        placeholder="제목을 입력하세요" required>
+                </div>
+
+                <div class="form-group full-row">
+                    <label class="form-label">내용</label>
+                    <div id="editor"></div>
+                    <input type="hidden" name="context" id="contextInput">
+                    <!-- <textarea name="context" class="content-textarea" rows="15" placeholder="내용을 입력하세요"
+                        required>{% if is_edit %}{{ article.contents }}{% endif %}</textarea> -->
+                </div>
+
+                <div class="form-group full-row">
+                    <label class="form-label">첨부파일</label>
+
+                    <div class="file-upload-wrapper">
+                        <input type="file" name="file" id="fileInput" class="file-input" multiple>
+                        <label for="fileInput" class="file-upload-btn">
+                            <span>📎 파일 선택</span>
+                        </label>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+
+                    {% if is_edit and existing_files %}
+                    <div class="existing-files" style="margin-top:10px;">
+                        <label class="form-label" style="font-size: 14px;">기존 첨부파일:</label>
+                        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                            {% for file in existing_files %}
+                            <div class="exist-file-item"
+                                style="padding:5px 10px; background:#f5f5f5; border-radius:4px; display:flex; align-items:center; gap:8px;">
+                                <a href="{{ file.url }}" target="_blank" style="color:#2f5c9c;">{{ file.name }}</a>
+                                <button type="button" class="delete-existing-btn" data-file-id="{{ file.id }}"
+                                    style="background:#ff4d4d; color:white; border:none; padding:2px 6px; cursor:pointer;">
+                                    X
+                                </button>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="btn-row">
+                    <div class="btn-left">
+                        <a href="{% url 'board:list' board_name %}" class="btn btn-list">목록으로</a>
+                    </div>
+
+                    <div class="btn-right">
+                        <button type="submit" class="btn btn-submit">작성</button>
+
+                        {% if is_edit %}
+                        <a href="{% url 'board:detail' board_name article.article_id %}" class="btn btn-list">취소</a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

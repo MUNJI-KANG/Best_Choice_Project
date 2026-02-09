@@ -1,0 +1,540 @@
+/* -----------------------------
+   페이지 타이틀
+------------------------------ */
+.page-title-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: var(--spacing-xl) auto;
+    padding: 0 var(--spacing-lg);
+    text-align: center;
+}
+
+.page-title {
+    font-size: 43px;
+    font-weight: 900;
+    color: var(--color-text-primary);
+    margin: 0;
+    padding: var(--spacing-xl) 0;
+    background: linear-gradient(135deg, var(--color-deep-blue) 0%, var(--color-deep-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* -----------------------------
+   Hero 섹션 (전체 너비 - page-title-section과 동일한 레이아웃)
+------------------------------ */
+.board-hero {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: var(--spacing-xl) auto var(--spacing-2xl);
+    padding: var(--spacing-2xl) 0;
+    min-height: 300px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 0;
+}
+
+.board-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 1;
+}
+
+.board-hero h2 {
+    font-size: 56px;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0;
+    letter-spacing: -2px;
+    line-height: 1;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 14px 30px rgba(15, 23, 42, 0.55);
+}
+
+/* 이벤트 페이지 전용 hero */
+.event-hero {
+    background-image: url('/static/board/img/event_hero.png');
+}
+
+/* 공지사항 페이지 전용 hero */
+.notice-hero {
+    background-image: url('/static/board/img/notice_hero.png');
+}
+
+/* post 페이지 전용 hero */
+.post-hero {
+    background-image: url('/static/board/img/post_hero.png');
+}
+
+/* FAQ 페이지 전용 hero */
+.faq-hero {
+    /* 이미지를 그 위에 표시 */
+    background-image: url('/static/board/img/aidrip.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* FAQ hero 배경 그라데이션 (이미지 좌우 공간 채우기) */
+.faq-hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* 이미지 좌우 색상에 맞춘 그라데이션 배경 */
+    background: linear-gradient(to right, 
+        #f8f9fa 0%, 
+        #f8f9fa 35%, 
+        #e3f2fd 50%, 
+        #2196f3 65%, 
+        #1976d2 100%
+    );
+    z-index: 0;
+}
+
+.faq-hero h2 {
+    position: relative;
+    z-index: 2;
+}
+
+/* 모바일 반응형은 responsive.css에서 통합 관리 */
+
+
+/* -----------------------------
+   서브 레이아웃
+------------------------------ */
+.sub-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: var(--spacing-2xl) auto 0;
+    padding: var(--spacing-lg);
+}
+
+.sub-content {
+    width: 100%;
+    background: var(--color-card-box);
+    padding: var(--spacing-xl);
+    min-height: 400px;
+    border: 1px solid var(--color-soft-gray-line);
+    overflow: visible;
+}
+
+
+/* -----------------------------
+   검색 바
+------------------------------ */
+
+/* 모든 검색 요소를 한 줄로 */
+.search-section {
+    margin-bottom: var(--spacing-2xl);
+
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+}
+
+/* 왼쪽 (드롭다운들 묶음) */
+.search-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    flex-shrink: 0;
+}
+
+/* 드롭다운 공통 */
+.search-dropdown {
+    padding: 12px 20px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    font-size: 14px;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    min-width: 140px;
+    transition: var(--transition-base);
+    transform-origin: top;
+}
+
+.search-dropdown:hover {
+    border-color: var(--color-deep-blue);
+}
+
+/* 오른쪽 (검색창 + 검색버튼) */
+.search-input-group {
+    display: flex;
+    flex: 1;  
+    align-items: center;
+    gap: var(--spacing-xs);
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px 20px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    font-size: 14px;
+    transition: var(--transition-base);
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-deep-blue);
+}
+
+.search-btn,
+.write-btn {
+    padding: 12px 24px;
+    background: var(--color-deep-blue);
+    color: var(--color-card-box);
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-base);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    text-decoration: none; 
+}
+
+.search-btn:hover,
+.write-btn:hover{
+    background: var(--color-deep-blue-hover);
+}
+
+
+/* 검색 리스트 섹션 */
+.search-list-section {
+    margin-top: var(--spacing-2xl);
+}
+
+.section-title {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xl);
+    padding-bottom: var(--spacing-md);
+    
+}
+
+.write-btn-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--spacing-xl);
+}
+
+/* ============================================
+   게시판 리스트 전용 스타일 (.page-board-list 스코프)
+   ============================================ */
+
+/* 리스트 컨테이너 */
+.page-board-list .facility-list {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    background: var(--color-card-box);
+    border-radius: 8px;
+    border: 1px solid var(--color-soft-gray-line);
+    overflow: hidden;
+}
+
+.page-board-list .facility-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* 헤더 + 아이템 공통 레이아웃 (grid) */
+.page-board-list .facility-header,
+.page-board-list .facility-item {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px 140px 80px; /* 번호 / 제목 / 작성자 / 작성날짜 / 조회수 */
+    align-items: center;
+    padding: 0.9rem 1.1rem;
+    column-gap: 1rem;
+    font-size: 0.95rem;
+    position: relative;
+}
+
+/* 헤더 스타일 */
+.page-board-list .facility-header {
+    background-color: #F5F7FA;
+    border-bottom: 2px solid var(--color-soft-gray-line);
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.page-board-list .facility-header > span {
+    text-align: center;
+}
+
+.page-board-list .facility-header > span:first-child {
+    text-align: center; /* 번호 */
+}
+
+.page-board-list .facility-header > span:nth-child(2) {
+    text-align: left; /* 제목 */
+}
+
+/* 행 스타일 */
+.page-board-list .facility-item {
+    border-bottom: 1px solid var(--color-soft-gray-line);
+    background-color: var(--color-card-box);
+    transition: background-color var(--transition-base);
+}
+
+.page-board-list .facility-item:last-child {
+    border-bottom: none;
+}
+
+.page-board-list .facility-item:hover {
+    background-color: #F9FBFF;
+}
+
+/* 순번 */
+.page-board-list .facility-order {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* 제목 */
+.page-board-list .facility-item .facility-title {
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 0.5rem;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.page-board-list .facility-item .facility-title:hover {
+    text-decoration: underline;
+    color: var(--color-deep-blue);
+}
+
+.page-board-list .facility-header .facility-title {
+    color: var(--color-text-primary);
+    font-weight: 600;
+}
+
+/* hover 시: 제목만 밑줄 */
+.page-board-list .facility-item:hover .facility-title {
+    text-decoration: underline;
+}
+
+/* 작성자 */
+.facility-author {
+    display: inline-flex;       /* 텍스트 + 아이콘을 한 줄 배치 */
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;        /* 줄바꿈 금지 */
+}
+
+/* 관리자 배지 스타일 (게시글 목록) - 구체적인 선택자로 우선순위 확보 */
+.page-board-list .facility-author.admin-badge {
+    color: #d9534f;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+    padding: 2px 16px;
+    border-radius: 4px;
+    border: 1px solid #ffc107;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* 일반 작성자 스타일 - 관리자 배지가 아닌 경우만 적용 */
+.page-board-list .facility-author:not(.admin-badge) {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* 날짜 */
+.page-board-list .facility-date {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* 조회수 */
+.page-board-list .facility-views {
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+/* 구분자 (각 항목 사이) */
+.page-board-list .facility-header > span:not(:last-child)::after,
+.page-board-list .facility-item > span:not(:last-child)::after {
+    content: '|';
+    position: absolute;
+    right: -0.375rem;
+    color: var(--color-soft-gray-line);
+    font-weight: 300;
+}
+
+/* 고정 게시글은 구분자 제거 (pinned-badge 때문에) */
+.page-board-list .pinned-item > span:not(:last-child)::after {
+    display: none;
+}
+
+/* 데이터 없을 때 */
+.page-board-list .facility-empty {
+    grid-template-columns: 1fr;
+    text-align: center;
+    color: var(--color-text-secondary);
+    padding: var(--spacing-lg);
+    border-bottom: none;
+}
+
+.page-selector{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--spacing-xs);
+}
+
+.pagination {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 6px;
+    background: var(--color-card-box);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.page-btn:hover {
+    background: var(--color-muted-blue);
+    color: white;
+}
+
+.page-btn.active {
+    background: var(--color-deep-blue);
+    color: white;
+    border-color: var(--color-deep-blue);
+    font-weight: 700;
+}
+
+.page-btn.arrow {
+    font-weight: 600;
+}
+
+.page-btn.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.page-dots {
+    padding: 6px 10px;
+    color: var(--color-text-secondary);
+}
+
+.sort-page-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.sort-page-container .search-dropdown {
+    min-width: 140px;
+}
+
+.page-selector {
+    display: flex;
+    justify-content: flex-end;
+    width: 150px; /* 원하면 조절 가능 */
+}
+
+.dividing-line {
+    border: 0;
+    border-top: 2px solid var(--color-muted-blue);
+    margin: 20px 0;
+}
+
+/* -----------------------------
+   고정 게시글 스타일
+------------------------------ */
+.pinned-section {
+    margin-bottom: var(--spacing-xl);
+}
+
+.pinned-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--color-deep-blue);
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-xs);
+    border-bottom: 2px solid var(--color-muted-blue);
+}
+
+.page-board-list .pinned-item {
+    background: linear-gradient(135deg, rgba(47, 92, 156, 0.05) 0%, rgba(77, 158, 70, 0.05) 100%);
+    border-left: 4px solid var(--color-deep-blue);
+    font-weight: 600;
+    padding: 0.9rem 1.1rem;
+    position: relative;
+    display: grid;
+    grid-template-columns: auto 80px 1fr 120px 140px 80px; /* 고정배지 / 번호 / 제목 / 작성자 / 작성날짜 / 조회수 */
+    align-items: center;
+    column-gap: 1rem;
+}
+
+.page-board-list .pinned-item .facility-title {
+    font-weight: 700;
+    color: var(--color-deep-blue);
+}
+
+.pinned-badge {
+    display: inline-block;
+    padding: 4px 8px;
+    background: var(--color-deep-blue);
+    color: var(--color-card-box);
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.no-pinned {
+    padding: var(--spacing-lg);
+    text-align: center;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    font-style: italic;
+}
+
+/* 고정 게시글이 없을 때 섹션 숨기기 */
+.pinned-section:has(.no-pinned) {
+    display: none;
+}

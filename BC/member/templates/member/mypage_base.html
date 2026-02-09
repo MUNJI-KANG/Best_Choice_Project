@@ -1,0 +1,45 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'member/css/mypage_base.css' %}" />
+{% endblock %}
+{% block mypagecss %}
+{% endblock %}
+
+{% block script1 %}
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+{% endblock %}
+{% block title %}
+mypage base
+{% endblock %}
+{% block contents %}
+<!-- 회원가입 컨테이너 -->
+<div class="register-container">
+  <div class="register-wrapper">
+
+    <!-- PC 브랜딩 -->
+    <div class="register-brand">
+      <h2>My Page</h2>
+      <ul class="register-brand-features">
+        <li><a href="{% url 'member:info' %}" class="{% if request.path == '/member/info/' or request.path == '/member/edit/' or request.path == '/member/password/' %}active{% endif %}">내 정보</a></li>
+        <li><a href="{% url 'member:myreservation' %}" class="{% if request.path == '/member/myreservation/' %}active{% endif %}">내 예약 내역</a></li>
+        <li><a href="{% url 'member:myrecruitment' %}" class="{% if request.path == '/member/myrecruitment/' %}active{% endif %}">내 모집글</a></li>
+        <li><a href="{% url 'member:myarticle' %}" class="{% if request.path == '/member/myarticle/' %}active{% endif %}">내 게시글</a></li>
+        <li><a href="{% url 'member:myjoin' %}" class="{% if request.path == '/member/myjoin/' %}active{% endif %}">내 참여 내역</a></li>
+      </ul>
+    </div>
+
+    <!-- 내용 담을 컨테이너 -->
+
+    {% block mypagecontainer %}
+    {% endblock %}
+
+
+
+
+<!-- mypage내용 담을 container -->
+  </div> <!-- register-wrapper -->
+</div> <!-- register-container -->
+
+
+{% endblock %}

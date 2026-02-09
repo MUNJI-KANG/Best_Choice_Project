@@ -1,0 +1,85 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}시설 안전점검 통계{% endblock %}
+
+{% block extra_head %}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <!-- 메인 콘텐츠 -->
+    <div class="admin-main">
+        <h1 class="box-header" style="text-align: center;">시설 안전 통계</h1>
+
+        <!-- 필터 -->
+        <div class="filter-section">
+            <form method="GET" class="filter-form">
+                <select name="region" class="filter-select">
+                    <option value="">전체 지역</option>
+                    {% for region in regions %}
+                    <option value="{{ region }}" {% if selected_region == region %}selected{% endif %}>
+                        {{ region }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <select name="sport" class="filter-select">
+                    <option value="">전체 종목</option>
+                    {% for sport in sports %}
+                    <option value="{{ sport }}" {% if selected_sport == sport %}selected{% endif %}>
+                        {{ sport }}
+                    </option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="filter-btn">적용</button>
+            </form>
+            <!-- 상세 보기 버튼 -->
+            <div style="display: flex; gap: 15px;">
+                <a href="{% url 'manager:facility_inspection_yearly_detail' %}" class="filter-btn" style="text-decoration: none; display: inline-block; padding: 12px 30px;">
+                    연도별 상세
+                </a>
+                <a href="{% url 'manager:facility_inspection_grade_detail' %}" class="filter-btn" style="text-decoration: none; display: inline-block; padding: 12px 30px;">
+                    점검 등급별 상세
+                </a>
+            </div>
+        </div>
+
+        <!-- 차트 섹션 -->
+        <div class="charts-section">
+            <!-- 연도별 안전점검 추세 -->
+            <div class="chart-card">
+                <h3>연도별 안전점검 추세</h3>
+                <canvas id="yearlyInspectionChart"></canvas>
+            </div>
+
+            <!-- 등급별 분포 -->
+            <div class="chart-card">
+                <h3>안전점검 등급별 분포</h3>
+                <canvas id="gradeDistributionChart"></canvas>
+            </div>
+
+            <!-- 지역별 안전점검 통계 -->
+            <div class="chart-card">
+                <h3>지역별 안전점검 통계</h3>
+                <canvas id="regionInspectionChart"></canvas>
+            </div>
+
+            <!-- 종목별 안전점검 통계 -->
+            <div class="chart-card">
+                <h3>종목별 안전점검 통계</h3>
+                <canvas id="sportInspectionChart"></canvas>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'manager/js/facility_inspection_stats.js' %}"></script>
+    <script>
+        // 데이터 전달
+        const yearlyInspectionTrend = {{ yearly_inspection_trend|safe }};
+        const gradeDistribution = {{ grade_distribution|safe }};
+        const regionInspectionStats = {{ region_inspection_stats|safe }};
+        const sportInspectionStats = {{ sport_inspection_stats|safe }};
+    </script>
+{% endblock %}

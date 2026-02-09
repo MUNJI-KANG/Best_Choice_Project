@@ -1,0 +1,193 @@
+/* ------------------------------------
+   공통 폼 박스 스타일
+------------------------------------ */
+
+.form-wrapper {
+    background: var(--color-card-box);
+    padding: var(--spacing-xl);
+    border-radius: 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    margin-top: var(--spacing-xl);
+}
+
+/* ------------------------------------
+   라벨 / 인풋 / 텍스트 영역
+------------------------------------ */
+
+.form-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 6px;
+    font-size: 15px;
+    color: var(--color-text-primary);
+    background: white;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-deep-blue);
+}
+
+/* 본문 작성란 전용 스타일 */
+.content-textarea {
+    width: 100%;
+    height: 200px;
+    resize: vertical;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 6px;
+    font-size: 15px;
+    color: var(--color-text-primary);
+}
+
+.content-textarea:focus {
+    outline: none;
+    border-color: var(--color-deep-blue);
+}
+
+/* ------------------------------------
+   그룹 / 행 구조
+------------------------------------ */
+
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.full-row {
+    width: 100%;
+}
+
+.form-row {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.form-group.small {
+    flex: 1;
+}
+
+/* ------------------------------------
+   버튼 그룹
+------------------------------------ */
+
+.btn-row {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn {
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-submit {
+    background: var(--color-deep-blue);
+    color: white;
+}
+
+.btn-submit:hover {
+    background: var(--color-deep-blue-hover);
+}
+
+.btn-list {
+    background: #ccc;
+}
+
+.btn-list:hover {
+    background: #b5b5b5;
+}
+
+/* ------------------------------------
+   상단 제목
+------------------------------------ */
+
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.page-title-section {
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* ------------------------------------
+   컨테이너 정렬
+------------------------------------ */
+
+.sub-container,
+.page-title-section {
+    max-width: 1400px;
+    margin: auto;
+}
+
+/* ------------------------------------
+   공지 방식 선택
+------------------------------------ */
+
+.hidden {
+    display: none;
+}
+
+.notice-type {
+    display: flex;
+    gap: var(--spacing-md);
+    font-size: 16px;
+}
+
+.notice-type input {
+    margin-right: 6px;
+}
+
+/* ------------------------------------
+   파일 업로드
+------------------------------------ */
+
+.file-hidden {
+    display: none;
+}
+
+.file-upload-wrapper {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    width: 100%;
+}
+
+.file-name {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+.file-btn {
+    background: var(--color-deep-blue);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.file-btn:hover {
+    background: var(--color-deep-blue-hover);
+}

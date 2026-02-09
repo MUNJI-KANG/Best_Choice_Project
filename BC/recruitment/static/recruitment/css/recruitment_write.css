@@ -1,0 +1,398 @@
+/* -----------------------------
+   페이지 타이틀
+------------------------------ */
+.page-title-section {
+    width: 100%;
+    max-width: 1200px;
+    margin: var(--spacing-xl) auto;
+    padding: 0 var(--spacing-lg);
+    text-align: center;
+}
+
+.page-title {
+    font-size: 43px;
+    font-weight: 900;
+    margin: 0;
+    padding: var(--spacing-xl) 0;
+    background: linear-gradient(135deg, var(--color-deep-blue) 0%, var(--color-deep-green) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+/* -----------------------------
+   서브 컨테이너
+------------------------------ */
+.sub-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: var(--spacing-2xl) auto 0;
+    padding: var(--spacing-lg);
+}
+
+.sub-content {
+    width: 100%;
+    background: var(--color-card-box);
+    padding: var(--spacing-xl);
+    min-height: 400px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 12px;
+}
+
+
+/* -----------------------------
+   폼 전체 래퍼
+------------------------------ */
+.form-wrapper {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+
+/* 라벨 */
+.form-label {
+    display: block;
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-text-primary);
+}
+
+
+/* 입력 줄 간격 */
+.full-row,
+.form-row {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-row {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.form-row .form-group.small {
+    flex: 1;
+    min-width: 180px;
+}
+
+
+/* input / select */
+.form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 8px;
+    background: var(--color-card-box);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+    box-sizing: border-box;
+}
+
+/* select 전용 스타일 */
+select.form-input {
+    height: auto;
+    min-height: 44px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23333' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+/* input[type="text"], input[type="number"] 전용 */
+input[type="text"].form-input,
+input[type="number"].form-input {
+    height: 44px;
+}
+
+/* focus 스타일 */
+.form-input:focus {
+    border-color: var(--color-deep-blue);
+    box-shadow: 0 0 0 3px rgba(47, 92, 156, 0.1);
+    outline: none;
+}
+
+.form-input::placeholder {
+    color: var(--color-text-secondary);
+}
+
+/* Editor 영역 */
+#editor {
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* 본문 작성란 전용 스타일 (사용 안 함, editor 사용) */
+.content-textarea {
+    width: 100%;
+    padding: var(--spacing-md) var(--spacing-lg);
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    font-size: 1rem;
+    min-height: 300px;
+    resize: vertical;
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
+}
+
+.content-textarea:focus {
+    border-color: var(--color-deep-blue);
+    box-shadow: 0 0 0 2px rgba(47, 92, 156, 0.2);
+    outline: none;
+}
+
+
+/* -----------------------------
+   버튼 영역
+------------------------------ */
+.btn-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+}
+
+.btn {
+    min-width: 100px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-background);
+    color: var(--color-text-primary);
+    border-radius: 8px;
+    transition: all var(--transition-base);
+}
+
+/* 작성 버튼 (primary) */
+.btn-submit {
+    background: var(--color-deep-blue);
+    border-color: var(--color-deep-blue);
+    color: white;
+}
+
+.btn-submit:hover {
+    background: var(--color-deep-blue-hover);
+}
+
+/* 목록 버튼 */
+.btn-list:hover {
+    background: var(--color-soft-gray-line);
+}
+.sub-container,
+.sub-content,
+.form-wrapper,
+.form-row,
+.form-group {
+    overflow: visible ;
+}
+
+
+.form-row .form-group,
+.full-row {
+    margin-bottom: var(--spacing-lg);
+}
+
+/* label과 input 사이 간격 통일 */
+.form-label {
+    margin-bottom: var(--spacing-xs);
+}
+
+
+
+
+
+
+/* 파일 업로드 */
+.file-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.file-input {
+    display: none;
+}
+
+.file-upload-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--color-card-box);
+    border: 2px dashed var(--color-soft-gray-line);
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all var(--transition-base);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.file-upload-btn:hover {
+    border-color: var(--color-deep-blue);
+    background: var(--color-background);
+    color: var(--color-deep-blue);
+}
+
+.file-upload-btn span {
+    display: inline-block;
+}
+
+.file-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-xs);
+    margin-top: var(--spacing-sm);
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--color-background);
+    border-radius: 6px;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+.file-item-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.file-item-remove {
+    margin-left: var(--spacing-sm);
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-size: 14px;
+    transition: color var(--transition-base);
+}
+
+.file-item-remove:hover {
+    color: var(--color-deep-blue);
+}
+
+
+/* ============================
+   첨부파일 섹션 (수정 페이지)
+============================ */
+.attachment-section {
+    margin-top: 24px;
+    padding: 18px 20px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+}
+
+.attachment-section .section-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+.attachment-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.attachment-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 6px 0;
+    border-bottom: 1px dashed #e5e7eb;
+}
+
+.attachment-item:last-child {
+    border-bottom: none;
+}
+
+.attachment-link {
+    flex: 1;
+    font-size: 0.9rem;
+    color: #1f2937;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.attachment-link:hover {
+    text-decoration: underline;
+}
+
+.attachment-delete {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.8rem;
+    color: #ef4444;
+    white-space: nowrap;
+}
+
+.attachment-delete input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+}
+
+/* 새 첨부 업로드 영역 */
+.attachment-upload-section {
+    margin-top: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.attachment-upload-section .form-label {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.attachment-upload-section input[type="file"] {
+    font-size: 0.85rem;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-row .form-group.small {
+        min-width: 100%;
+    }
+
+    .attachment-section {
+        padding: 14px 12px;
+    }
+
+    .attachment-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .attachment-delete {
+        margin-top: 4px;
+    }
+
+    .btn-row {
+        flex-direction: column-reverse;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}

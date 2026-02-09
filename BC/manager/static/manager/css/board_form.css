@@ -1,0 +1,200 @@
+.form-wrapper {
+    background: var(--color-card-box);
+    padding: var(--spacing-xl);
+    border-radius: 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    margin-top: var(--spacing-xl);
+}
+
+/* ------------------------------------
+   라벨 / 인풋 / 텍스트 영역
+------------------------------------ */
+.form-label {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-xs);
+    display: block;
+}
+
+.form-input {
+    width: 100%;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 6px;
+    font-size: 15px;
+    color: var(--color-text-primary);
+    background: white;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: var(--color-deep-blue);
+}
+
+/* 본문 작성란 전용 스타일 */
+.content-textarea {
+    width: 100%;
+    height: 200px;
+    resize: vertical;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 6px;
+    font-size: 15px;
+    color: var(--color-text-primary);
+}
+
+/* ------------------------------------
+   구조 정렬
+------------------------------------ */
+.form-group {
+    margin-bottom: var(--spacing-lg);
+}
+
+.full-row { width: 100%; }
+
+.form-row {
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+.form-group.small {
+    flex: 1;
+}
+
+/* ------------------------------------
+   버튼 영역
+------------------------------------ */
+.btn-row {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.btn {
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-size: 16px;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.btn-submit {
+    background: var(--color-deep-blue);
+    color: white;
+}
+
+.btn-submit:hover {
+    background: var(--color-deep-blue-hover);
+}
+
+.btn-list {
+    background: #ccc;
+}
+
+.btn-list:hover {
+    background: #b5b5b5;
+}
+
+/* ------------------------------------
+   페이지 제목
+------------------------------------ */
+.page-title {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+}
+
+.page-title-section {
+    margin-top: var(--spacing-xl);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* ------------------------------------
+   컨테이너
+------------------------------------ */
+.sub-container,
+.page-title-section {
+    max-width: 1400px;
+    margin: auto;
+}
+
+/* ------------------------------------
+   파일 업로드 (수정 완료)
+------------------------------------ */
+
+.file-upload-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+/* 문제 해결 핵심 부분 */
+.file-input {
+    position: absolute;
+    opacity: 0;        /* 투명 */
+    width: 0;
+    height: 0;         /* 크기 0 (UI 영향 X) */
+    overflow: hidden;
+}
+
+.hidden{
+    display: none;
+}
+.file-upload-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--color-card-box);
+    border: 2px dashed var(--color-soft-gray-line);
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: all var(--transition-base);
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+}
+
+.file-upload-btn:hover {
+    border-color: var(--color-deep-blue);
+    background: var(--color-background);
+    color: var(--color-deep-blue);
+}
+
+/* 현재 파일 박스 */
+.current-file-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--color-background);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+.file-remove-btn {
+    padding: 4px 8px;
+    background: transparent;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+}
+
+.file-remove-btn:hover {
+    color: var(--color-deep-blue);
+}
+.content-textarea {
+    width: 100%;
+    height: 220px;          
+    resize: none;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 6px;
+    font-size: 15px;
+    line-height: 1.6;
+    box-sizing: border-box;
+}

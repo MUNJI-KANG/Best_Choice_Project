@@ -1,0 +1,204 @@
+/* ------------------------------------
+   컨테이너 / 카드 스타일
+------------------------------------ */
+.detail-wrapper {
+    background: var(--color-card-box);
+    padding: var(--spacing-xl);
+    border-radius: 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    margin-top: var(--spacing-xl);
+}
+
+/* ------------------------------------
+   제목 영역
+------------------------------------ */
+.detail-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-md);
+    word-break: keep-all;
+}
+
+/* ------------------------------------
+   메타 정보
+------------------------------------ */
+.detail-meta {
+    display: flex;
+    gap: var(--spacing-lg);
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* ------------------------------------
+   본문 내용
+------------------------------------ */
+.detail-content {
+    padding: var(--spacing-lg) 0;
+    line-height: 1.7;
+    font-size: 16px;
+    color: var(--color-text-primary);
+    border-top: 1px solid var(--color-soft-gray-line);
+    border-bottom: 1px solid var(--color-soft-gray-line);
+    margin-bottom: var(--spacing-xl);
+    white-space: pre-line;
+}
+
+/* ------------------------------------
+   공통 섹션 제목
+------------------------------------ */
+.detail-section-title,
+.detail-files h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 30px 0 10px;
+    color: var(--color-text-primary);
+    border-bottom: 1px solid var(--color-soft-gray-line);
+    padding-bottom: 6px;
+}
+
+/* ------------------------------------
+   첨부파일 리스트
+------------------------------------ */
+.detail-file-list,
+.detail-files ul {
+    list-style: none;
+    padding: 0;
+}
+
+.detail-file-list li,
+.detail-files li {
+    padding: 6px 0;
+    font-size: 15px;
+}
+
+.detail-file-list a,
+.detail-files a {
+    color: var(--color-deep-blue);
+    text-decoration: none;
+}
+
+.detail-file-list a:hover,
+.detail-files a:hover {
+    text-decoration: underline;
+}
+
+/* ------------------------------------
+   이미지 섹션
+------------------------------------ */
+.detail-image-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.detail-image-box {
+    width: 250px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.detail-image {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* ------------------------------------
+   버튼 영역
+------------------------------------ */
+.detail-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: var(--spacing-xl);
+}
+
+.btn {
+    padding: 12px 22px;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition-base);
+    text-decoration: none;
+}
+
+.btn-edit {
+    background: var(--color-deep-blue);
+    color: white;
+}
+
+.btn-edit:hover {
+    background: var(--color-deep-blue-hover);
+}
+
+.btn-list {
+    background: #ccc;
+    color: black;
+}
+
+.btn-list:hover {
+    background: #b5b5b5;
+}
+.comment-section {
+    margin-top: 32px;
+}
+
+.comment-section .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 16px;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.comment-item {
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #f9fafb;
+}
+
+.comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.comment-writer {
+    font-weight: 600;
+    color: #111827;
+}
+
+.comment-date {
+    color: #6b7280;
+    font-size: 12px;
+}
+
+.comment-content {
+    color: #111827;
+    line-height: 1.6;
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.comment-empty {
+    text-align: center;
+    padding: 18px 0;
+    color: #6b7280;
+    font-size: 14px;
+}

@@ -1,0 +1,46 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}배너 상세보기{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'manager/css/banner_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-title-section">
+    <h2 class="page-title">배너 상세보기</h2>
+</div>
+
+<div class="sub-container">
+    <div class="sub-content">
+
+        <div class="form-wrapper">
+
+            {% if banner.url %}
+                <img src="/media/{{ banner.url }}"
+                     style="max-width:300px; border-radius:8px; margin-bottom:20px;">
+            {% endif %}
+
+            <p><strong>제목:</strong> {{ banner.title }}</p>
+            <p><strong>설명:</strong> {{ banner.context }}</p>
+            <p><strong>시작:</strong> {{ banner.start_date }}</p>
+            <p><strong>종료:</strong> {{ banner.end_date }}</p>
+
+            <div class="btn-row">
+                <!-- 강제 다운로드 경로 -->
+                <a href="{% url 'manager:banner_download' banner.img_id %}">
+                    <button type="button" class="btn btn-submit">파일 다운로드</button>
+                </a>
+
+                <a href="{% url 'manager:banner_edit' banner.img_id %}">
+                    <button type="button" class="btn btn-submit">수정하기</button>
+                </a>
+
+                <button type="button" class="btn btn-list" onclick="history.back()">뒤로가기</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

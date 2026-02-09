@@ -1,0 +1,201 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'common/css/index.css' %}" />
+{% endblock %}
+{% block template_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+{% endblock %}
+{% block script1 %}
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="{% static 'common/js/main.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+  할래말래
+{% endblock %}
+{% block contents %}
+ <main class="main">
+    <!-- 템플릿 스타일 메인 배너 (Swiper) -->
+  <section class="template-main-banner">
+    <div class="swiper-container template-main-swiper">
+      <ul class="swiper-wrapper">
+
+        {% for b in banners %}
+        <li class="swiper-slide" style="background-image: url('/media/{{ b.url }}'); background-size: cover; background-position: center;">
+          <div class="banner-txt-box">
+            <p class="move-txt01">{{ b.title }}</p>
+            <p class="move-txt02">{{ b.context }}</p>
+            <div class="swiper-pager"></div>
+            <p class="scroll">Scroll Down</p>
+          </div>
+        </li>
+        {% endfor %}
+
+        {% if banners|length == 0 %}
+        <li class="swiper-slide">
+          <div class="banner-txt-box">
+            <p class="move-txt01">등록된 배너가 없습니다</p>
+            <p class="move-txt02">관리자에서 배너를 추가해주세요</p>
+            <div class="swiper-pager"></div>
+            <p class="scroll">Scroll Down</p>
+          </div>
+        </li>
+        {% endif %}
+
+      </ul>
+    </div>
+  </section>
+
+    <!-- 템플릿 섹션 01: 소개 -->
+    <section class="template-section-01 reveal">
+      <div class="inner1">
+        <!-- 날씨 애니메이션 SVG -->
+        <div class="weather-animation">
+          <svg class="weather-cloud" viewBox="0 0 200 120" xmlns="http://www.w3.org/2000/svg">
+            <path class="cloud-path" d="M50,70 Q30,50 50,40 Q50,20 70,20 Q90,10 110,20 Q130,10 150,20 Q170,20 170,40 Q190,40 190,60 Q210,60 190,80 Q190,100 170,100 L50,100 Q30,100 30,80 Q10,80 30,70 Z" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="2"/>
+            <path class="cloud-open-left" d="M50,80 L30,80" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200"/>
+            <path class="cloud-open-right" d="M170,80 L150,80" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-dasharray="200" stroke-dashoffset="200"/>
+          </svg>
+          <svg class="weather-rain" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <line class="rain-line rain-line-1" x1="40" y1="0" x2="35" y2="200" stroke="rgba(135,206,250,0.6)" stroke-width="2" stroke-linecap="round"/>
+            <line class="rain-line rain-line-2" x1="80" y1="0" x2="75" y2="200" stroke="rgba(135,206,250,0.6)" stroke-width="2" stroke-linecap="round"/>
+            <line class="rain-line rain-line-3" x1="120" y1="0" x2="115" y2="200" stroke="rgba(135,206,250,0.6)" stroke-width="2" stroke-linecap="round"/>
+            <line class="rain-line rain-line-4" x1="160" y1="0" x2="155" y2="200" stroke="rgba(135,206,250,0.6)" stroke-width="2" stroke-linecap="round"/>
+            <line class="rain-line rain-line-5" x1="60" y1="0" x2="55" y2="200" stroke="rgba(135,206,250,0.5)" stroke-width="2" stroke-linecap="round"/>
+            <line class="rain-line rain-line-6" x1="100" y1="0" x2="95" y2="200" stroke="rgba(135,206,250,0.5)" stroke-width="2" stroke-linecap="round"/>
+            <line class="rain-line rain-line-7" x1="140" y1="0" x2="135" y2="200" stroke="rgba(135,206,250,0.5)" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+          <div class="weather-lightning"></div>
+        </div>
+        <div class="widget widget--today">
+          <h2>오늘의 날씨</h2>
+          <div class="weather-info" id="weatherInfo">
+            <div class="weather-loading">날씨 정보를 불러오는 중...</div>
+          </div>
+        </div>
+      </div>
+      <div class="inner2">
+        <p class="tit">할래말래<br><b>스포츠 시설 예약 플랫폼</b></p>
+        <p class="txt">할래말래는 다양한 스포츠 시설을 쉽고 빠르게 예약할 수 있는 플랫폼입니다.<br>
+           간편한 온라인 예약, 실시간 예약 현황, 안전한 결제 시스템을 제공합니다.</p>
+        <div class="more"><a href="{% url 'facility:list' %}">MORE VIEW</a></div>
+      </div>
+      <a class="btn" href="{% url 'reservation:reservation_list' %}">예약하기</a>
+    </section>
+
+    <!-- 템플릿 섹션: 랜덤 시설 위젯 -->
+    <section class="template-section-facilities reveal">
+      <div class="facilities-container">
+        <h2 class="facilities-title">추천 시설</h2>
+        <ul class="facilities-list" id="randomFacilitiesList">
+          {% if random_facilities %}
+            {% for facility in random_facilities %}
+            <li class="facility-item">
+              <a href="{% url 'facility:detail' facility.faci_id %}" class="facility-link">
+                <span class="facility-name">{{ facility.name }}</span>
+                <span class="facility-address">{{ facility.address }}</span>
+                <span class="facility-description">{{ facility.description }}</span>
+              </a>
+            </li>
+            {% endfor %}
+          {% else %}
+            <li class="facility-item">등록된 시설이 없습니다.</li>
+          {% endif %}
+        </ul>
+      </div>
+    </section>
+
+    <!-- 템플릿 섹션 02: 아이콘 카드 (4개) -->
+    <section class="template-section-02 reveal">
+      <ul>
+        <li><a href="{% url 'facility:list' %}">
+          <div class="icon">🏋️</div>
+          <span>시설 안내</span>
+          <p>다양한 스포츠 시설을<br>확인하세요</p>
+        </a></li>
+        <li><a href="{% url 'recruitment:recruitment_list' %}">
+          <div class="icon">👥</div>
+          <span>모집할래</span>
+          <p>함께 즐길 사람을<br>찾아보세요</p>
+        </a></li>
+        <li><a href="{% url 'reservation:reservation_list' %}">
+          <div class="icon">📅</div>
+          <span>예약할래</span>
+          <p>원하는 시설을<br>예약하세요</p>
+        </a></li>
+        <li><a href="{% url 'board:list' 'notice' %}">
+          <div class="icon">📢</div>
+          <span>정보알래</span>
+          <p>공지사항과 이벤트를<br>확인하세요</p>
+        </a></li>
+      </ul>
+    </section>
+
+
+
+  </main>
+
+  <script>
+  $(document).ready(function(){
+    // 배너 텍스트 애니메이션
+    $('.template-main-banner .move-txt01').delay(200).animate({"margin-top":"0","opacity":"1"},600);
+    $('.template-main-banner .move-txt02').delay(600).animate({"opacity":"1"},600);
+    $('.template-main-banner .swiper-pager').delay(600).animate({"opacity":"1"},600);
+    $('.template-main-banner .scroll').delay(1000).animate({"opacity":"1"},600);
+    
+    // Swiper 초기화
+    var swiper = new Swiper(".template-main-swiper", {
+      effect: "fade",
+      fadeEffect: { crossFade: true },
+      loop: true,
+      speed: 1000,
+      autoplay: {
+        delay: 3500,
+        disableOnInteraction: false,
+      },
+      pagination: {
+        el: ".swiper-pager",
+        bulletActiveClass: 'on',
+        clickable: true,
+        renderBullet: function (index, className) {
+          return '<span class="' + className + '"></span>';
+        },
+      },
+    });
+    swiper.on('slideChangeTransitionStart', function () {
+        // 모든 슬라이드 텍스트 초기화 (CSS와 동일하게!)
+        $('.move-txt01').css({opacity:0, marginTop:'-25px'});
+        $('.move-txt02').css({opacity:0});
+
+        var active = $('.swiper-slide-active');
+
+        var t1 = active.find('.move-txt01');
+        var t2 = active.find('.move-txt02');
+
+        t1.animate({opacity:1, marginTop:'0px'}, 600);
+        t2.delay(200).animate({opacity:1}, 600);
+    });
+  });
+  </script>
+  
+  {% if messages %}
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      {% for message in messages %}
+        // Toast 함수가 로드될 때까지 대기
+        if (typeof showToast === 'function') {
+          showToast('{{ message|escapejs }}', '{{ message.tags }}');
+        } else {
+          // Toast 함수가 아직 로드되지 않았으면 대기
+          setTimeout(function() {
+            if (typeof showToast === 'function') {
+              showToast('{{ message|escapejs }}', '{{ message.tags }}');
+            }
+          }, 100);
+        }
+      {% endfor %}
+    });
+  </script>
+  {% endif %}
+{% endblock %}

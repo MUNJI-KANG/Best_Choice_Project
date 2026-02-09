@@ -1,0 +1,100 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}관리자 - {{ article.title }} 상세보기{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'manager/css/manager_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="article-box">
+    <h1 class="box-header">게시글 상세보기</h1>
+
+    <div class="detail-wrapper">
+        <h2 class="detail-title">{{ article.title }}</h2>
+
+        <div class="detail-meta">
+            <span>작성자: {{ author }}</span>
+            <span>작성일: {{ article.reg_date|date:"Y-m-d" }}</span>
+            <span>조회수: {{ article.view_cnt }}</span>
+        </div>
+
+        <div class="detail-content">
+            {{ article.contents|safe }}
+        </div>
+
+        {% if files %}
+            <section class="file-section">
+                <b>첨부파일</b>
+
+                <ul class="file-list">
+                {% for f in files %}
+                    <li class="file-item">
+                        <a href="{% url 'manager:download' f.add_info_id %}">
+                            📄 {{ f.file_name }}
+                        </a>
+                    </li>
+                {% endfor %}
+                </ul>
+            </section>
+        {% endif %}
+
+        {% if images %}
+        <div class="detail-images-section">
+            <h3 class="detail-section-title">이미지 첨부</h3>
+            <div class="detail-image-grid">
+                {% for image in images %}
+                <div class="detail-image-box">
+                    <img src="{{ image.url }}" class="detail-image">
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        <!-- 댓글 섹션 -->
+        <section class="comment-section">
+            <h3 class="section-title">댓글 ({{ comments|length }})</h3>
+
+            <ul class="comment-list">
+                {% for comment in comments %}
+                 <li class="comment-item {% if comment.is_deleted %}comment-deleted{% endif %}">
+                    <div class="comment-meta">
+                        <span class="comment-writer {% if comment.is_admin %}admin-badge{% elif comment.is_author %}author-badge{% endif %}">
+                            {{ comment.author }}{% if comment.is_admin %} 👑{% elif comment.is_author %} (작성자) {% endif %}
+                        </span>
+                        <span class="comment-date">
+                            {{ comment.reg_date|date:"Y-m-d H:i" }}
+                        </span>
+
+                        {% if not comment.is_deleted %}
+                        <button type="button"
+                                class="comment-delete-btn"
+                                data-comment-id="{{ comment.comment_id }}">
+                            삭제
+                        </button>
+                        {% endif %}
+                    </div>
+
+                    <p class="comment-content">{{ comment.comment|linebreaksbr }}</p>
+                </li>
+                {% empty %}
+                <li class="comment-empty">아직 등록된 댓글이 없습니다.</li>
+                {% endfor %}
+            </ul>
+
+        </section>
+
+
+        <div class="detail-actions">
+            <a href="{% url 'manager:board_edit' article.board_id_id article.article_id %}" class="btn btn-edit">수정</a>
+            <a href="{% url 'manager:board_list' article.board_id_id %}" class="btn btn-list">목록</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'manager/js/comment_delete.js' %}"></script>
+{% endblock %}

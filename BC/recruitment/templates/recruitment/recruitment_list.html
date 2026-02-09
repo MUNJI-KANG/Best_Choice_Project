@@ -1,0 +1,236 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'recruitment/css/recruitment_list.css' %}" />
+{% endblock %}
+
+
+{% block title %}
+모집할래 - 할래말래
+{% endblock %}
+
+{% block script1 %}
+<script src="{% static 'recruitment/js/recruitment_list.js' %}"></script>
+{% endblock %}
+
+{% block contents %}
+
+<!-- Hero 섹션 -->
+<div class="board-hero recruitment-hero reveal">
+  <h2>모집할래</h2>
+</div>
+
+
+<!-- 서브 컨테이너 -->
+<div class="sub-container page-recruitment reveal">
+
+    <div class="sub-content">
+        
+    <!-- 검색 섹션 -->
+<form id="searchForm" method="get">
+    <section class="search-section">
+        <div class="search-controls">
+            <!-- 검색 타입 -->
+            <select class="search-dropdown" id="searchType" name="search_type">
+                <option value="all" {% if search_type == "all" %}selected{% endif %}>전체</option>
+                <option value="facility" {% if search_type == "facility" %}selected{% endif %}>시설명</option>
+                <option value="sport" {% if search_type == "sport" %}selected{% endif %}>종목명</option>
+            </select>
+
+            <!-- 시/도 선택 -->
+            <select id="sido" class="search-dropdown" name="sido">
+                <option value="">시/도 선택</option>
+                {% if sido %}
+                    <!-- JS에서 옵션 채울 거면, 선택값만 유지용 data 속성 -->
+                {% endif %}
+            </select>
+
+            <!-- 구/군 선택 -->
+            <select id="sigungu" class="search-dropdown" name="sigungu">
+                <option value="">구/군 선택</option>
+            </select>
+        </div>
+
+        <div class="search-input-group">
+            <input
+                type="text"
+                class="search-input"
+                id="searchKeyword"
+                name="keyword"
+                placeholder="검색어를 입력하세요"
+                value="{{ keyword }}"
+            >
+            <!-- 검색 버튼은 submit -->
+            <button type="submit" class="search-btn" id="searchBtn">
+                <span>🔍</span> 검색
+            </button>
+        </div>
+    </section>
+
+    <section class="search-list-section">
+        
+        
+        <div class="sort-page-container">
+
+            <!-- 왼쪽: 정렬 + 모집상태 -->
+            <div class="sort-left-group">
+                <select class="search-dropdown" id="sortSelect" name="sort">
+                    <option value="recent" {% if sort == "recent" %}selected{% endif %}>최신순</option>
+                    <option value="title" {% if sort == "title" %}selected{% endif %}>제목순</option>
+                    <option value="end_set_date" {% if sort == "end_set_date" %}selected{% endif %}>마감임박순</option>
+                    <option value="views" {% if sort == "views" %}selected{% endif %}>조회수순</option>
+                </select>
+
+                <select class="search-dropdown" id="statusFilter" name="status">
+                    <option value="all" {% if status == "all" %}selected{% endif %}>전체</option>
+                    <option value="open" {% if status == "open" %}selected{% endif %}>모집중</option>
+                    <option value="closed" {% if status == "closed" %}selected{% endif %}>마감</option>
+                </select>
+            </div>
+
+            <!-- 오른쪽: 페이지당 개수 -->
+            <div class="sort-right-group">
+                <select class="search-dropdown" id="perPageSelect" name="per_page">
+                    <option value="15" {% if per_page == 15 %}selected{% endif %}>15개</option>
+                    <option value="30" {% if per_page == 30 %}selected{% endif %}>30개</option>
+                    <option value="50" {% if per_page == 50 %}selected{% endif %}>50개</option>
+                    <option value="100" {% if per_page == 100 %}selected{% endif %}>100개</option>
+                </select>
+            </div>
+        </div>
+
+
+        <hr class="dividing-line">
+            
+            
+            
+<div class="facility-list recruitment-list" id="facilityList">
+    <!-- 헤더 -->
+    <div class="facility-header">
+        <span class="facility-col col-no">번호</span>
+        <span class="facility-col col-title">제목</span>
+        <span class="facility-col col-num">모집인원</span>
+        <span class="facility-col col-status">마감여부</span>
+        <span class="facility-col col-status">마감날짜</span>
+        <span class="facility-col col-writer">작성자</span>
+        <span class="facility-col col-views">조회수</span>
+        <span class="facility-col col-date">작성날짜</span>
+    </div>
+
+    <ul>
+        {% for item in page_obj %}
+            <li class="facility-item">
+                
+                <!-- 번호 -->
+                <span class="facility-col col-no">
+                    {{ forloop.counter0|add:page_obj.start_index }}
+                </span>
+
+                <!-- 제목 -->
+                <span class="facility-col col-title">
+                    <a href="{% url 'recruitment:recruitment_detail' item.pk %}">
+                        {{ item.title }} ({{ item.comment_count }})
+                    </a>
+                </span>
+
+                
+                <!-- 모집인원 -->
+                <span class="facility-col col-num">
+                    {{ item.num_member }}명
+                </span>
+                
+                <!-- 마감여부 -->
+                <span class="facility-col col-status">
+                    {% if item.is_closed %}
+                        <span class="badge badge-end">마감</span>
+                    {% else %}
+                        <span class="badge badge-open">모집중</span>
+                    {% endif %}
+
+                </span>
+
+                <!-- 마감날짜  -->
+                <span class="facility-col col-status">
+                    
+                    <span class="facility-col col-date">
+                        
+                        {% if item.is_always_open %}
+                        상시모집
+                        {% else %}
+                        {{ item.end_set_date }}
+                        {% endif %}
+
+                    </span>
+
+                    
+                </span>
+
+                
+                
+                <!-- 작성자 -->
+                <span class="facility-col col-writer">
+                    {{ item.member_id.nickname }}
+                </span>
+                <!-- 조회수 -->
+                <span class="facility-col col-views">
+                    {{ item.view_cnt }}
+                </span>
+                
+                <!-- 작성날짜 -->
+                <span class="facility-col col-date">
+                    {{ item.reg_date|date:"Y-m-d" }}
+                </span>
+            </li>
+        {% empty %}
+            <li class="facility-empty">등록된 모집글이 없습니다.</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+
+        </section>
+    </form>
+    
+    
+    
+    
+    
+        <div class="write-btn-container">
+            <a href="{% url 'recruitment:recruitment_write' %}" class="write-btn">작성하기</a>
+        </div>
+
+        <div class="pagination">
+
+            <!-- 🔹 이전 블록 -->
+            {% if block_start > 1 %}
+                <a href="?page={{num}}&per_page={{per_page}}&sort={{sort}}&search_type={{search_type }}&keyword={{ keyword|urlencode }}&sido={{ sido|urlencode }}&sigungu={{ sigungu|urlencode }}&status={{ status }}&facility={{ facility|urlencode }}" class="page-btn arrow">◀ 이전</a>
+                {% else %}
+                <span class="page-btn arrow disabled">◀ 이전</span>
+                {% endif %}
+                
+                <!-- 🔹 페이지 번호 5개씩 블록 -->
+                {% for num in block_range %}
+                {% if num == page_obj.number %}
+                <span class="page-btn active">{{ num }}</span>
+                {% else %}
+                <a href="?page={{num}}&per_page={{per_page}}&sort={{sort}}&search_type={{search_type }}&keyword={{ keyword|urlencode }}&sido={{ sido|urlencode }}&sigungu={{ sigungu|urlencode }}&status={{ status }}&facility={{ facility|urlencode }}" class="page-btn arrow">{{ num }}</a>
+                {% endif %}
+                {% endfor %}
+                
+                <!-- 🔹 다음 블록 -->
+                {% if block_end < paginator.num_pages %}
+                <a href="?page={{num}}&per_page={{per_page}}&sort={{sort}}&search_type={{search_type }}&keyword={{ keyword|urlencode }}&sido={{ sido|urlencode }}&sigungu={{ sigungu|urlencode }}&status={{ status }}&facility={{ facility|urlencode }}" class="page-btn arrow">{{ num }}</a>
+              {% else %}
+                <span class="page-btn arrow disabled">다음 ▶</span>
+            {% endif %}
+
+        </div>
+
+
+    </div>
+</div>
+
+
+
+{% endblock %}

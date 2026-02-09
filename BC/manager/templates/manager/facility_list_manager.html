@@ -1,0 +1,93 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}시설 관리{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'manager/css/facility_add_manager.css' %}">
+{% endblock %}
+
+{% block content %}
+
+        <form method="GET" class="filter-container">
+
+            <select id="sido" name="sido" class="filter-select">
+                <option value="">시/도 선택</option>
+            </select>
+
+            <select id="sigungu" name="sigungu" class="filter-select">
+                <option value="">구/군 선택</option>
+            </select>
+            <div class="search-wrap">
+                <input type="text" id="searchKeyword" name="keyword" class="search-input"
+                       placeholder="검색어" value="{{ keyword }}">
+                <button type="submit" class="search-btn">검색</button>
+            </div>
+        </form>
+
+        <script id="facilityData" type="application/json">{{ facility_json|safe }}</script>
+
+
+        <div class="facility-box">
+            <select id="rsPosible" class="filter-rs-posible">
+                <option value="" >전체</option>
+                <option value="1" {% if rsPosible == '1' %} selected {% endif %}>활성</option>
+                <option value="0"{% if rsPosible == '0' %} selected {% endif %}>비활성</option>
+               
+            </select>
+            <h1 class="box-header">시설 관리</h1>
+
+            <select id="perPageSelect" class="filter-select">
+                <option value="15">15개</option>
+                <option value="30">30개</option>
+                <option value="50">50개</option>
+                <option value="100">100개</option>
+            </select>
+
+            <table class="facility-table">
+                <thead class="facility-table-header">
+                    <tr>
+                        <th style="width: 50px;">번호</th>
+                        <th style="width: 50px;">✔</th>
+                        <th>시설명</th>
+                        <th>주소</th>
+                        <th style="width: 120px;">금일 활성 예약</th>
+                        <th style="width: 120px;">누적 예약</th>
+                    </tr>
+                </thead>
+                <tbody id="facilityList"></tbody>
+            </table>
+
+            <!-- 페이징 -->
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a class="page-btn arrow"
+                        href="?page={{ page_obj.previous_page_number }}&per_page={{ per_page }}&sido={{ sido }}&sigungu={{ sigungu }}&rsPosible={{ rsPosible }}&keyword={{ keyword }}">◀ 이전</a>
+                {% else %}
+                    <span class="page-btn arrow disabled">◀ 이전</span>
+                {% endif %}
+
+                {% for num in block_range %}
+                    {% if num == page_obj.number %}
+                        <span class="page-btn active">{{ num }}</span>
+                    {% else %}
+                        <a class="page-btn"
+                           href="?page={{ num }}&per_page={{ per_page }}&sido={{ sido }}&sigungu={{ sigungu }}&rsPosible={{ rsPosible }}&keyword={{ keyword }}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a class="page-btn arrow"
+                       href="?page={{ page_obj.next_page_number }}&per_page={{ per_page }}&sido={{ sido }}&sigungu={{ sigungu }}&rsPosible={{ rsPosible }}&keyword={{ keyword }}">다음 ▶</a>
+                {% else %}
+                    <span class="page-btn arrow disabled">다음 ▶</span>
+                {% endif %}
+            </div>
+
+            <button class="delete-btn">삭제</button>
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'manager/js/facility_list_manager.js' %}"></script>
+{% endblock %}

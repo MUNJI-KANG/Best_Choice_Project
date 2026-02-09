@@ -1,0 +1,398 @@
+/* ===========================
+   마이페이지 공통 레이아웃
+=========================== */
+
+/* 오른쪽 메인 영역 */
+.main {
+    padding: var(--spacing-xl) var(--spacing-xl);
+}
+
+/* 제목 (예: 나의 게시글, 나의 시설 예약 등) */
+.main > h2 {
+    font-size: 26px;
+    font-weight: 800;
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* ===========================
+   마이페이지 게시글 리스트
+=========================== */
+
+.mypage-board {
+    width: 100%;
+}
+
+/* 상단 정렬/개수 선택 영역 */
+.mypage-board-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+/* 드롭다운 공통 */
+.mypage-select {
+    padding: 8px 16px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 4px;
+    background: var(--color-card-box);
+    font-size: 14px;
+    color: var(--color-text-primary);
+    cursor: pointer;
+    min-width: 120px;
+    transition: var(--transition-base);
+}
+
+.mypage-select:hover {
+    border-color: var(--color-deep-blue);
+}
+
+/* 리스트 전체 박스 */
+.mypage-board-list {
+    margin-top: var(--spacing-sm);
+    border-top: 1px solid var(--color-soft-gray-line);
+    border-bottom: 1px solid var(--color-soft-gray-line);
+}
+
+/* ===========================
+   Grid Columns (한 군데에서만 관리)
+   - 기본(4칸): 번호 | 제목 | 날짜 | 조회수
+   - myrecruitment(5칸): 번호 | 제목 | 마감여부 | 날짜 | 조회수
+=========================== */
+
+/* 헤더 행 */
+.mypage-board-header {
+    background: #f5f7fa;
+    border-bottom: 2px solid var(--color-soft-gray-line);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    padding: 12px 4px;
+}
+
+/* 행 래퍼 (게시글 링크 + 삭제 버튼) */
+.mypage-board-row-wrapper {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-soft-gray-line);
+}
+
+.mypage-board-row-wrapper:hover {
+    background: #f9fbff;
+}
+
+/* 기본 그리드(4칸) */
+.mypage-board-header,
+.mypage-board-row,
+.mypage-board-row.no-link {
+    display: grid;
+    grid-template-columns: 60px 1fr 120px 100px; /* 번호 | 제목 | 날짜 | 조회수 */
+    align-items: center;
+    gap: 8px;
+}
+
+/* 한 줄 전체(행) – a 태그 하나 */
+.mypage-board-row {
+    padding: 10px 4px;
+    font-size: 14px;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    flex: 1;
+}
+
+/* 삭제/비링크 행 */
+.mypage-board-row.no-link {
+    padding: 10px 4px;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    flex: 1;
+}
+
+/* myrecruitment 전용(5칸) */
+.mypage-recruitment .mypage-board-header,
+.mypage-recruitment .mypage-board-row,
+.mypage-recruitment .mypage-board-row.no-link {
+    grid-template-columns: 60px 1fr 120px 120px 100px; /* 번호 | 제목 | 마감여부 | 날짜 | 조회수 */
+}
+
+/* ===========================
+   Column Styles
+=========================== */
+
+/* 번호 */
+.col-number {
+    text-align: left;
+    color: var(--color-text-secondary);
+}
+
+/* 제목 */
+.col-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* 마감여부 */
+.col-end-status {
+    text-align: left;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+}
+
+/* 날짜 */
+.col-date {
+    text-align: left;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+}
+
+/* 조회수 */
+.col-views {
+    text-align: left;
+    color: var(--color-text-secondary);
+    font-size: 13px;
+}
+
+/* hover 효과 – 제목 밑줄 */
+.mypage-board-row:hover .col-title {
+    text-decoration: underline;
+}
+
+/* ===========================
+   삭제된 글 표시
+=========================== */
+
+/* hover 시에도 링크처럼 underline 안 생기게 */
+.mypage-board-row.no-link:hover .col-title {
+    text-decoration: none;
+}
+
+/* 삭제된 글 제목 색상 약하게 */
+.deleted-title {
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 삭제된 행 hover 효과는 약하게 유지 */
+.deleted-row:hover {
+    background: #f9fbff;
+    cursor: default;
+}
+
+/* ===========================
+   참여 상태 배지 스타일 (나의 참여 내역 페이지)
+=========================== */
+
+.status-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+/* 참여 상태: 초록색 (퍼스널 컬러) */
+.status-badge.status-joined {
+    color: var(--color-deep-green);
+    background: linear-gradient(135deg, rgba(77, 158, 70, 0.1) 0%, rgba(138, 204, 120, 0.15) 100%);
+    border: 1px solid var(--color-deep-green);
+}
+
+/* 대기 상태: 노란색 */
+.status-badge.status-pending {
+    color: #f0ad4e;
+    background: linear-gradient(135deg, rgba(240, 173, 78, 0.1) 0%, rgba(255, 235, 182, 0.15) 100%);
+    border: 1px solid #f0ad4e;
+}
+
+/* 기타 상태: 회색 */
+.status-badge.status-unknown {
+    color: var(--color-text-secondary);
+    background: var(--color-background);
+    border: 1px solid var(--color-soft-gray-line);
+}
+
+/* ===========================
+   삭제 버튼
+=========================== */
+
+.mypage-delete-btn {
+    padding: 6px 16px;
+    margin-right: 8px;
+    border-radius: 4px;
+    border: none;
+    background: #d9534f;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-base);
+    white-space: nowrap;
+}
+
+.mypage-delete-btn:hover {
+    background: #b52b27;
+}
+
+/* ===========================
+   리스트 비었을 때
+=========================== */
+
+.mypage-board-empty {
+    padding: 20px 4px;
+    font-size: 14px;
+    color: var(--color-text-secondary);
+}
+
+/* ===========================
+   하단 작성 버튼
+=========================== */
+
+.mypage-board-bottom {
+    margin-top: var(--spacing-lg);
+    display: flex;
+    justify-content: flex-end;
+}
+
+.mypage-write-btn {
+    padding: 10px 22px;
+    border-radius: 4px;
+    border: none;
+    background: var(--color-deep-blue);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.mypage-write-btn:hover {
+    background: var(--color-deep-blue-hover);
+}
+
+/* ===========================
+   페이지네이션 전체
+=========================== */
+
+.pagination {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+}
+
+/* ===========================
+   기본 버튼 스타일
+=========================== */
+
+.page-btn {
+    padding: 6px 14px;
+    border-radius: 999px;
+    border: 1px solid var(--color-soft-gray-line);
+    background: var(--color-card-box);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 36px;
+}
+
+/* hover */
+.page-btn:hover:not(.disabled):not(.active) {
+    border-color: var(--color-deep-blue);
+    color: var(--color-deep-blue);
+}
+
+/* 현재 페이지(활성) */
+.page-btn.active {
+    background: var(--color-deep-blue);
+    border-color: var(--color-deep-blue);
+    color: #fff;
+    font-weight: 700;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+}
+
+/* 이전/다음 화살표 버튼 */
+.page-btn.arrow {
+    font-size: 13px;
+    padding: 6px 14px;
+    color: var(--color-text-secondary);
+}
+
+.page-btn.arrow:hover:not(.disabled) {
+    color: var(--color-deep-blue);
+    border-color: var(--color-deep-blue);
+}
+
+/* disabled 상태 */
+.page-btn.disabled {
+    opacity: 0.4;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* ===========================
+   반응형 (모바일)
+=========================== */
+
+@media (max-width: 768px) {
+    .main {
+        padding: var(--spacing-lg);
+    }
+
+    /* 헤더는 모바일에서 숨겨도 되고 유지해도 됨(원하면 display:none 처리) */
+    /* .mypage-board-header { display: none; } */
+
+    /* 행을 카드형으로: 번호 | 제목(1줄), 하단에 상태/날짜/조회수 */
+    .mypage-board-row,
+    .mypage-board-row.no-link {
+        grid-template-columns: 40px 1fr;
+        grid-auto-rows: auto;
+        row-gap: 4px;
+        padding: 12px 6px;
+    }
+
+    .col-title {
+        grid-column: 2 / 3;
+    }
+
+    /* myrecruitment의 마감여부도 2열 구조에 맞춰 내려가게 */
+    .mypage-recruitment .col-end-status {
+        grid-column: 2 / 3;
+        font-size: 12px;
+    }
+
+    .col-date {
+        grid-column: 2 / 3;
+        font-size: 12px;
+    }
+
+    .col-views {
+        grid-column: 2 / 3;
+        justify-self: end;
+        font-size: 12px;
+    }
+
+    .pagination {
+        gap: 6px;
+    }
+
+    .page-btn {
+        padding: 5px 12px;
+        min-width: 32px;
+        font-size: 12px;
+    }
+
+    .page-btn.arrow {
+        padding: 5px 12px;
+        font-size: 12px;
+    }
+}

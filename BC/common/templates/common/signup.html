@@ -1,0 +1,248 @@
+{% extends 'common/base.html' %}
+{% load static %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'common/css/signup.css' %}" />
+{% endblock %}
+
+{% block script1 %}
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="{% static 'common/js/signup.js' %}"></script>
+{% endblock %}
+
+{% block title %}
+회원가입 - 할래말래
+{% endblock %}
+
+{% block contents %}
+<!-- 회원가입 컨테이너 -->
+<div class="register-container">
+  <div class="register-wrapper">
+
+    <!-- PC 브랜딩 -->
+    <div class="register-brand">
+      <h2>할래말래</h2>
+      <p>스포츠 시설을 쉽고 빠르게 예약하세요</p>
+      <ul class="register-brand-features">
+        <li>간편한 온라인 예약</li>
+        <li>다양한 스포츠 시설</li>
+        <li>실시간 예약 현황</li>
+        <li>안전한 결제 시스템</li>
+      </ul>
+    </div>
+
+    <!-- 회원가입 카드 -->
+    <div class="register-card">
+
+      <div class="register-header">
+        <h1>회원가입</h1>
+        <p>할래말래에 오신 것을 환영합니다</p>
+      </div>
+          
+      {% if messages %}
+        <div class="message-area">
+          {% for message in messages %}
+            <p class="msg-{{ message.tags }}">{{ message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+    <form class="register-form" method="post" action="/signup/">
+      {% csrf_token %}
+      
+      {% if is_kakao_signup %}
+        <input type="hidden" name="kakao_signup" value="true">
+      {% endif %}
+
+      <!-- 이름 -->
+      <div class="form-group">
+        <label class="form-label" for="name">이름</label>
+        <input
+          type="text"
+          id="name"
+          name="name"
+          class="form-input"
+          placeholder="이름 입력"
+          value="{% if is_kakao_signup %}{{ kakao_name }}{% else %}{{ input.name }}{% endif %}"
+          required
+        />
+      </div>
+
+      <!-- 아이디 -->
+      <div class="form-group">
+        <label class="form-label" for="username">아이디</label>
+        <div class="form-row">
+          <input
+            type="text"
+            id="username"
+            name="username"
+            class="form-input {% if is_kakao_signup %}disabled-input{% endif %}"
+            placeholder="아이디 입력"
+            value="{% if is_kakao_signup %}{{ kakao_user_id }}{% else %}{{ input.username }}{% endif %}"
+            {% if is_kakao_signup %}readonly{% endif %}
+            required
+          />
+          {% if not is_kakao_signup %}
+          <button type="button" id="usernameCheckBtn" class="check-btn small-btn">
+            중복 확인
+          </button>
+          {% endif %}
+        </div>
+        {% if not is_kakao_signup %}
+        <small id="username_msg" class="msg-area"></small>
+        {% endif %}
+      </div>
+
+      <!-- 비밀번호 -->
+      {% if is_kakao_signup %}
+      <input type="hidden" name="password" value="kakao_login_no_password">
+      <input type="hidden" name="password2" value="kakao_login_no_password">
+      {% else %}
+      <div class="form-group">
+        <label class="form-label" for="password">비밀번호</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          class="form-input"
+          placeholder="비밀번호 입력"
+          required
+        />
+      </div>
+
+      <!-- 비밀번호 확인 -->
+      <div class="form-group">
+        <label class="form-label" for="password2">비밀번호 확인</label>
+        <input
+          type="password"
+          id="password2"
+          name="password2"
+          class="form-input"
+          placeholder="비밀번호 재입력"
+          required
+        />
+        <small id="pw_msg" class="msg-area"></small>
+      </div>
+      {% endif %}
+
+      <!-- 닉네임 -->
+      <div class="form-group">
+        <label class="form-label" for="nickname">닉네임</label>
+        <div class="form-row">
+          <input
+            type="text"
+            id="nickname"
+            name="nickname"
+            class="form-input"
+            placeholder="닉네임 입력"
+            value="{% if is_kakao_signup %}{{ kakao_nickname }}{% else %}{{ input.nickname }}{% endif %}"
+            required
+          />
+          <button type="button" id="nicknameCheckBtn" class="check-btn small-btn">
+            중복 확인
+          </button>
+        </div>
+        <small id="nickname_msg" class="msg-area"></small>
+      </div>
+
+      <!-- 생년월일 -->
+      <div class="form-group">
+        <label class="form-label">생년월일</label>
+        <input
+          type="date"
+          name="birthday"
+          class="form-input"
+          value="{{ input.birthday }}"
+          required
+        />
+      </div>
+
+      <!-- 성별 -->
+      <div class="form-group">
+        <label class="form-label">성별</label>
+        <div class="gender-toggle">
+          <input
+            type="radio"
+            id="gender_male"
+            name="gender"
+            value="male"
+            {% if input.gender == "female" %}{% else %}checked{% endif %}
+          />
+          <label for="gender_male" class="gender-option">남자</label>
+
+          <input
+            type="radio"
+            id="gender_female"
+            name="gender"
+            value="female"
+            {% if input.gender == "female" %}checked{% endif %}
+          />
+          <label for="gender_female" class="gender-option">여자</label>
+        </div>
+      </div>
+
+      <!-- 주소 -->
+      <div class="form-group">
+        <label class="form-label">주소</label>
+        <div class="form-row">
+          <input
+            type="text"
+            id="address"
+            name="address"
+            class="form-input"
+            placeholder="주소 검색 버튼을 눌러주세요"
+            value="{{ input.address }}"
+            readonly
+            required
+          />
+          <button
+            type="button"
+            id="addressSearchBtn"
+            class="check-btn small-btn"
+          >
+            주소 검색
+          </button>
+        </div>
+      </div>
+
+      <!-- 상세주소 -->
+      <div class="form-group">
+        <label class="form-label">상세 주소</label>
+        <input
+          type="text"
+          id="address_detail"
+          name="address_detail"
+          class="form-input"
+          placeholder="상세 주소 입력"
+          value="{{ input.address_detail }}"
+          required
+        />
+      </div>
+
+      <!-- 전화번호 -->
+      <div class="form-group">
+        <label class="form-label">핸드폰 번호</label>
+        <div class="form-row">
+          <input
+            type="text"
+            name="phone"
+            class="form-input"
+            placeholder="010-0000-0000"
+            value="{{ input.phone }}"
+            required
+          />
+          <button type="button" id="phoneCheckBtn" class="check-btn small-btn">
+            중복 확인
+          </button>
+        </div>
+        <small id="phone_msg" class="msg-area"></small>
+      </div>
+
+      <!-- 제출 버튼 -->
+      <button type="submit" class="register-btn">회원가입</button>
+    </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

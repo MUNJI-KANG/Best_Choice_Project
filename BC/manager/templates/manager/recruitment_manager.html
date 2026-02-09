@@ -1,0 +1,128 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}모집글 관리{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'manager/css/facility_add_manager.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+        <script id="facilityData" type="application/json">
+            {{ facility_json|safe }}
+        </script>
+
+        <div class="facility-box">
+            <h1 class="box-header">모집글 관리</h1>
+            
+            <select id="perPageSelect" class="filter-select">
+                <option value="15">15개</option>
+                <option value="30">30개</option>
+                <option value="50">50개</option>
+                <option value="100">100개</option>
+            </select>
+            <table class="facility-table">
+                
+                <thead class="facility-table-header">
+                    <tr>
+                        <th style="width: 50px;">번호</th>
+                        <th style="width: 50px;">✔</th>
+                        <th>제목</th>
+                        <th style="width: 120px;">작성자 ID</th>
+                        <th style="width: 180px;">삭제 일자</th>
+                    </tr>
+                </thead>
+                <tbody id="facilityList"></tbody>
+            </table>
+
+            <!-- 페이징 -->
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a class="page-btn arrow"
+                        href="?page={{ page_obj.previous_page_number }}&per_page={{ per_page }}">◀ 이전</a>
+                {% else %}
+                    <span class="page-btn arrow disabled">◀ 이전</span>
+                {% endif %}
+
+                {% for num in block_range %}
+                    {% if num == page_obj.number %}
+                        <span class="page-btn active">{{ num }}</span>
+                    {% else %}
+                        <a class="page-btn"
+                           href="?page={{num}}&per_page={{ per_page }}">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <a class="page-btn arrow"
+                        href="?page={{ page_obj.next_page_number }}&per_page={{ per_page }}">다음 ▶</a>
+                {% else %}
+                    <span class="page-btn arrow disabled">다음 ▶</span>
+                {% endif %}
+            </div>
+
+    <div class="action-buttons">
+        <button class="hard-delete-btn">영구삭제</button>
+        <button class="restore-btn">복구</button>
+        <button class="delete-btn">삭제</button>
+    </div>
+
+
+        </div>
+{% endblock %}
+
+{% block extra_js %}
+<style>
+/*****************************************
+    액션 버튼 묶음 (영구삭제 / 복구 / 삭제)
+*****************************************/
+.action-buttons {
+    margin-top: 16px;              /* 페이징이랑 간격 */
+    display: flex;
+    justify-content: flex-end;     /* 오른쪽 정렬 */
+    gap: 8px;
+}
+
+.hard-delete-btn,
+.restore-btn,
+.delete-btn {
+    position: static;
+    padding: 10px 18px;
+    border-radius: 7px;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+    white-space: nowrap;
+    min-width: 70px;
+    color: white;
+}
+
+/* 개별 색상 */
+.hard-delete-btn {
+    background: #8A1915;
+}
+.hard-delete-btn:hover {
+    background: #6E0F0C;
+}
+
+.restore-btn {
+    background: #5B8F3B;
+}
+.restore-btn:hover {
+    background: #47772E;
+}
+
+.delete-btn {
+    background: #d9534f;
+}
+.delete-btn:hover {
+    background: #b52b27;
+}
+
+</style>
+
+<script src="{% static 'manager/js/paging.js' %}"></script>
+<script src="{% static 'manager/js/recruitment_manager.js' %}"></script>
+{% endblock %}

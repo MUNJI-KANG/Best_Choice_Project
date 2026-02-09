@@ -1,0 +1,240 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}배너 수정{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'manager/css/banner_form.css' %}">
+<style>
+    #date-section.hide { display: none; }
+    #date-section.show { display: block; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="page-title-section">
+    <h2 class="page-title">배너 수정</h2>
+</div>
+
+<div class="sub-container">
+<div class="sub-content">
+
+<div class="form-wrapper">
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    
+    {% if messages %}
+    <div class="message-area" style="margin-bottom: 20px;">
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}" style="padding: 12px 16px; margin-bottom: 10px; border-radius: 4px; font-size: 14px; background-color: {% if message.tags == 'error' %}#f8d7da{% else %}#d4edda{% endif %}; color: {% if message.tags == 'error' %}#721c24{% else %}#155724{% endif %}; border: 1px solid {% if message.tags == 'error' %}#f5c6cb{% else %}#c3e6cb{% endif %};">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    <!-- 파일 -->
+    <div class="form-group full-row">
+        <label class="form-label">배너 이미지</label>
+
+        <div class="file-upload-wrapper">
+            <input type="file" name="file" id="fileInput" class="file-input" accept="image/*">
+            <label for="fileInput" class="file-upload-btn"><span>📎 첨부파일</span></label>
+            <div class="file-list" id="fileList"></div>
+        </div>
+
+        {% if banner.url %}
+        <div id="currentFileBox" class="existing-files" style="margin-top: 10px;">
+            <label class="form-label" style="font-size: 14px;">현재 이미지:</label>
+            <div style="margin-top: 5px; display:flex; align-items:center; gap:10px;">
+                <a href="/media/{{ banner.url }}" target="_blank" style="color:#2f5c9c;">{{ banner.url }}</a>
+                <button type="button" id="deleteFileBtn" class="file-delete-btn" style="color:red;">X</button>
+            </div>
+            <input type="hidden" name="delete_file" id="deleteFileFlag" value="0">
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- 제목 -->
+    <div class="form-group full-row">
+        <label class="form-label">제목</label>
+        <textarea name="title" class="content-textarea" rows="3">{{ banner.title }}</textarea>
+    </div>
+
+    <!-- 내용 -->
+    <div class="form-group full-row">
+        <label class="form-label">내용</label>
+        <textarea name="context" class="content-textarea" rows="3">{{ banner.context }}</textarea>
+    </div>
+
+    <!-- 상태 라디오 -->
+    <div class="form-group full-row">
+        <label class="form-label">배너 상태</label>
+
+        <label class="radio-label">
+            <input type="radio" name="img_status" value="0"
+                   class="status-radio"
+                   {% if banner.img_status == 0 %}checked{% endif %}>
+            상시 노출
+        </label>
+
+        <label class="radio-label">
+            <input type="radio" name="img_status" value="1"
+                   class="status-radio"
+                   {% if banner.img_status == 1 %}checked{% endif %}>
+            기간 지정
+        </label>
+
+        <label class="radio-label">
+            <input type="radio" name="img_status" value="2"
+                   class="status-radio"
+                   {% if banner.img_status == 2 %}checked{% endif %}>
+            노출 종료
+        </label>
+    </div>
+
+    <!-- 기간 영역 -->
+    {% if banner.img_status == 1 %}
+    <div id="date-section" class="form-row">
+    {% else %}
+    <div id="date-section" class="form-row" style="display:none;">
+    {% endif %}
+        <div class="form-group small">
+            <label class="form-label">시작 날짜</label>
+            <input type="datetime-local" name="start_date" class="form-input"
+                value="{{ banner.start_date|date:'Y-m-d\\TH:i' }}">
+        </div>
+
+        <div class="form-group small">
+            <label class="form-label">종료 날짜</label>
+            <input type="datetime-local" name="end_date" class="form-input"
+                value="{{ banner.end_date|date:'Y-m-d\\TH:i' }}">
+        </div>
+    </div>
+
+    <div class="btn-row">
+        <button type="submit" class="btn btn-submit">수정 완료</button>
+        <button type="button" class="btn btn-list" onclick="history.back()">뒤로가기</button>
+    </div>
+
+</form>
+</div>
+
+</div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // 파일 선택하면 파일명 표시 및 취소 기능
+    const fileInput = document.getElementById("fileInput");
+    const fileList = document.getElementById("fileList");
+
+    if (fileInput && fileList) {
+        fileInput.addEventListener("change", function () {
+            fileList.innerHTML = "";
+            if (fileInput.files.length > 0) {
+                // 새 파일이 업로드되면 delete_flag 초기화
+                const deleteFileFlag = document.getElementById("deleteFileFlag");
+                if (deleteFileFlag) {
+                    deleteFileFlag.value = "0";
+                }
+                
+                // 삭제 안내 메시지 제거
+                const notice = document.querySelector(".image-delete-notice");
+                if (notice) {
+                    notice.remove();
+                }
+                
+                const item = document.createElement("div");
+                item.className = "file-item";
+                
+                const fileName = document.createElement("span");
+                fileName.className = "file-item-name";
+                fileName.textContent = fileInput.files[0].name;
+                
+                const removeBtn = document.createElement("button");
+                removeBtn.type = "button";
+                removeBtn.className = "file-item-remove";
+                removeBtn.textContent = "✕";
+                removeBtn.title = "업로드 취소";
+                removeBtn.addEventListener("click", function() {
+                    // 파일 input 초기화
+                    fileInput.value = "";
+                    // 파일 리스트 비우기
+                    fileList.innerHTML = "";
+                });
+                
+                item.appendChild(fileName);
+                item.appendChild(removeBtn);
+                fileList.appendChild(item);
+            }
+        });
+    }
+
+    // 배너 상태에 따라 기간 영역 노출
+    const radios = document.querySelectorAll(".status-radio");
+    const dateSection = document.getElementById("date-section");
+
+    function toggleDateSection() {
+        let selected = document.querySelector(".status-radio:checked");
+        if (!selected) {
+            dateSection.style.display = "none";
+            return;
+        }
+        if (selected.value === "1") {
+            dateSection.style.display = "flex";
+        } else {
+            dateSection.style.display = "none";
+        }
+    }
+
+    radios.forEach(function (r) {
+        r.addEventListener("change", toggleDateSection);
+    });
+
+    toggleDateSection();
+
+    // 현재 이미지 삭제 버튼 기능
+    const deleteFileBtn = document.getElementById("deleteFileBtn");
+    const deleteFileFlag = document.getElementById("deleteFileFlag");
+    const currentFileBox = document.getElementById("currentFileBox");
+
+    if (deleteFileBtn && deleteFileFlag) {
+        deleteFileBtn.addEventListener("click", function() {
+            if (confirm("현재 이미지를 삭제하시겠습니까? 삭제 후에는 새 이미지를 첨부해야 수정이 가능합니다.")) {
+                deleteFileFlag.value = "1";
+                // 현재 이미지 영역 숨기기
+                if (currentFileBox) {
+                    currentFileBox.style.display = "none";
+                }
+                // 삭제되었다는 안내 메시지 표시
+                const notice = document.createElement("div");
+                notice.className = "image-delete-notice";
+                notice.style.cssText = "margin-top: 10px; padding: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 6px; color: #856404; font-size: 14px;";
+                notice.textContent = "⚠️ 이미지가 삭제되었습니다. 새 이미지를 첨부해야 수정이 가능합니다.";
+                
+                const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
+                if (fileUploadWrapper && !fileUploadWrapper.querySelector(".image-delete-notice")) {
+                    fileUploadWrapper.appendChild(notice);
+                }
+            }
+        });
+    }
+
+    // 폼 제출 시 검증: 이미지 삭제된 상태에서 새 이미지 없으면 제출 방지
+    const form = document.querySelector("form");
+    if (form) {
+        form.addEventListener("submit", function(e) {
+            const isDeleted = deleteFileFlag && deleteFileFlag.value === "1";
+            const hasNewFile = fileInput && fileInput.files.length > 0;
+            
+            if (isDeleted && !hasNewFile) {
+                e.preventDefault();
+                alert("이미지를 삭제하셨습니다. 새 이미지를 첨부해주세요.");
+                return false;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

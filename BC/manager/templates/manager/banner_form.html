@@ -1,0 +1,160 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}배너 등록{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'manager/css/banner_form.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-title-section">
+    <h2 class="page-title">배너 등록</h2>
+</div>
+
+<div class="sub-container">
+<div class="sub-content">
+
+<div class="form-wrapper">
+<form method="post" action="{% url 'manager:banner_form' %}" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <!-- 파일 -->
+    <div class="form-group full-row">
+        <label class="form-label">배너 이미지</label>
+
+        <div class="file-upload-wrapper">
+            <input type="file" name="file" id="fileInput" class="file-input" accept="image/*">
+            <label for="fileInput" class="file-upload-btn"><span>📎 첨부파일</span></label>
+            <div class="file-list" id="fileList"></div>
+        </div>
+    </div>
+    <!-- 제목 -->
+    <div class="form-group full-row">
+        <label class="form-label">제목</label>
+        <textarea name="title" class="content-textarea" placeholder="제목 입력" rows="3"></textarea>
+    </div>
+
+    <!-- 내용 -->
+    <div class="form-group full-row">
+        <label class="form-label">내용</label>
+        <textarea name="context" class="content-textarea" placeholder="내용 입력" rows="3"></textarea>
+    </div>
+
+    <!-- 상태 라디오 -->
+    <div class="form-group full-row">
+        <label class="form-label">배너 상태</label>
+
+        <label class="radio-label">
+            <input type="radio" name="img_status" value="0"
+                class="status-radio"
+                {% if selected_status == "0" %}checked{% endif %}>
+            상시 노출
+        </label>
+
+        <label class="radio-label">
+            <input type="radio" name="img_status" value="1"
+                class="status-radio"
+                {% if selected_status == "1" %}checked{% endif %}>
+            기간 지정
+        </label>
+    </div>
+
+    <div id="date-section" class="form-row" style="display:none;">
+        <div class="form-group small">
+            <label class="form-label">시작 날짜</label>
+            <input type="datetime-local" name="start_date" class="form-input"
+                value="{{ start_date|default_if_none:'' }}">
+        </div>
+
+        <div class="form-group small">
+            <label class="form-label">종료 날짜</label>
+            <input type="datetime-local" name="end_date" class="form-input"
+                value="{{ end_date|default_if_none:'' }}">
+        </div>
+    </div>
+
+    </div>
+    <!-- 버튼 -->
+    <div class="btn-row">
+        <button type="submit" class="btn btn-submit">등록</button>
+        <button type="button" class="btn btn-list" onclick="history.back()">뒤로가기</button>
+    </div>
+
+</form>
+</div>
+
+</div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // 파일 선택하면 파일명 표시
+    const fileInput = document.getElementById("fileInput");
+    const fileList = document.getElementById("fileList");
+
+    if (fileInput && fileList) {
+        fileInput.addEventListener("change", function () {
+            fileList.innerHTML = "";
+            if (fileInput.files.length > 0) {
+                const item = document.createElement("div");
+                item.className = "file-item";
+                
+                const fileName = document.createElement("span");
+                fileName.className = "file-item-name";
+                fileName.textContent = fileInput.files[0].name;
+                
+                const removeBtn = document.createElement("button");
+                removeBtn.type = "button";
+                removeBtn.className = "file-item-remove";
+                removeBtn.textContent = "✕";
+                removeBtn.title = "업로드 취소";
+                removeBtn.addEventListener("click", function() {
+                    // 파일 input 초기화
+                    fileInput.value = "";
+                    // 파일 리스트 비우기
+                    fileList.innerHTML = "";
+                });
+                
+                item.appendChild(fileName);
+                item.appendChild(removeBtn);
+                fileList.appendChild(item);
+            }
+        });
+    }
+
+    // 배너 상태에 따라 기간 영역 노출
+    const radios = document.querySelectorAll(".status-radio");
+    const dateSection = document.getElementById("date-section");
+
+    function toggleDateSection() {
+        let selected = document.querySelector(".status-radio:checked");
+        if (!selected) {
+            dateSection.style.display = "none";
+            return;
+        }
+        if (selected.value === "1") {
+            dateSection.style.display = "flex";  // form-row 레이아웃 유지
+        } else {
+            dateSection.style.display = "none";
+        }
+    }
+
+    radios.forEach(function (r) {
+        r.addEventListener("change", toggleDateSection);
+    });
+
+    // 페이지 로드 시에도 초기 상태 세팅
+    toggleDateSection();
+});
+</script>
+
+{# 서버에서 alert 전달 시 바로 띄우기 #}
+{% if alert %}
+<script>
+    alert("{{ alert }}");
+</script>
+{% endif %}
+{% endblock %}

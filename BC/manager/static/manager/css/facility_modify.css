@@ -1,0 +1,736 @@
+/* ================================
+   공통 레이아웃
+================================ */
+.modify-container {
+    max-width: 1050px;
+    margin: 0 auto;
+    padding: 30px 15px 80px;
+}
+
+/* 제목 */
+.modify-header {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    color: #1A2A43;
+}
+
+
+/* ================================
+   기본 정보 박스
+================================ */
+.facility-info-box {
+    background: #fff;
+    border: 1px solid #e5e9f2;
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin-bottom: 35px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 18px;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.info-label {
+    width: 120px;
+    font-weight: 600;
+    color: #2b3a4b;
+}
+
+.info-value input {
+    width: 330px;
+    padding: 8px 12px;
+    border: 1px solid #cfd6df;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+
+/* ================================
+   대표 이미지
+================================ */
+.photo-box {
+    background: #fff;
+    border: 1px solid #e5e9f2;
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin-bottom: 35px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.photo-flex {
+    display: flex;
+    gap: 35px;
+    align-items: center;
+}
+
+.facility-photo {
+    width: 240px;
+    border-radius: 10px;
+    border: 1px solid #d9d9d9;
+}
+
+.photo-placeholder {
+    width: 240px;
+    height: 160px;
+    border: 1px dashed #b9c3cf;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #98a3af;
+    border-radius: 10px;
+}
+
+.photo-upload-area {
+    display: flex;
+    align-items: center;
+}
+
+.photo-input {
+    padding: 6px;
+}
+
+
+/* ================================
+   첨부파일
+================================ */
+.file-box {
+    background: #fff;
+    border: 1px solid #e5e9f2;
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin-bottom: 35px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.attached-list {
+    list-style: none;
+    margin-bottom: 15px;
+}
+
+.attached-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f3f6;
+}
+
+
+/* ================================
+   예약 활성화 UI
+================================ */
+.reserve-posible {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 18px 22px;
+    background: #ffffff;
+    border: 1px solid #e5e9f2;
+    border-radius: 12px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+}
+
+.reserve-posible label {
+    font-size: 17px;
+    font-weight: 600;
+    color: #2b3a4b;
+}
+
+.reserve-posible input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    accent-color: #2f5c9c;
+}
+
+
+/* ================================
+   예약 시간 박스
+================================ */
+.time-setting-box {
+    background: #fff;
+    border: 1px solid #e5e9f2;
+    border-radius: 12px;
+    padding: 25px 30px;
+    margin-bottom: 40px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    position: relative;
+}
+
+.time-setting-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1a2a43;
+}
+
+.time-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
+.time-disabled::after {
+    content: "예약하기 비활성화 상태입니다";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 12px 18px;
+    background: rgba(255,255,255,0.95);
+    border: 1px solid #ccd3dd;
+    border-radius: 10px;
+    font-size: 14px;
+    color: #4e5563;
+}
+
+/* ================================
+   2컬럼 레이아웃
+================================ */
+.time-setting-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+/* ================================
+   좌측: 요일별 가능한 시간 패널
+================================ */
+.weekly-time-panel {
+    border: 2px solid #22c55e;
+    border-radius: 8px;
+    padding: 20px;
+    background: #fff;
+}
+
+.panel-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1a2a43;
+}
+
+.weekly-time-content {
+    display: flex;
+    gap: 20px;
+}
+
+/* 요일 탭 (세로) */
+.day-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 60px;
+}
+
+.day-tab {
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.day-tab:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.day-tab.active {
+    background: #22c55e;
+    color: #fff;
+    border-color: #22c55e;
+    font-weight: 600;
+}
+
+/* 시간 구간 편집 영역 */
+.time-slots-editor {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 단일 요일 시간 및 요금 추가 영역 */
+.single-day-add-section {
+    padding: 16px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.single-day-time-payment-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.single-day-time-payment-section label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.single-day-inputs-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.single-day-time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.single-day-time-inputs input[type="time"] {
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100px;
+}
+
+.single-day-time-inputs input[type="time"]:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.single-day-payment-input-wrapper {
+    flex: 1;
+    min-width: 120px;
+}
+
+.single-payment-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.single-payment-input:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.btn-single-add {
+    padding: 6px 20px;
+    border: 1px solid #22c55e;
+    border-radius: 4px;
+    background: #22c55e;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-single-add:hover {
+    background: #16a34a;
+    border-color: #16a34a;
+}
+
+/* 다중 선택 일괄 작업 영역 */
+.multi-select-actions {
+    padding: 16px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+    margin-bottom: 12px;
+}
+
+.selected-days-info {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0369a1;
+    margin-bottom: 12px;
+}
+
+.batch-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.batch-time-payment-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.batch-time-payment-section label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.batch-inputs-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.batch-time-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.batch-time-inputs input[type="time"] {
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100px;
+}
+
+.batch-time-inputs input[type="time"]:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.batch-payment-input-wrapper {
+    flex: 1;
+    min-width: 120px;
+}
+
+.batch-payment-input {
+    width: 100%;
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.batch-payment-input:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.btn-batch-add {
+    padding: 6px 20px;
+    border: 1px solid #22c55e;
+    border-radius: 4px;
+    background: #22c55e;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.btn-batch-add:hover {
+    background: #16a34a;
+    border-color: #16a34a;
+}
+
+.time-slots-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.no-slots-message {
+    padding: 20px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    background: #f9fafb;
+    border-radius: 6px;
+    border: 1px dashed #d1d5db;
+}
+
+/* 시간 구간 row */
+.time-slot-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 0;
+}
+
+.time-range-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.time-range-inputs input[type="time"] {
+    padding: 6px 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100px;
+    background: #fff;
+}
+
+.time-range-inputs input[type="time"]:focus {
+    outline: none;
+    border-color: #22c55e;
+    box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.1);
+}
+
+.time-separator {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.slot-actions {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.btn-delete-slot,
+.btn-delete-exception {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-delete-slot:hover,
+.btn-delete-exception:hover {
+    background: #f3f4f6;
+    color: #ef4444;
+}
+
+.btn-delete-slot svg,
+.btn-delete-exception svg {
+    width: 16px;
+    height: 16px;
+}
+
+/* 구간 추가 버튼 */
+.btn-add-slot {
+    padding: 8px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #fff;
+    color: #374151;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: all 0.2s;
+    width: fit-content;
+}
+
+.btn-add-slot:hover {
+    background: #f3f4f6;
+    border-color: #9ca3af;
+}
+
+.icon-plus {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1;
+}
+
+/* ================================
+   우측: 활성화된 요일과 시간 패널
+================================ */
+.active-time-panel {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 20px;
+    background: #fff;
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.help-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #6b7280;
+    cursor: help;
+    background: #fff;
+}
+
+.panel-description {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.5;
+    margin-bottom: 16px;
+}
+
+.active-days-summary {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 16px;
+}
+
+.no-active-days {
+    padding: 20px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 14px;
+    background: #f9fafb;
+    border-radius: 6px;
+    border: 1px dashed #d1d5db;
+}
+
+.active-day-item {
+    padding: 12px 16px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    border-left: 3px solid #22c55e;
+}
+
+.active-day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.active-day-label {
+    font-weight: 600;
+    color: #1a2a43;
+    font-size: 14px;
+}
+
+.btn-delete-day {
+    background: none;
+    border: none;
+    color: #6b7280;
+    cursor: pointer;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all 0.2s;
+}
+
+.btn-delete-day:hover {
+    background: #f3f4f6;
+    color: #ef4444;
+}
+
+.btn-delete-day svg {
+    width: 16px;
+    height: 16px;
+}
+
+.active-day-slots {
+    font-size: 13px;
+    color: #6b7280;
+    line-height: 1.6;
+}
+
+/* ================================
+   반응형
+================================ */
+@media (max-width: 900px) {
+    .time-setting-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .weekly-time-content {
+        flex-direction: column;
+    }
+    
+    .day-tabs {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+}
+
+/* ================================
+   하단 버튼
+================================ */
+.btn-bottom-area {
+    margin-top: 40px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-back {
+    padding: 10px 22px;
+    background: #dfe4eb;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1a2a43;
+    text-decoration: none;
+}
+
+.btn-save-all {
+    padding: 10px 22px;
+    background: #2f5c9c;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.interval-pay {
+    text-align: right;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+
+/* ================================
+   반응형 (작은 화면)
+================================ */
+@media (max-width: 900px) {
+    .time-inputs {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .time-inputs label {
+        text-align: left;
+    }
+}
+

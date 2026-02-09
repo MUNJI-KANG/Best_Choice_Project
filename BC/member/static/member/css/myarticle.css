@@ -1,0 +1,65 @@
+/* 마이페이지 전체 영역 */
+.mypage-profile {
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-xl) 0;
+}
+
+/* 제목 */
+.main h2 {
+    font-size: 1.8rem;
+    margin-top: 10px;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-deep-blue);
+    font-weight: 700;
+}
+
+
+/* 전체 영역 */
+.article-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+    background: #ffffff;
+    border: 1px solid #E7EBEF;
+    border-radius: 8px;
+    overflow: hidden; /* radius 적용 */
+}
+
+/* 테이블 헤더 */
+.article-table thead th {
+    background: var(--color-muted-blue);
+    color: white;
+    font-weight: 600;
+    text-align: center;
+    padding: 14px 10px;
+    border-bottom: 2px solid var(--color-deep-blue);
+}
+
+/* 기본 셀 */
+.article-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #E7EBEF;
+    text-align: center;
+    color: var(--color-text-primary);
+}
+
+/* 링크 스타일 */
+.article-table td a {
+    color: var(--color-deep-blue);
+    text-decoration: none;
+    font-weight: 600;
+}
+.article-table td a:hover {
+    color: var(--color-deep-blue-hover);
+    text-decoration: underline;
+}
+
+/* 호버 시 강조 */
+.article-table tbody tr:hover {
+    background-color: #F4F8FB;
+}
+
+/* 마지막 줄 border 제거 */
+.article-table tbody tr:last-child td {
+    border-bottom: none;
+}

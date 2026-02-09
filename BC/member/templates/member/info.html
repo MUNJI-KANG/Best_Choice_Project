@@ -1,0 +1,196 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" href="{% static 'member/css/mypage_base.css' %}" />
+<link rel="stylesheet" href="{% static 'member/css/mypage_info.css' %}" />
+{% endblock %}
+{% block mypagecss %}
+{% endblock %}
+
+{% block script1 %}
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script>
+    // URL 변수 선언
+    const MEMBER_EDIT_URL = '{% url "member:edit" %}';
+    const MEMBER_PASSWORD_URL = '{% url "member:password" %}';
+</script>
+<script src="{% static 'member/js/info.js'%}"></script>
+{% endblock %}
+{% block title %}
+mypage base
+{% endblock %}
+{% block contents %}
+<!-- 회원가입 컨테이너 -->
+<div class="register-container">
+  <div class="register-wrapper">
+
+    <!-- PC 브랜딩 -->
+    <div class="register-brand">
+      <h2>My Page</h2>
+      <ul class="register-brand-features">
+        <li><a href="{% url 'member:info' %}" class="{% if request.path == '/member/info/' %}active{% endif %}">내 정보</a></li>
+        <li><a href="{% url 'member:myreservation' %}" class="{% if request.path == '/member/myreservation/' %}active{% endif %}">내 예약 내역</a></li>
+        <li><a href="{% url 'member:myrecruitment' %}" class="{% if request.path == '/member/myrecruitment/' %}active{% endif %}">내 모집글</a></li>
+        <li><a href="{% url 'member:myarticle' %}" class="{% if request.path == '/member/myarticle/' %}active{% endif %}">내 게시글</a></li>
+        <li><a href="{% url 'member:myjoin' %}" class="{% if request.path == '/member/myjoin/' %}active{% endif %}">내 참여 내역</a></li>
+      </ul>
+    </div>
+
+    <!-- 내용 담을 컨테이너 -->
+    <main class="main">
+
+    <h2>마이페이지</h2>
+
+    <section class="mypage-profile">
+
+        <!-- user_id를 JavaScript에서 사용할 수 있도록 data 속성 추가 -->
+        <div data-user-id="{{ user_id }}" style="display:none;"></div>
+
+        <form class="mypage-form">
+
+
+            <!-- 기본 정보 -->
+            
+            <div class="info-group">
+                <label>이름</label>
+                <input type="text" name="name" value="{{ name }}" readonly>
+            </div>
+
+            <div class="info-group">
+                <label>아이디</label>
+                <input type="text" name="user_id" value="{{ user_id }}" readonly>
+            </div>
+            
+            <div class="info-group">
+                <label>닉네임</label>
+                <input type="text" name="nickname" value="{{ nickname }}" readonly>
+            </div>
+
+            <div class="info-group">
+                <label>생년월일</label>
+                <input type="text" name="birthday" value="{{ birthday }}" readonly>
+            </div>
+
+            <div class="info-group">
+                <label>전화번호</label>
+                <input type="text" name="phone" value="{{ phone_num }}" readonly>
+            </div>
+
+            <div class="info-group info-group-address">
+                <label>주소</label>
+                <div class="address-row">
+                    <input type="text" value="{{ addr1 }}" readonly>
+                    <input type="text" value="{{ addr2 }}" readonly>
+                    <input type="text" value="{{ addr3 }}" readonly>
+                </div>
+            </div>
+
+
+
+            <!-- 버튼 -->
+            <div class="mypage-btn-box">
+                <div class="btn-left">
+                    <button type="button" class="btn-edit">정보 수정</button>
+                    <button type="button" class="btn-password">비밀번호 변경</button>
+                </div>
+
+                <button type="button" class="btn-withdraw">회원 탈퇴</button>
+            </div>
+
+        </form>
+        
+        <!-- 숨겨진 폼 -->
+        <form id="withdrawForm"
+              method="post"
+              action="{% url 'member:withdraw' %}"
+              style="display:none;">
+            {% csrf_token %}
+            <input type="hidden" name="delete_reason" id="delete_reason_input">
+            <input type="hidden" name="password" id="password_input">
+        </form>
+
+        <!-- 탈퇴 (2단계) -->
+        <div id="withdrawModal" class="withdraw-modal">
+            <div class="withdraw-modal-backdrop"></div>
+            <div class="withdraw-modal-content">
+                <!-- 1: 탈퇴 사유 설문 -->
+                <div id="withdrawStep1" class="withdraw-step">
+                    <h3 class="withdraw-modal-title">회원 탈퇴 사유를 선택해주세요</h3>
+                    <form id="withdrawReasonForm">
+                        <div class="reason-options">
+                            <label>
+                                <input type="radio" name="delete_reason" value="1">
+                                <span>서비스 이용이 불편함</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="delete_reason" value="2">
+                                <span>원하는 기능이 없음</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="delete_reason" value="3">
+                                <span>이용 빈도가 낮음</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="delete_reason" value="4">
+                                <span>개인정보 보호 우려</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="delete_reason" value="5">
+                                <span>다른 서비스 이용</span>
+                            </label>
+                            <label>
+                                <input type="radio" name="delete_reason" value="6">
+                                <span>기타</span>
+                            </label>
+                        </div>
+                        <div id="otherReasonBox" class="other-reason-box">
+                            <textarea 
+                                id="otherReasonText" 
+                                placeholder="탈퇴 사유를 입력해주세요" 
+                                rows="3"
+                            ></textarea>
+                        </div>
+                        <div class="modal-buttons">
+                            <button type="button" id="cancelWithdraw" class="btn-cancel">취소</button>
+                            <button type="button" id="nextToPassword" class="btn-next">다음</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 2: 비밀번호 확인 -->
+                <div id="withdrawStep2" class="withdraw-step" style="display:none;">
+                    <h3 class="withdraw-modal-title">비밀번호 확인</h3>
+                    <p class="withdraw-modal-desc">회원 탈퇴를 위해 비밀번호를 입력해주세요.</p>
+                    <div class="password-confirm-group">
+                        <label for="confirmPassword">비밀번호</label>
+                        <input 
+                            type="password" 
+                            id="confirmPassword" 
+                            placeholder="비밀번호를 입력하세요"
+                            autocomplete="current-password"
+                        >
+                        <p id="passwordError" class="error-message" style="display:none;"></p>
+                    </div>
+                    <div class="modal-buttons">
+                        <button type="button" id="backToReason" class="btn-back">이전</button>
+                        <button type="button" id="confirmWithdraw" class="btn-confirm">탈퇴하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+
+
+    </main>
+
+
+
+
+<!-- mypage내용 담을 container -->
+  </div> <!-- register-wrapper -->
+</div> <!-- register-container -->
+
+
+{% endblock %}

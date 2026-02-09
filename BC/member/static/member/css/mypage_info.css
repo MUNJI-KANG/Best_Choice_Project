@@ -1,0 +1,530 @@
+/* ===========================
+   오른쪽 메인 영역
+   =========================== */
+.main {
+  padding: var(--spacing-2xl) var(--spacing-xl);
+}
+
+/* 프로필 박스 */
+.mypage-profile {
+  background: var(--color-card-box);
+  border: 1px solid var(--color-soft-gray-line);
+  border-radius: 18px;
+  padding: var(--spacing-xl) var(--spacing-2xl);
+  box-shadow: var(--shadow-soft);
+}
+
+/* 제목 */
+.main > h2 {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: var(--spacing-lg);
+  color: var(--color-text-primary);
+}
+
+/* ===========================
+   폼 레이아웃
+   =========================== */
+.mypage-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  max-width: 680px;
+}
+
+/* 라벨 + 인풋 한 줄 */
+.info-group {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+/* 라벨 */
+.info-group label {
+  width: 80px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+/* ===========================
+   ✏ editable input
+   =========================== */
+.info-group input,
+.address-row input {
+  flex: 1;
+  width: 100%;
+  padding: 11px 14px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--color-soft-gray-line);
+  background-color: #ffffff;
+  color: var(--color-text-primary);
+  transition: all var(--transition-fast);
+  outline: none;
+}
+
+/* focus */
+.info-group input:not([readonly]):focus,
+.address-row input:not([readonly]):focus {
+  border-color: var(--color-deep-blue);
+  box-shadow: 0 0 0 2px rgba(47, 92, 156, 0.18);
+}
+
+/* ===========================
+   🔒 readonly input
+   =========================== */
+.info-group input[readonly],
+.address-row input[readonly] {
+  background-color: #f5f6f8;
+  border: 1px solid var(--color-soft-gray-line);
+  color: var(--color-text-secondary);
+  box-shadow: none;
+}
+
+/* readonly hover/focus 동일 유지 */
+.info-group input[readonly]:focus,
+.address-row input[readonly]:focus,
+.info-group input[readonly]:hover,
+.address-row input[readonly]:hover {
+  border: 1px solid var(--color-soft-gray-line);
+  background-color: #f5f6f8;
+}
+
+/* ===========================
+   주소 3칸 레이아웃
+   =========================== */
+.info-group-address {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.address-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  flex: 1;
+}
+
+/* ===========================
+   반응형
+   =========================== */
+@media (max-width: 768px) {
+  .mypage-profile {
+    padding: var(--spacing-lg);
+  }
+
+  .mypage-form {
+    max-width: 100%;
+  }
+
+  .info-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info-group label {
+    width: auto;
+  }
+
+  .info-group-address {
+    align-items: flex-start;
+  }
+
+  .address-row {
+    width: 100%;
+  }
+}
+
+/* ===========================
+   버튼 영역 (공통 디자인 적용)
+   =========================== */
+.mypage-btn-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--spacing-md);
+  gap: 12px;
+}
+
+/* 버튼 그룹 */
+.mypage-btn-box .btn-left {
+  display: flex;
+  gap: 10px;
+}
+
+/* ---------------------------
+   기본 버튼들
+   (common.css 버튼 스타일 시스템에 맞춤)
+   --------------------------- */
+.btn-edit,
+.btn-password {
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  border: 1px solid var(--color-deep-blue);
+  background: #ffffff;
+  color: var(--color-deep-blue);
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.btn-edit:hover,
+.btn-password:hover {
+  background: var(--color-deep-blue);
+  border-color: var(--color-deep-blue);
+  color: #ffffff;
+}
+
+/* ---------------------------
+   🔥 회원 탈퇴 버튼
+   --------------------------- */
+.btn-withdraw {
+  padding: 10px 20px;
+  border-radius: 999px;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid #ff4d4f;
+  background-color: #ff4d4f;
+  color: #ffffff;
+  transition: var(--transition-base);
+}
+
+.btn-withdraw:hover {
+  background-color: #d9363e;
+  border-color: #d9363e;
+}
+
+/* ===========================
+   비밀번호 수정 섹션
+   =========================== */
+.password-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  max-width: 450px;
+}
+
+.password-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.password-group label {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.password-group input {
+  padding: 12px 14px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid var(--color-soft-gray-line);
+  background: #ffffff;
+  transition: var(--transition-fast);
+}
+
+.password-group input:focus {
+  border-color: var(--color-deep-blue);
+  box-shadow: 0 0 0 2px rgba(47, 92, 156, 0.18);
+}
+
+/* 버튼 박스 */
+.password-btn-box {
+  margin-top: var(--spacing-md);
+  display: flex;
+  justify-content: center;
+}
+
+/* 비밀번호 변경 버튼 */
+.password-btn-box button {
+  padding: 10px 22px;
+  border-radius: 999px;
+  border: 1px solid var(--color-deep-blue);
+  background: var(--color-deep-blue);
+  color: #ffffff;
+  font-size: 14px;
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.password-btn-box button:hover {
+  background: var(--color-deep-blue-hover);
+  border-color: var(--color-deep-blue-hover);
+}
+
+/* ===========================
+   탈퇴 섹션
+   =========================== */
+.withdraw-section {
+    animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.reason-options label:hover {
+    background-color: #f8f9fa;
+    border-color: #ff4d4f;
+}
+
+.reason-options input[type="radio"]:checked + span {
+    color: #ff4d4f;
+    font-weight: 600;
+}
+
+/* ===========================
+   탈퇴 모달
+   =========================== */
+.withdraw-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.withdraw-modal.show {
+    display: flex;
+}
+
+.withdraw-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(3px);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.withdraw-modal-content {
+    position: relative;
+    background: white;
+    padding: 40px;
+    border-radius: 14px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.25);
+    animation: slideIn 0.3s ease-out;
+    z-index: 1;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.withdraw-modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 24px;
+    color: var(--color-text-primary);
+    text-align: center;
+}
+
+.withdraw-modal-desc {
+    font-size: 15px;
+    color: var(--color-text-secondary);
+    margin-bottom: 24px;
+    text-align: center;
+}
+
+/* 탈퇴 사유 옵션 */
+.reason-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.reason-options label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 15px;
+}
+
+.reason-options label:hover {
+    background-color: #f8f9fa;
+    border-color: #ff4d4f;
+}
+
+.reason-options input[type="radio"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.reason-options input[type="radio"]:checked + span {
+    color: #ff4d4f;
+    font-weight: 600;
+}
+
+.reason-options input[type="radio"]:checked ~ label,
+.reason-options label:has(input[type="radio"]:checked) {
+    border-color: #ff4d4f;
+    background-color: #fff5f5;
+}
+
+/* 기타 사유 입력 */
+.other-reason-box {
+    display: none;
+    margin-top: 16px;
+}
+
+.other-reason-box textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 8px;
+    font-size: 15px;
+    resize: vertical;
+    font-family: inherit;
+    transition: var(--transition-fast);
+}
+
+.other-reason-box textarea:focus {
+    outline: none;
+    border-color: #ff4d4f;
+    box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.18);
+}
+
+/* 비밀번호 확인 */
+.password-confirm-group {
+    margin-bottom: 24px;
+}
+
+.password-confirm-group label {
+    display: block;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 8px;
+}
+
+.password-confirm-group input {
+    width: 100%;
+    padding: 12px 14px;
+    font-size: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--color-soft-gray-line);
+    transition: var(--transition-fast);
+}
+
+.password-confirm-group input:focus {
+    outline: none;
+    border-color: #ff4d4f;
+    box-shadow: 0 0 0 2px rgba(255, 77, 79, 0.18);
+}
+
+.error-message {
+    color: #ff4d4f;
+    font-size: 13px;
+    margin-top: 8px;
+}
+
+/* 모달 버튼 */
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 24px;
+}
+
+.modal-buttons button {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition-base);
+    border: none;
+}
+
+.btn-cancel {
+    background: #f5f5f5;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.btn-cancel:hover {
+    background: #e8e8e8;
+}
+
+.btn-back {
+    background: #f5f5f5;
+    color: #666;
+    border: 1px solid #ddd;
+}
+
+.btn-back:hover {
+    background: #e8e8e8;
+}
+
+.btn-next {
+    background: var(--color-deep-blue);
+    color: white;
+}
+
+.btn-next:hover {
+    background: var(--color-deep-blue-hover);
+}
+
+.btn-confirm {
+    background: #ff4d4f;
+    color: white;
+}
+
+.btn-confirm:hover {
+    background: #d9363e;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+    .withdraw-modal-content {
+        padding: 30px 20px;
+        width: 95%;
+    }
+
+    .withdraw-modal-title {
+        font-size: 20px;
+    }
+
+    .modal-buttons {
+        flex-direction: column;
+    }
+
+    .modal-buttons button {
+        width: 100%;
+    }
+}

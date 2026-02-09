@@ -1,0 +1,291 @@
+/* 사이드바 스타일은 dashboard.css에서 통일 관리 */
+
+.admin-main {
+    flex: 1;
+    padding: 30px 40px;
+    background: #F4F8FB;
+}
+
+.filter-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.filter-select {
+    height: 40px;
+    padding: 8px;
+    border: 1px solid #cdd3da;
+    border-radius: 6px;
+}
+
+.search-wrap {
+    display: flex;
+    gap: 8px;
+}
+
+.search-input {
+    height: 40px;
+    padding: 0 10px;
+    border: 1px solid #cdd3da;
+    border-radius: 6px;
+}
+
+.search-btn {
+    height: 40px;
+    padding: 0 14px;
+    background: var(--color-deep-blue);
+    color: white;
+    border-radius: 6px;
+    border: none;
+}
+
+.facility-box {
+    position: relative;
+    background: #fff;
+    border: 1px solid #cdd3da;
+    padding: 20px;
+    border-radius: 10px;
+    min-height: 200px;
+}
+
+.facility-box select#perPageSelect {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+}
+
+.facility-item {
+    padding: 8px 0;
+    font-size: 15px;
+}
+
+.pages {
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* 페이징 */
+.page-selector{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: var(--spacing-xs);
+}
+
+.pagination {
+    margin-top: var(--spacing-xl);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+}
+
+.page-btn {
+    padding: 6px 12px;
+    border: 1px solid var(--color-soft-gray-line);
+    border-radius: 6px;
+    background: var(--color-card-box);
+    color: var(--color-text-primary);
+    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition-base);
+}
+
+.page-btn:hover {
+    background: var(--color-muted-blue);
+    color: white;
+}
+
+.page-btn.active {
+    background: var(--color-deep-blue);
+    color: white;
+    border-color: var(--color-deep-blue);
+    font-weight: 700;
+}
+
+.page-btn.arrow {
+    font-weight: 600;
+}
+
+.page-btn.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+.page-dots {
+    padding: 6px 10px;
+    color: var(--color-text-secondary);
+}
+
+.sort-page-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.sort-page-container .search-dropdown {
+    min-width: 140px;
+}
+
+.page-selector {
+    display: flex;
+    justify-content: flex-end;
+    width: 150px;
+}
+
+#perPageSelect {
+    margin-bottom: var(--spacing-md);
+}
+
+.facility-table td:nth-child(1),
+.facility-table th:nth-child(1) {
+    width: 80px;
+    white-space: nowrap;
+}
+
+/* 시설 리스트 테이블 */
+.facility-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 50px;
+    background: var(--color-card-box);
+    border: 1px solid var(--color-soft-gray-line);
+    font-size: 15px;
+}
+
+.facility-table-header th {
+    background: #F5F7FA;
+    color: #1A2A43;
+    border-bottom: 2px solid #d6dce3;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.facility-table td {
+    border-bottom: 1px solid #e5e9f0;
+    padding: 12px 10px;
+    color: #4c5c68;
+}
+
+.facility-table td:nth-child(1),
+.facility-table td:nth-child(2) {
+    text-align: center;
+    color: #1A2A43;
+    font-weight: 600;
+}
+
+
+.facility-table tbody tr:nth-child(odd) {
+    background: #FAFCFF;
+}
+
+.facility-table tbody tr:nth-child(even) {
+    background: #FFFFFF;
+}
+
+.facility-table tbody tr:hover {
+    background: #EDF4FF;
+    transition: var(--transition-base);
+}
+
+.facility-check {
+    width: 18px;
+    height: 18px;
+}
+
+.box-header {
+    width: 100%;
+    text-align: center;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 2px solid var(--color-soft-gray-line);
+    margin-bottom: var(--spacing-lg);
+}
+
+/* 버튼 그룹 (겹침 해결) */
+.button-group {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.register-btn,
+.delete-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 22px;
+    background: #2F5C9C;
+    color: white;
+    border-radius: 7px;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.register-btn {
+    background: #2F5C9C;
+}
+
+.delete-btn {
+    background: #d9534f;
+    right: 140px; /* 작성하기 버튼 옆에 배치 */
+}
+
+.delete-btn:hover {
+    background: #b52b27;
+}
+
+/* 테이블 컬럼 비율 */
+.facility-table th:nth-child(1),
+.facility-table td:nth-child(1) {
+    width: 50px;
+    text-align: center;
+}
+
+.facility-table th:nth-child(2),
+.facility-table td:nth-child(2) {
+    width: 50px;
+    text-align: center;
+}
+
+.facility-table td:nth-child(3) {
+    font-weight: 600;
+    color: #1A2A43;
+}
+
+.facility-table th:nth-child(4),
+.facility-table td:nth-child(4) {
+    width: 120px;
+    text-align: center;
+}
+
+.facility-table th:nth-child(5),
+.facility-table td:nth-child(5) {
+    width: 180px;
+    text-align: center;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;  /* 오른쪽 정렬 */
+    gap: 10px;
+    margin-top: 20px;           /* 위랑 띄우기 */
+}
+
+/* float으로 레이아웃 깨질 경우 대비 */
+.facility-box::after {
+    content: "";
+    display: block;
+    clear: both;
+}

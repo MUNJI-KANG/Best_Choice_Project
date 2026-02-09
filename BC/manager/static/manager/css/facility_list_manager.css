@@ -1,0 +1,410 @@
+/*****************************************
+    기본 레이아웃
+*****************************************/
+body {
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    background: #F4F8FB;
+    font-family: 'Pretendard', sans-serif;
+}
+
+/* 사이드바 스타일은 dashboard.css에서 통일 관리 */
+
+/*****************************************
+    메인 영역
+*****************************************/
+.dashboard-main {
+    flex: 1;
+    padding: 30px 40px;
+}
+
+/*****************************************
+    필터 영역
+*****************************************/
+.filter-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 22px;
+}
+
+.filter-select {
+    height: 40px;
+    padding: 8px 12px;
+    border: 1px solid #cdd3da;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+}
+
+.search-wrap {
+    display: flex;
+    gap: 8px;
+}
+
+.search-input {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #cdd3da;
+    border-radius: 6px;
+    width: 170px;
+}
+
+.search-btn {
+    height: 40px;
+    padding: 0 16px;
+    background: var(--color-deep-blue);
+    color: white;
+    border-radius: 6px;
+    border: none;
+    font-size: 14px;
+}
+
+.sports-filter-box {
+    margin-right: auto;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.apply-sports-label {
+    font-size: 14px;
+    color: var(--color-text-primary);
+}
+
+.btn-sports-manage {
+    padding: 6px 12px;
+    font-size: 13px;
+    background: #2F5C9C;
+    color: white;
+    border: none;
+    border-radius: 6px;
+}
+
+/*****************************************
+    시설 박스
+*****************************************/
+.facility-box {
+    background: #fff;
+    border: 1px solid #cdd3da;
+    padding: 20px;
+    border-radius: 10px;
+    position: relative;
+}
+
+/* 제목 */
+.box-header {
+    width: 100%;
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    padding-bottom: 18px;
+    border-bottom: 2px solid var(--color-soft-gray-line);
+    margin-bottom: 40px;
+    letter-spacing: -0.5px;
+}
+
+/* 페이지 개수 선택 */
+.facility-box select#perPageSelect {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    padding: 6px 10px;
+}
+
+/*****************************************
+    시설 리스트 테이블
+*****************************************/
+.facility-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: white;
+    border: 1px solid #d6dce3;
+    font-size: 15px;
+}
+
+.facility-table-header th {
+    background: #F5F7FA;
+    color: #1A2A43;
+    border-bottom: 2px solid #d6dce3;
+    padding: 12px 8px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+/* 데이터 */
+.facility-table td {
+    border-bottom: 1px solid #e5e9f0;
+    padding: 12px 10px;
+    color: #4c5c68;
+}
+
+/* 각 열 정렬 */
+.facility-table td:nth-child(1),
+.facility-table td:nth-child(2) {
+    text-align: center;
+    color: #1A2A43;
+    font-weight: 600;
+}
+
+.facility-table td:nth-child(3) {
+    font-weight: 600;
+    color: #1A2A43;
+}
+
+/* hover */
+.facility-table tbody tr:hover {
+    background: #F0F7FF;
+    transition: 0.1s;
+}
+
+/* 홀수/짝수 */
+.facility-table tbody tr:nth-child(odd) {
+    background: #FAFCFF;
+}
+
+/*****************************************
+    체크박스
+*****************************************/
+.facility-check {
+    width: 18px;
+    height: 18px;
+}
+
+/*****************************************
+    페이징
+*****************************************/
+.pagination {
+    margin-top: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.page-btn {
+    padding: 6px 13px;
+    border: 1px solid #d0d6dd;
+    border-radius: 6px;
+    background: white;
+    color: #1A2A43;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.page-btn:hover {
+    background: #92B8D8;
+    color: white;
+}
+
+.page-btn.active {
+    background: #2F5C9C;
+    color: white;
+    border-color: #2F5C9C;
+    font-weight: 700;
+}
+
+.page-btn.disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+/*****************************************
+    등록 버튼 / 삭제 버튼
+*****************************************/
+.register-btn,
+.delete-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    padding: 10px 22px;
+    background: #2F5C9C;
+    color: white;
+    border-radius: 7px;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.register-btn {
+    background: #2F5C9C;
+}
+
+.delete-btn {
+    background: #d9534f;
+}
+
+.delete-btn:hover {
+    background: #b52b27;
+}
+
+.sports-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.45);
+    display: none; /* 처음엔 숨김 */
+    justify-content: center;
+    align-items: center;
+    z-index: 9000;
+}
+
+/* 팝업 내용 */
+.popup-content {
+    width: 600px;
+    background: white;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: popupFadeIn 0.2s ease-out;
+}
+
+@keyframes popupFadeIn {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.popup-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 18px;
+    color: #1A2A43;
+}
+
+
+/* 카드 그리드 */
+.sports-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px; 
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+/* 카드+삭제버튼 래퍼 */
+.sports-card-wrap {
+    position: relative;
+    display: block;   /* ★ inline-block 절대 금지 */
+}
+
+/* 카드 */
+.sports-card {
+    border: 1px solid #d6dce3;
+    padding: 18px 10px;
+    border-radius: 14px;
+    text-align: center;
+    cursor: pointer;
+    background: #FAFCFF;
+    transition: 0.15s;
+    font-size: 16px;
+    color: #1A2A43;
+    font-weight: 600;
+
+    width: 100%;           /* ★ wrap 안에서 꽉 차게 */
+    box-sizing: border-box;
+}
+
+
+/* hover */
+.sports-card:hover {
+    background: #EDF4FF;
+}
+
+/* 선택됨 */
+.sports-card.selected {
+    border-color: #2F5C9C;
+    background: #E4EEFF;
+    color: #2F5C9C;
+}
+
+/* 삭제 버튼 */
+.sport-del-btn {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.sport-del-btn:hover {
+    background: #e60000;
+}
+
+/* 입력창 + 추가버튼 */
+.sport-add-wrap {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+    margin-bottom: 20px;        /* 입력창과 아래 버튼 사이 여백 */
+}
+
+.sport-add-input {
+    flex: 1;
+    padding: 10px 14px;
+    border: 1px solid #cdd3da;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.sport-add-btn {
+    padding: 10px 16px;
+    background: #2F5C9C;
+    color: white;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.sport-add-btn:hover {
+    background: #3E6FB3;
+}
+
+/* 팝업 하단 버튼 */
+.popup-bottom {
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+}
+
+.popup-close-btn,
+.popup-save-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.popup-close-btn {
+    background: #cdd3da;
+    color: #1A2A43;
+}
+
+.popup-save-btn {
+    background: #2F5C9C;
+    color: white;
+}
+
+.popup-save-btn:hover {
+    background: #3E6FB3;
+}
+

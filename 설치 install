@@ -1,0 +1,26 @@
+pip xmltodict
+pip install pandas django-pandas
+
+
+pip install numpy pandas matplotlib
+pip install jupyter
+pip install pydantic
+pip install python-dotenv
+pip install pymysql
+pip install cryptography
+pip install openpyxl
+pip install finance_datareader
+pip install sqlalchemy
+pip install seaborn
+pip install beautifulsoup4
+pip install html5lib
+pip install selenium
+
+pip install django
+pip install sqlparse
+pip install mysqlclient
+pip install xmltodict
+pip install pandas django-pandas
+
+pip install markdown bleach
+pip install openai

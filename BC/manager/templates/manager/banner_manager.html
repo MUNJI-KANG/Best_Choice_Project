@@ -1,0 +1,97 @@
+{% extends 'manager/manager_base.html' %}
+{% load static %}
+
+{% block title %}배너 관리{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'manager/css/facility_add_manager.css' %}">
+<link rel="stylesheet" href="{% static 'manager/css/banner_manager.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="facility-box">
+    <h1 class="box-header">배너 관리</h1>
+    
+    <!-- 페이지당 항목 수 선택 (다른 관리 페이지와 통일) -->
+    <select id="perPageSelect" class="filter-select">
+        <option value="15" {% if per_page == 15 %}selected{% endif %}>15개</option>
+        <option value="30" {% if per_page == 30 %}selected{% endif %}>30개</option>
+        <option value="50" {% if per_page == 50 %}selected{% endif %}>50개</option>
+        <option value="100" {% if per_page == 100 %}selected{% endif %}>100개</option>
+    </select>
+    
+    <table class="facility-table">
+        <thead class="facility-table-header">
+            <tr>
+                <th style="width: 50px;">번호</th>
+                <th style="width: 50px;">✔</th>
+                <th>이미지 정보</th>
+                <th style="width: 180px;">등록일</th>
+                <th style="width: 180px;">종료일</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for b in banner_list %}
+            <tr>
+                <td>{{ b.row_no }}</td>
+                <td><input type="checkbox" name="delete_ids" value="{{ b.img_id }}"></td>
+                <td>
+                    <a href="{% url 'manager:banner_detail' b.img_id %}" class="detail-link">
+                        {{ b.title }}
+                    </a>
+                </td>
+                <td>{{ b.reg_date|date:"Y-m-d H:i" }}</td>
+                <td>
+                    {% if b.end_date %}
+                        {{ b.end_date|date:"Y-m-d H:i" }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px;">등록된 배너가 없습니다.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- 페이징 (다른 관리 페이지와 동일한 구조) -->
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a class="page-btn arrow" href="?page={{ page_obj.previous_page_number }}&per_page={{ per_page }}">◀ 이전</a>
+        {% else %}
+            <span class="page-btn arrow disabled">◀ 이전</span>
+        {% endif %}
+
+        {% for num in block_range %}
+            {% if num == page_obj.number %}
+                <span class="page-btn active">{{ num }}</span>
+            {% else %}
+                <a class="page-btn" href="?page={{ num }}&per_page={{ per_page }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a class="page-btn arrow" href="?page={{ page_obj.next_page_number }}&per_page={{ per_page }}">다음 ▶</a>
+        {% else %}
+            <span class="page-btn arrow disabled">다음 ▶</span>
+        {% endif %}
+    </div>
+
+    <!-- 버튼 영역 (다른 관리 페이지와 동일한 구조) -->
+    <a href="{% url 'manager:banner_form' %}">
+        <button class="register-btn" type="button">이미지 등록</button>
+    </a>
+    <button class="delete-btn" type="button" onclick="deleteBanners()">선택 삭제</button>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'manager/js/banner_manager.js' %}"></script>
+<script src="{% static 'manager/js/paging.js' %}"></script>
+{% endblock %}
