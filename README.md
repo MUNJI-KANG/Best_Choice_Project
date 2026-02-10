@@ -43,6 +43,7 @@
 
 ## 📂 프로젝트 구조
 
+```
 BC_Project/
 ├── ai_analytics/
 ├── board/
@@ -53,6 +54,7 @@ BC_Project/
 ├── recruitment/
 ├── reservation/
 └── manage.py
+```
 
 
 ### 주요 앱 설명
