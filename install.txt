@@ -1,0 +1,7 @@
+pip install pandas
+pip install django_pandas
+pip install request
+pip install markdown
+pip install bleach
+pip install openai
+pip install Pillow
