@@ -1,1 +1,3 @@
-# Best_Choice_Project~
+# Best_Choice_Project
+- 국민체육진흥공단에서 주최한 공공 기간 데이터를 이용한 웹 플랫폼 개발 
+- 개발 기간 2025.~ 
