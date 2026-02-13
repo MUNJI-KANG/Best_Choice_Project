@@ -120,38 +120,71 @@ OpenAI API를 연동한 관리자 전용 AI 챗봇 기능을 구현했습니다.
 API Key는 환경변수로 관리하여 보안을 유지했습니다.
 
 ---
-## 📂 프로젝트 구조
+## 🗂 Database Design (ERD)
 
-```
-BC_Project/
-├── manage.py
-├── requirements.txt
-│
-├── ai_analytics/     # AI 분석 기능
-├── BC_Contest/       # 프로젝트 설정 모듈 (settings, urls 등)
-├── board/            # 게시판 기능
-├── common/           # 공통 로직
-├── facility/         # 공공시설 관리
-├── manager/          # 관리자 기능
-├── member/           # 회원 관리
-├── recruitment/      # 팀원 모집 기능
-└── reservation/      # 시설 예약 기능
-```
+![ERD](./ERD/BC_erd.png)
 
+- Member를 중심으로 Reservation, Community, Comment, Rating 등 주요 도메인이 1:N 관계로 연결됩니다.
+- Reservation은 Facility 및 Time_slot과 연결되어 예약 흐름을 관리합니다.
+- Community는 Article, Comment, Join_stat과 연결되어 모집 및 커뮤니티 활동을 구성합니다.
+- Add_file은 게시글 및 시설과 연결되어 파일 업로드 기능을 지원합니다.
+- 각 도메인은 상태(status) 및 날짜 필드를 활용하여 흐름 제어가 가능하도록 설계했습니다.
+---
 
+## 🧩 주요 App 구조
 
-### 주요 앱 설명
-
-| App | 설명 |
+| App | 역할 |
 |------|------|
-| facility | 공공시설 정보 관리 |
-| reservation | 시설 예약 로직 |
-| recruitment | 팀원 모집 게시판 |
-| member | 회원 관리 |
-| manager | 관리자 기능 |
-| board | 일반 게시판 |
-| ai_analytics | 데이터 분석 기능 |
+| facility | 공공데이터 기반 시설 정보 관리 및 조회 기능 |
+| reservation | 예약 생성, 시간 중복 검증, 예약 상태 관리 |
+| recruitment | 운동 모집 게시글 및 참여 관리 |
+| member | 사용자 인증 및 권한 관리 |
+| manager | 관리자 전용 통계 및 운영 기능 |
+| board | 일반 게시판 및 공지사항 기능 |
+| ai_analytics | 예약/회원 데이터 기반 통계 및 분석 기능 |
 
+---
+## ⚠️ Trouble Shooting
+### 모집 참여 상태(PENDING) 및 자동 마감 타이밍 설계
+
+**문제 상황**
+
+모집 기능 구현 중 다음 두 가지를 어떻게 설계할지 고민했습니다.
+
+1. 참여 신청 즉시 인원에 포함할 것인가?
+2. 모집 정원 초과 및 마감 시점을 어떻게 제어할 것인가?
+
+초기에는 참여 신청과 동시에 인원에 포함시키는 방식을 고려했으나,  
+이 경우 작성자의 승인 없이 모집이 마감되거나 정원이 초과될 가능성이 있었습니다.
+
+---
+
+**설계 고민**
+
+- 대기(PENDING) 상태를 정원 계산에 포함할 것인가?
+- 승인/거절 흐름을 어떻게 분리할 것인가?
+- 정원이 모두 찼을 때 자동으로 모집을 마감할 것인가?
+- 마감 날짜 기반 종료와 인원 기반 종료를 함께 처리할 수 있는가?
+
+---
+
+**해결 방법**
+
+1️⃣ 참여 상태를 `PENDING(0)`, `APPROVED(1)`, `REJECTED(2)`로 분리  
+2️⃣ 정원 계산 시 `APPROVED` 상태만 카운트  
+3️⃣ 승인 인원이 모집 정원(capacity)에 도달하면 자동으로 `end_stat = 1` 처리  
+4️⃣ `end_set_date`를 별도 관리하여 날짜 기반 마감과 인원 기반 마감을 모두 지원
+
+이를 통해 작성자 승인 기반 흐름을 유지하면서도  
+정원 초과 문제를 방지할 수 있도록 설계했습니다.
+
+---
+
+**결과**
+
+- 승인 기반 참여 확정 구조 완성
+- 모집 인원 초과 방지
+- 상태 전이 중심의 안정적인 모집 흐름 구현
 ---
 
 ## 🎥 발표 영상
