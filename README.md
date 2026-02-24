@@ -1,4 +1,5 @@
-# Best Choice (BC_Project)
+# 🏆 Best Choice (BC_Project) - 할래말래
+> **공공데이터 활용 공모전을 참가한 Django 기반 체육시설 예약 및 커뮤니티 서비스**
 ---
 ## 📌 프로젝트 소개 (KOREA IT ACADEMY 국비지원 과정 팀 프로젝트)
 
@@ -36,12 +37,11 @@
 - 팀명: 최강선택
 - 개발 형태: 4인 팀 프로젝트 (KOREA IT ACADEMY 과정)
 
-### 👥 팀 구성 및 역할
-
-- 강대광: 예약 시스템 설계 및 구현, 회원 관리 및 인증 기능 개발
-- 최무선: 카카오 로그인 연동, 통계 대시보드 및 AI 분석 기능 구현
-- 최재영: 모집 게시판, 마이페이지, 공지사항 기능 개발
-- 오경택: 서버 관리 및 공공시설 관리 기능 구현
+## 👥 팀 구성 및 역할 (최강선택)
+- **강대광**: 예약 시스템 설계 및 구현, 회원 관리 및 인증 기능 개발
+- **최무선**: 카카오 로그인 연동, 통계 대시보드 및 AI 분석 기능 구현
+- **최재영**: 모집 게시판, 마이페이지, 공지사항 기능 개발
+- **오경택**: 서버 관리 및 공공시설 관리 기능 구현
 
 ### 🎯 프로젝트 목표
 
@@ -144,41 +144,89 @@ API Key는 환경변수로 관리하여 보안을 유지했습니다.
 | ai_analytics | 예약/회원 데이터 기반 통계 및 분석 기능 |
 
 ---
-## ⚠️ Trouble Shooting
-### 모집 참여 상태(PENDING) 및 자동 마감 타이밍 설계
+## ⚠️ Trouble Shooting & Technical Highlights
 
-**문제 상황**
+### 1. 데이터 일관성을 위한 원자적 연산(Atomic Update) 적용
+**[Situation]**
+모집 게시판 상세 페이지 조회 시, 사용자 접속에 따른 실시간 조회수 업데이트가 필요했습니다.
 
-모집 기능 구현 중 다음 두 가지를 어떻게 설계할지 고민했습니다.
+**[Problem]**
+일반적인 파이썬 객체 수정(`instance.view_cnt += 1`) 방식은 다수의 사용자가 동시에 접속할 경우 데이터가 덮어씌워져 조회수가 누락되는 **경쟁 상태(Race Condition)**를 유발할 수 있었습니다.
 
-1. 참여 신청 즉시 인원에 포함할 것인가?
-2. 모집 정원 초과 및 마감 시점을 어떻게 제어할 것인가?
+**[Solution]**
+Django의 `F()` 객체를 활용하여 파이썬 메모리가 아닌 데이터베이스 레벨에서 직접 값을 증가시키는 업데이트 쿼리를 수행하도록 로직을 개선했습니다.
 
-초기에는 참여 신청과 동시에 인원에 포함시키는 방식을 고려했으나,  
-이 경우 작성자의 승인 없이 모집이 마감되거나 정원이 초과될 가능성이 있었습니다.
+**[Result]**
+동시 접속 환경에서도 단 한 건의 데이터 누락 없이 정확한 조회수 정합성을 유지하는 안정적인 시스템을 구축했습니다.
 
-**설계 고민**
+**💻 핵심 코드**
+```python
+# recruitment/views.py (상세 조회 로직 중)
+try:
+    recruit = Community.objects.get(pk=pk, delete_date__isnull=True)
+    # F() 객체를 활용한 DB 레벨의 원자적 업데이트로 동시성 이슈 해결
+    Community.objects.filter(pk=pk, delete_date__isnull=True).update(view_cnt=F("view_cnt") + 1)
+except Community.DoesNotExist:
+    raise Http404("존재하지 않는 모집글입니다.")
+```
 
-- 대기(PENDING) 상태를 정원 계산에 포함할 것인가?
-- 승인/거절 흐름을 어떻게 분리할 것인가?
-- 정원이 모두 찼을 때 자동으로 모집을 마감할 것인가?
-- 마감 날짜 기반 종료와 인원 기반 종료를 함께 처리할 수 있는가?
+---
 
-**해결 방법**
+### 2. 효율적인 대용량 데이터 로딩 및 N+1 문제 해결
+**[Situation]**
+모집글 목록을 불러올 때 게시글 정보뿐만 아니라 마감 상태, 현재 참가자 수, 댓글 수 등 연관된 여러 테이블의 데이터를 함께 렌더링해야 했습니다.
 
-1️⃣ 참여 상태를 `PENDING(0)`, `APPROVED(1)`, `REJECTED(2)`로 분리  
-2️⃣ 정원 계산 시 `APPROVED` 상태만 카운트  
-3️⃣ 승인 인원이 모집 정원(capacity)에 도달하면 자동으로 `end_stat = 1` 처리  
-4️⃣ `end_set_date`를 별도 관리하여 날짜 기반 마감과 인원 기반 마감을 모두 지원
+**[Problem]**
+ORM의 지연 로딩(Lazy Loading)으로 인해 게시글 개수만큼 추가적인 SQL 쿼리가 발생하는 **N+1 문제**가 발생하여 서버 성능 저하가 우려되었습니다.
 
-이를 통해 작성자 승인 기반 흐름을 유지하면서도  
-정원 초과 문제를 방지할 수 있도록 설계했습니다.
+**[Solution]**
+`select_related`를 적용하여 연관 객체(`EndStatus`)를 SQL JOIN으로 한 번에 가져오도록 최적화하고, `annotate`와 `Count`를 조합해 참가자 수와 댓글 수를 DB 레벨에서 미리 계산했습니다.
 
-**결과**
+**[Result]**
+데이터베이스 호출 횟수를 획기적으로 줄여, 다량의 게시글 조회 시에도 일관되고 빠른 로딩 속도를 보장하는 쿼리 최적화를 달성했습니다.
 
-- 승인 기반 참여 확정 구조 완성
-- 모집 인원 초과 방지
-- 상태 전이 중심의 안정적인 모집 흐름 구현
+**💻 핵심 코드**
+```python
+# recruitment/views.py (목록 조회 로직 중)
+qs = (
+    Community.objects
+    .filter(delete_date__isnull=True)
+    .select_related("endstatus")  # JOIN을 통한 N+1 문제 해결
+    .annotate(
+        current_member=Count("joinstat"),              # DB 레벨 집계 연산
+        comment_count=Count('comment', distinct=True),
+    )
+)
+```
+
+---
+
+### 3. 사용자 경험(UX)과 데이터 신뢰도를 높인 예약-모집 연동
+**[Situation]**
+사용자가 자신이 예약한 시설을 기반으로 모집글을 작성하거나 수정할 때, 이미 사용된 예약을 걸러내고 지역 정보를 일치시켜야 했습니다.
+
+**[Problem]**
+이미 다른 모집글에 사용된 예약 내역이 중복 노출될 경우, 데이터의 신뢰도가 떨어지고 사용자의 혼란을 초래할 수 있었습니다.
+
+**[Solution]**
+`exclude` 쿼리를 복합적으로 사용하여 로그인한 사용자의 전체 예약 중 **이미 다른 게시글에 연결된 `reservation_id`를 완벽하게 제외**하는 필터링 로직을 구현했습니다.
+
+**[Result]**
+사용자의 입력 실수를 방지하는 동시에 시스템적인 데이터 불일치 가능성을 원천 차단하여 서비스의 완성도를 높였습니다.
+
+**💻 핵심 코드**
+```python
+# recruitment/views.py (모집글 수정 로직 중)
+# 이미 다른 모집글에서 사용 중인 예약 내역 중복 노출 차단
+used_reservation_ids = (
+    Community.objects
+    .filter(member_id=member, delete_date__isnull=True)
+    .exclude(reservation_id__isnull=True)
+    .exclude(reservation_id_id=current_reservation_id) # 현재 수정 중인 글은 예외 처리
+    .values_list("reservation_id_id", flat=True)
+)
+```
+
 ---
 
 ## 🎥 발표 영상
