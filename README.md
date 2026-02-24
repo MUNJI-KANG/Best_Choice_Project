@@ -51,30 +51,54 @@
 - 커뮤니티 기능을 통한 공공시설 이용 활성화
 
 ---
+주인님, 요청하신 대로 전체 내용을 그대로 복사해서 사용하실 수 있도록 하나의 마크다운 코드로 정리해 드립니다. Tech Stack은 말씀하신 대로 Simple Icons로 모두 교체했으며, 가독성과 전문성을 극대화했습니다.
+
+아래 코드 블록 우측 상단의 복사 버튼을 눌러 사용하십시오.
+
+Markdown
+# 🏆 Best Choice (BC_Project) - 할래말래
+> **공공데이터 기반 체육시설 예약 및 운동 모집 커뮤니티 플랫폼**
+
+---
+
+## 📌 프로젝트 소개
+**할래말래**는 체육진흥공단 주관 공공데이터 활용 공모전 참가를 목적으로 개발된 **Django 기반 웹 서비스**입니다. 
+흩어져 있는 공공 체육시설 정보를 통합하여 **조회 및 예약** 기능을 제공하며, **모집 커뮤니티**를 통해 사용자 간의 능동적인 운동 문화를 장려합니다. 단순한 시스템 구축을 넘어 실사용자의 편의성과 커뮤니티 활성화를 목표로 설계되었습니다.
+
+---
 
 ## 🛠 Tech Stack
 
-### Backend
-- Python 3.12.5
-- Django 5.2.8
+### 🔹 Backend & AI
+<p align="left">
+  <img src="https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white" hspace="3">
+  <img src="https://img.shields.io/badge/Django-092E20?style=for-the-badge&logo=django&logoColor=white" hspace="3">
+  <img src="https://img.shields.io/badge/OpenAI-412991?style=for-the-badge&logo=openai&logoColor=white" hspace="3">
+</p>
 
-### Database
-- MySQL (AWS RDS)
+### 🔹 Database & Infrastructure
+<p align="left">
+  <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" hspace="3">
+  <img src="https://img.shields.io/badge/AWS_RDS-527FFF?style=for-the-badge&logo=amazon-rds&logoColor=white" hspace="3">
+  <img src="https://img.shields.io/badge/AWS_EC2-FF9900?style=for-the-badge&logo=amazon-ec2&logoColor=white" hspace="3">
+  <br>
+  <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-badge&logo=nginx&logoColor=white" hspace="3">
+  <img src="https://img.shields.io/badge/Gunicorn-499848?style=for-the-badge&logo=gunicorn&logoColor=white" hspace="3">
+  <img src="https://img.shields.io/badge/Ubuntu-E94333?style=for-the-badge&logo=ubuntu&logoColor=white" hspace="3">
+</p>
 
-### Frontend
-- HTML5
-- CSS3
-- JavaScript
-- Django Template
+### 🔹 Frontend
+<p align="left">
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" hspace="3">
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" hspace="3">
+  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" hspace="3">
+</p>
 
-### Deployment
-- AWS EC2 (Ubuntu)
-- Gunicorn
-- Nginx
-- AWS RDS (MySQL)
-
-### Collaboration
-- Git / GitHub
+### 🔹 Collaboration
+<p align="left">
+  <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white" hspace="3">
+  <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white" hspace="3">
+</p>
 ---
 ## 🔑 주요 기능
 
@@ -157,16 +181,12 @@ API Key는 환경변수로 관리하여 보안을 유지했습니다.
 초기에는 참여 신청과 동시에 인원에 포함시키는 방식을 고려했으나,  
 이 경우 작성자의 승인 없이 모집이 마감되거나 정원이 초과될 가능성이 있었습니다.
 
----
-
 **설계 고민**
 
 - 대기(PENDING) 상태를 정원 계산에 포함할 것인가?
 - 승인/거절 흐름을 어떻게 분리할 것인가?
 - 정원이 모두 찼을 때 자동으로 모집을 마감할 것인가?
 - 마감 날짜 기반 종료와 인원 기반 종료를 함께 처리할 수 있는가?
-
----
 
 **해결 방법**
 
@@ -177,8 +197,6 @@ API Key는 환경변수로 관리하여 보안을 유지했습니다.
 
 이를 통해 작성자 승인 기반 흐름을 유지하면서도  
 정원 초과 문제를 방지할 수 있도록 설계했습니다.
-
----
 
 **결과**
 
