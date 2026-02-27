@@ -29,7 +29,13 @@ _geo_cache = {}
 
 
 def facility_list(request):
+    """
+    조건에 맞는 공공 체육시설 목록을 조회하고 지도 렌더링을 위한 데이터를 준비하는 뷰 함수입니다.
 
+    [기술적 주안점]
+    - 대규모 트래픽 대비 캐싱(Caching) 적용: 검색 조건(지역, 키워드)을 키(Key)로 삼아 Django Cache Framework를 적용하고 TTL(5분)을 설정하여, 반복적인 대량의 DB 조회(I/O) 부하를 획기적으로 줄였습니다.
+    - 사용자 경험(UX) 최적화: 검색 조건이 없을 경우 세션의 유저 주소 정보(addr1)를 SIDO_MAP 매핑을 통해 역산하여, 사용자 맞춤형 지역 시설을 디폴트로 노출하도록 설계했습니다.
+    """
     KAKAO_SCRIPT_KEY = os.getenv("KAKAO_SCRIPT_KEY")
 
     cp_nm = request.GET.get('cpNm')
@@ -204,6 +210,13 @@ def get_sigungu_center(sido, sigungu):
 
 
 def kakao_for_map(page_obj):
+    """
+    시설 목록의 주소를 카카오 로컬 API를 통해 위도/경도로 변환(Geocoding)하는 함수입니다.
+
+    [기술적 주안점]
+    - API 호출 최소화 및 인메모리 캐싱: 외부 API(카카오)의 Rate Limit(호출 제한)과 네트워크 지연을 방지하기 위해, 자체적인 _geo_cache 딕셔너리와 TTL(24시간) 로직을 구현하여 중복된 주소의 API 호출을 원천 차단했습니다.
+    - 무중단 Fallback 아키텍처: 지오코딩 실패나 API 장애 발생 시 에러를 뱉고 멈추지 않도록, get_sigungu_center()를 통한 시/군/구 중심 좌표 또는 서울 시청 좌표로 대체(Fallback)하여 지도 렌더링의 안정성을 보장합니다.
+    """
     KAKAO_REST_KEY = os.getenv("KAKAO_REST_API_KEY")
     headers = {"Authorization": f"KakaoAK {KAKAO_REST_KEY}"} if KAKAO_REST_KEY else None
 
@@ -253,6 +266,12 @@ def kakao_for_map(page_obj):
     return result
 
 def facility_detail(request, fk):
+    """
+    특정 시설의 상세 정보, 예약 가능 여부, 첨부파일 및 댓글을 종합하여 반환하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 이기종 데이터 병합(Data Merging): 공공데이터 원천 테이블(Facility)과 관리자가 커스텀하게 관리하는 정보 테이블(FacilityInfo)을 동시에 조회하고, 삼항 연산자를 활용해 유효한 데이터를 우선순위에 따라 매핑함으로써 완벽한 데이터 정합성을 제공합니다.
+    """
     user_id = request.session.get('user_id')
     KAKAO_SCRIPT_KEY = os.getenv("KAKAO_SCRIPT_KEY")
 
@@ -432,7 +451,10 @@ def add_comment(request, fk):
 
 def get_naver_image(query):
     """
-    네이버 이미지 검색 API - 시설명 기반 사진 1장 반환
+    시설의 등록된 사진이 없을 경우, 네이버 이미지 검색 API를 호출하여 대체 이미지를 동적으로 수집하는 함수입니다.
+
+    [기술적 주안점]
+    - 동적 콘텐츠 수집 및 예외 처리: urllib를 활용한 외부 Open API 통신 시 timeout(3초)을 명시적으로 설정하여 서버가 무한 대기(Hang)에 빠지는 것을 방지하고, 검색 결과가 없거나 예외 발생 시 시스템 에러 없이 None을 반환하여 유연하게 대처했습니다.
     """
     NAVER_CLIENT_ID = os.getenv("NAVER_CLIENT_ID")
     NAVER_CLIENT_SECRET = os.getenv("NAVER_CLIENT_SECRET")
