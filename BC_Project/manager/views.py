@@ -10,8 +10,12 @@ from django.contrib.auth.hashers import make_password, check_password
 
 def manager(request):
     """
-    관리자 로그인 페이지
-    member_id == 1인 계정만 관리자로 인정
+    관리자 전용 로그인 인터페이스를 제공하고 인증을 처리하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 권한 기반 인증 보안: 단순 아이디/비밀번호 일치를 넘어, DB 내 'manager_yn' 플래그를 검증하여 인가된 관리자만 접근 가능하도록 설계했습니다.
+    - 세션 하이재킹 방지: 로그인 성공 시 request.session.flush()를 호출하여 기존 세션을 완전히 초기화하고 새로운 세션 ID를 생성함으로써, 세션 고정 공격(Session Fixation)을 원천 차단했습니다.
+    - 단방향 해시 검증: Django의 check_password를 활용해 DB에 해시화되어 저장된 비밀번호를 안전하게 비교 검증합니다.
     """
     admin = request.session.get("manager_id")
     if not admin : 
@@ -74,62 +78,41 @@ def manager(request):
         return render(request, 'manager/login_manager.html')
     else:
         return redirect('manager:dashboard')
-
-# 로그아웃
 def logout(request):
     """
-    로그아웃 처리
-    - 카카오 로그인 사용자: 세션 삭제 후 카카오 로그아웃 페이지로 이동
-    - 일반 로그인 사용자: 세션 삭제 후 메인 페이지로 이동
+    관리자 세션을 안전하게 파기하고 로그인 페이지로 리다이렉트합니다.
+
+    [기술적 주안점]
+    - 세션 데이터 완전 소거: 세션 내 모든 키를 명시적으로 삭제하고 flush()를 호출하여 서버 측 세션 데이터를 즉시 무효화합니다.
+    - 클라이언트 보안 강화: set_expiry(0)를 통해 브라우저 종료 시 세션 쿠키가 즉시 만료되도록 설정하여 공용 PC 등에서의 보안 취약점을 방어했습니다.
     """
-    # 로그인하지 않은 경우
-    if not request.session.get('user_id'):
-        return redirect('/')
+    # 로그인하지 않은 경우 바로 리다이렉트
+    if not request.session.get('manager_id'):
+        return redirect('manager:manager_login')
     
-    # 카카오 로그인 사용자 여부 확인
-    is_kakao_user = request.session.get('is_kakao_user', False)
-    if not is_kakao_user:
-        user_id = request.session.get('user_id', '')
-        is_kakao_user = user_id.startswith('kakao_') if user_id else False
-    
-    # 카카오 로그인 사용자인 경우: 세션 먼저 삭제 후 카카오 로그아웃 페이지로 이동
-    if is_kakao_user:
-        # 세션의 모든 키를 명시적으로 삭제
-        session_keys = list(request.session.keys())
-        for key in session_keys:
-            del request.session[key]
-        
-        # 세션 완전히 삭제
-        request.session.flush()
-        request.session.set_expiry(0)
-        
-        KAKAO_REST_API_KEY = os.getenv('KAKAO_REST_API_KEY')
-        if KAKAO_REST_API_KEY:
-            # 카카오 로그아웃 후 메인 페이지로 돌아옴 (세션은 이미 삭제됨)
-            kakao_logout_url = (
-                "https://kauth.kakao.com/oauth/logout"
-                f"?client_id={KAKAO_REST_API_KEY}"
-                f"&logout_redirect_uri={request.build_absolute_uri('/')}"
-            )
-            return redirect(kakao_logout_url)
-    
-    # 일반 로그인 사용자: 세션 삭제 후 메인 페이지로
-    # 세션의 모든 키를 명시적으로 삭제
+    # 세션 데이터 명시적 개별 삭제 (인증 정보 파편 제거)
     session_keys = list(request.session.keys())
     for key in session_keys:
         del request.session[key]
     
-    # 세션 완전히 삭제
+    # 세션 엔진에서 현재 세션 완전 파기
     request.session.flush()
     
-    # 세션 쿠키도 삭제하기 위해 만료 시간 설정
+    # 세션 쿠키 만료 시간 설정 (즉시 만료)
     request.session.set_expiry(0)
     
-    messages.success(request, "로그아웃되었습니다.")
+    messages.success(request, "관리자 로그아웃되었습니다.")
     return redirect('manager:manager_login')
 
-
 def info_edit(request):
+    """
+    관리자의 비밀번호를 포함한 계정 정보를 안전하게 갱신하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 다중 검증 아키텍처: 기존 비밀번호 대조, 새 비밀번호의 일치 여부를 단계별로 검증하여 비정상적인 정보 수정을 방지합니다.
+    - 데이터 암호화 저장: 변경된 비밀번호를 make_password로 단방향 해시화하여 저장함으로써, DB 노출 시에도 관리자 계정의 보안성을 확보했습니다.
+    - 권한 재검증: 요청 시마다 is_manager 유틸리티를 호출하여 비인가 사용자의 접근을 차단하는 방어적 프로그래밍을 적용했습니다.
+    """
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
         return redirect('manager:manager_login')

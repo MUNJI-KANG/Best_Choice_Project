@@ -34,6 +34,13 @@ from datetime import datetime
 
 # 게시판 list
 def board_list(request, id):
+    """
+    특정 게시판의 게시글 목록을 조회하고 상태에 따른 다중 정렬을 수행하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - DB 레벨 커스텀 정렬: Django ORM의 Case, When 연산자를 활용하여 '삭제되지 않은 글'을 최상단에, '삭제된 글'을 하단에 배치하는 복합 정렬(Multi-column Sorting)을 파이썬 메모리가 아닌 SQL 레벨에서 고속으로 처리했습니다.
+    - N+1 문제 방지: select_related('member_id', 'board_id')를 통해 연관 테이블 데이터를 JOIN으로 한 번에 로드하여 대량의 목록 렌더링 시 발생하는 성능 저하를 방지했습니다.
+    """
     # 관리자 권한 확인
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
@@ -479,6 +486,13 @@ def banner_detail(request, img_id):
 
 
 def banner_form(request):
+    """
+    메인 페이지에 노출될 신규 배너(HeroImg)를 업로드하고 메타 데이터를 저장하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 안전한 파일명 생성: 다수의 관리자가 동시에 동일한 이름의 파일을 업로드할 때 발생하는 덮어쓰기 충돌 및 인코딩 이슈를 방지하기 위해, uuid4.hex를 원본 파일명에 조합하여 고유한 물리적 파일 경로를 생성했습니다.
+    - 비즈니스 로직 기반 데이터 정제: 배너의 노출 상태(img_status)가 '기간 지정(1)'이 아닐 경우, 프론트엔드에서 실수로 넘어온 날짜 데이터(start_date, end_date)를 서버 단에서 명시적으로 None 처리하여 DB 데이터의 무결성을 보장합니다.
+    """
     # 관리자 권한 확인
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
@@ -556,6 +570,13 @@ def banner_form(request):
     return render(request, "manager/banner_form.html")
 
 def banner_edit(request, img_id):
+    """
+    기존 배너의 정보 및 이미지를 수정하고 이전 파일을 안전하게 삭제하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 스토리지 최적화 (Orphan File 방지): 관리자가 새로운 배너 이미지를 업로드할 경우, 기존에 연결되어 있던 구형 이미지 파일을 os.remove()를 통해 서버 스토리지에서 즉시 물리 삭제하여 불필요한 용량 낭비를 차단했습니다.
+    - 파일 변경 상태 추적: 프론트엔드의 숨김 필드(delete_flag)를 통해 이미지 교체, 단순 텍스트 수정, 이미지 강제 삭제 등 다양한 수정 케이스를 서버에서 분기 처리하여 유연한 파일 관리 아키텍처를 구현했습니다.
+    """
     banner = get_object_or_404(HeroImg, img_id=img_id, delete_date__isnull=True)
 
     if request.method == "POST":

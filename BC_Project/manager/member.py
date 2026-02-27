@@ -16,6 +16,12 @@ from common.paging import pager
 
 
 def member_list(request):
+    """
+    관리자 페이지에서 전체 회원을 조회하고 다중 조건으로 필터링하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 동적 쿼리 필터링: 검색어(이름, 아이디, 닉네임)와 회원 유형(카카오/일반) 파라미터를 조합하여 동적으로 QuerySet을 필터링함으로써, 복잡한 검색 요구사항을 깔끔한 단일 ORM 로직으로 해결했습니다.
+    """
     # 관리자 권한 확인
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
@@ -77,6 +83,13 @@ def member_list(request):
 
 
 def member_delete(request):
+    """
+    선택된 다수의 회원을 관리자 권한으로 일괄 탈퇴 처리(Soft Delete)하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 연쇄적 Soft Delete (Cascading Soft Delete): 배열 형태의 다중 ID(ids)를 받아, 단순히 회원 상태만 바꾸는 것이 아니라 회원이 작성한 댓글, 게시글, 모집글, 예약 내역까지 filter(id__in=ids).update()를 활용해 일괄 Soft Delete 처리함으로써 데이터 무결성을 유지합니다.
+    - 운영 상태 분리: 자진 탈퇴(1)와 관리자 강제 탈퇴(2)의 상태값을 명확히 분리(delete_yn=2)하여 추후 데이터베이스 관리 및 운영 추적성을 확보했습니다.
+    """
     if request.method == "POST":
         ids = request.POST.getlist("ids")  # 선택된 member_id 목록
 
@@ -102,6 +115,12 @@ def member_delete(request):
 
 
 def member_restore(request):
+    """
+    관리자가 탈퇴 처리된 회원을 일괄 복구하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 대량 데이터 일괄 복구: 전달받은 회원 ID 목록(ids)에 대해 개별 save()를 호출하지 않고, DB 레벨의 update() 쿼리를 사용하여 상태 플래그(delete_yn)와 날짜(delete_date)를 한 번에 초기화함으로써 DB 부하를 최소화했습니다.
+    """
     if request.method == "POST":
         ids = request.POST.getlist("ids")
 

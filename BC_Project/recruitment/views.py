@@ -37,7 +37,15 @@ from common.utils import *
 
 
 def recruitment_list(request):
-    
+    """
+    조건에 맞는 모집글 목록을 조회하고, 페이징 및 동적 필터링을 처리하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - N+1 문제 해결: QuerySet 평가 시 select_related("endstatus")를 사용하여 연관된 마감 상태 데이터를
+      SQL JOIN으로 한 번에 가져와 데이터베이스 호출 횟수를 최소화했습니다.
+    - DB 레벨 집계 최적화: annotate()와 Count()를 활용해 참여자 수(current_member)와 댓글 수(comment_count)를
+      파이썬 메모리가 아닌 데이터베이스 레벨에서 미리 계산하여 대용량 트래픽 환경에서의 렌더링 성능을 개선했습니다.
+    """
     search_type = request.GET.get("search_type", "all")
     keyword = request.GET.get("keyword", "").strip()
     sido = request.GET.get("sido", "")
@@ -333,13 +341,13 @@ def write(request):
 
 def update(request, pk):
     """
-    모집글 수정
-    - 작성자 본인만 수정 가능
-    - 예약 선택: 내 예약 중, 같은 지역 + delete_yn=0 + 다른 모집글에서 이미 쓴 예약은 제외
-    - 첨부파일:
-      * 기존 파일 목록 표시
-      * 체크한 파일만 실제 삭제(DB + 파일)
-      * 새로 업로드한 파일은 AddInfo 로 추가
+    기존 모집글의 내용을 수정하고 연관된 예약 정보 및 첨부파일을 갱신하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 데이터 무결성 보장: 사용자가 보유한 예약 목록을 불러올 때, exclude() 쿼리를 복합적으로 사용하여
+      '이미 다른 모집글에 매핑된 예약 내역'을 완벽하게 제외함으로써 예약 데이터의 중복 사용을 원천 차단했습니다.
+    - 파일 관리 효율화: 기존에 업로드된 첨부파일의 물리적 삭제(os.remove)와 DB 레코드 삭제를 동기화하여
+      스토리지 낭비를 방지하는 최적화된 파일 업데이트 로직을 구현했습니다.
     """
 
     # 0) 로그인 체크
@@ -546,6 +554,16 @@ def update(request, pk):
 
 
 def detail(request, pk):
+    """
+    모집글의 상세 정보를 조회하고, 사용자 참여 상태 및 자동 마감 여부를 계산하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 동시성 제어 (Race Condition 방지): 다수의 사용자가 동시에 상세 페이지를 조회할 때 발생할 수 있는
+      조회수 누락을 방지하기 위해, F("view_cnt") 객체를 활용하여 DB 레벨에서의 원자적 업데이트(Atomic Update)를 적용했습니다.
+    - 자동 마감 비즈니스 로직: '승인(Approved)'된 참여자 수(approved_count)를 실시간으로 집계하여,
+      모집 정원(capacity)에 도달하면 즉시 EndStatus를 마감(1) 처리하는 안정적인 모집 워크플로우를 구축했습니다.
+    """
+
     # 로그인 체크
     
     res = check_login(request)
@@ -795,6 +813,16 @@ def join(request, pk):
 @require_POST           # GET말고 POST만 받음
 @transaction.atomic     # DB 저장시 꼬이지 않게
 def update_join_status(request, pk, join_id):
+
+    """
+    모집글 작성자가 신청자의 참여 상태(대기/승인/거절)를 변경하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 트랜잭션 안전성 보장: @transaction.atomic을 적용하여, 참여 상태 변경 중 예기치 않은 오류가 발생하더라도
+      데이터가 꼬이지 않고 완벽하게 롤백되도록 처리하여 모집 프로세스의 신뢰도를 확보했습니다.
+    - 메서드 제한: @require_POST를 통해 비정상적인 GET 요청을 통한 상태 변경 시도를 차단하여
+      엔드포인트 보안을 강화했습니다.
+    """
 
     # 0) 로그인 체크    
     res = check_login(request)

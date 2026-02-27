@@ -63,7 +63,14 @@ def info(request):
 PHONE_PATTERN = re.compile(r'^\d{3}-\d{4}-\d{4}$')
 
 def edit(request):
+    """
+    회원의 닉네임, 연락처, 주소 등 개인정보를 수정하는 뷰 함수입니다.
 
+    [기술적 주안점]
+    - 하이브리드 응답 설계: 일반 POST 요청과 AJAX 요청을 모두 처리할 수 있도록 설계하여, 페이지 새로고침 없는 비동기 수정 경험을 제공합니다.
+    - 데이터 유효성 및 보안: 전화번호 정규식 검증과 중복 검사를 서버 사이드에서 수행하여 데이터의 무결성을 보장합니다.
+    - 세션 동기화: DB 값이 변경됨에 따라 사용자의 세션 정보(nickname 등)를 즉시 업데이트하여 서비스 전체의 UX 일관성을 유지합니다.
+    """
     # 로그인 체크
     res = check_login(request)
     if res:
@@ -234,6 +241,14 @@ def edit(request):
     
     return render(request, 'member/info_edit.html', context)
 def edit_password(request):
+    """
+    사용자의 비밀번호를 안전하게 변경하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 보안 강화 로직: 현재 비밀번호 일치 여부를 check_password로 검증하고, 새 비밀번호는 복잡도 패턴(대소문자, 숫자, 특수문자 포함)을 정규식으로 엄격히 체크합니다.
+    - 해시 기반 저장: 변경된 비밀번호는 make_password를 통해 단방향 해시화하여 저장함으로써 DB 유출 시에도 사용자 정보를 안전하게 보호합니다.
+    """
+
     # 로그인 체크
     res = check_login(request)
     if res:
@@ -357,7 +372,13 @@ def edit_password(request):
 
 # ---------- 마이 페이지 예약 ----------------------
 def myreservation(request):
+    """
+    사용자의 전체 예약 내역을 조회하고 상태별로 분류하여 표시하는 뷰 함수입니다.
 
+    [기술적 주안점]
+    - 상태 동적 계산: 별도의 상태 컬럼에 의존하지 않고, 연관된 TimeSlot들의 취소 여부(delete_yn)를 실시간으로 집계하여 '예약중/부분취소/전체취소' 상태를 정확히 산출합니다.
+    - 성능 최적화: 예약 목록 조회 시 발생할 수 있는 부하를 줄이기 위해 필수 정보만을 추출하여 리스트화하고 페이징 처리를 수행합니다.
+    """
     res = check_login(request)
     if res:
         return res
@@ -890,6 +911,13 @@ def delete_my_community(request):
 
 # 회원탈퇴
 def withdraw(request):
+    """
+    회원 탈퇴를 처리하고 연관 데이터를 정리하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 연쇄적 Soft Delete (데이터 보호): 사용자 레코드를 물리적으로 즉시 삭제하지 않고 delete_yn 플래그를 사용하며, 탈퇴 시 사용자가 작성한 댓글, 게시글, 모집글, 예약 내역을 모두 찾아 일괄적으로 Soft Delete 처리하여 데이터 정합성을 유지합니다.
+    - 소셜 로그인 예외 처리: 일반 유저와 카카오 유저를 구분하여 비밀번호 확인 절차를 유연하게 적용함으로써 플랫폼별 최적화된 탈퇴 흐름을 구현했습니다.
+    """
     # 로그인 체크
     res = check_login(request)
     if res:

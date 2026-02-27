@@ -24,6 +24,13 @@ from django.http import JsonResponse
 
 # 모집글관리
 def recruitment_manager(request):
+    """
+    서비스 내 모든 모집글을 관리자 화면에 출력하고 필터링하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 고도화된 조건부 정렬: Django의 Case와 When을 활용하여, 삭제되지 않은 활성 게시글을 상단에 배치하고 삭제된 글을 하단으로 보내는 우선순위 정렬 로직을 DB 레벨에서 구현했습니다.
+    - 쿼리 최적화: select_related('member_id')를 사용하여 작성자 정보를 JOIN으로 한 번에 가져옴으로써, 목록 렌더링 시 발생하는 N+1 문제를 예방했습니다.
+    """
     # 관리자 권한 확인
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
@@ -253,6 +260,14 @@ def hard_delete_recruitment(request):
 
 @csrf_exempt
 def restore_recruitment(request):
+    """
+    관리자가 선택한 다수의 삭제된 모집글을 일괄 복구하는 비동기(AJAX) 함수입니다.
+
+    [기술적 주안점]
+    - 선택적 업데이트 로직: 전달받은 ID 목록 중 실제로 'delete_date'가 존재하는(삭제된) 항목만 선별하여 복구함으로써 불필요한 DB 쓰기 작업을 최소화했습니다.
+    - 트랜잭션 효율성: 다량의 데이터를 처리할 때 개별 객체의 save()를 호출하되, 필요한 필드(update_fields=['delete_date'])만 명시적으로 업데이트하여 성능을 최적화했습니다.
+    - 실시간 피드백: 처리 결과를 JSON 형태로 반환하여 관리자 페이지에서 페이지 새로고침 없이 복구 수량을 즉시 확인할 수 있도록 UX를 개선했습니다.
+    """
     """모집글 일괄 복구 (Community)"""
     if request.method != "POST":
         return JsonResponse({"status": "error", "msg": "POST만 가능"}, status=405)

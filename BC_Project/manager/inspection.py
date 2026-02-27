@@ -27,6 +27,13 @@ from facility.models import Facility
 
 
 def dashboard(request):
+    """
+    관리자 대시보드 화면에 필요한 핵심 성과 지표(KPI)와 시계열 통계 데이터를 집계하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 예외 회복 탄력성(Fault Tolerance): DB 연결 상태를 사전에 검증(SELECT 1)하고 개별 통계 블록마다 독립적인 try-except를 적용하여, 특정 테이블이나 데이터에 장애가 발생하더라도 대시보드 전체가 다운되지 않고 정상 동작하도록 서버 안정성을 극대화했습니다.
+    - Pandas 기반 고속 처리: 복잡한 시계열 집계(일별 가입, 예약, 취소율 등)를 순수 ORM으로 처리할 때 발생하는 성능 저하를 막기 위해, django-pandas의 DataFrame을 활용하여 메모리 상에서 고속으로 그룹화(groupby) 연산을 수행했습니다.
+    """
     # 관리자 권한 확인
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
@@ -443,13 +450,19 @@ def dashboard(request):
 
 
 def facility_inspection_stats(request):
+    """
+    공공 체육시설의 안전점검 결과(연도별, 등급별, 지역별)를 다차원적으로 분석하여 시각화용 JSON 데이터로 가공하는 함수입니다.
+
+    [기술적 주안점]
+    - 데이터 전처리 및 정제(Data Cleaning): DB 내 혼재된 불규칙한 문자열 날짜 데이터를 Pandas를 활용해 정형화(2000년~현재)하고, 결측치를 안전하게 제거(dropna)하여 통계 지표의 신뢰도를 확보했습니다.
+    - 동적
+    """
+
     # 관리자 권한 확인
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
         return redirect('manager:manager_login')
-    """
-    시설 안전점검 통계 페이지
-    """
+
     # 필터 파라미터
     region_filter = request.GET.get('region', '')
     sport_filter = request.GET.get('sport', '')
@@ -553,6 +566,12 @@ def facility_inspection_stats(request):
 
 
 def facility_inspection_yearly_detail(request):
+    """
+    안전점검 추세를 연도별, 지역별, 종목별로 교차 분석하여 요약 통계를 제공하는 상세 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 데이터 집계 최적화: DataFrame을 활용해 특정 조건 하에서의 최대/최소/평균 점검 건수를 동적으로 계산(Summary Stats)하여, 데이터의 유의미한 인사이트를 관리자에게 즉각적으로 제공할 수 있도록 설계했습니다.
+    """
     # 관리자 권한 확인
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
@@ -682,13 +701,18 @@ def facility_inspection_yearly_detail(request):
 
 
 def facility_inspection_grade_detail(request):
+    """
+    특정 안전점검 등급(양호, 주의, 경고 등)을 받은 시설 목록을 다중 조건으로 조회하고 페이징 처리하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - SQL 레벨 문자열 처리: 문자열 형태로 저장된 날짜(YYYYMMDD)에서 특정 연도 범위를 조회하기 위해, ORM의 extra() 메서드와 DB 내장 함수(SUBSTRING)를 결합하여 SQL 레벨에서 고속 필터링을 수행했습니다.
+    - 페이로드(Payload) 정제: 템플릿 엔진의 연산 부하를 줄이기 위해 View 단에서 날짜 포맷팅 및 Null 처리를 완료한 깔끔한 딕셔너리 리스트를 프론트엔드로 전달합니다.
+    """
     # 관리자 권한 확인
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
         return redirect('manager:manager_login')
-    """
-    등급별 분포 상세 페이지 (시설 목록 표시)
-    """
+
     # 필터 파라미터
     year_filter = request.GET.get('year', '')
     region_filter = request.GET.get('region', '')

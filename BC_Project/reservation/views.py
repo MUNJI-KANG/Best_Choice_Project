@@ -17,7 +17,14 @@ from common.utils import check_login
 # from facility.models import FacilityInfo
 
 def reservation_list(request):
-    # 종목불러오기
+    """
+    공공 체육시설 목록을 조회하고 필터링 및 페이징을 처리하는 뷰 함수입니다.
+    
+    [기술적 주안점]
+    - 메모리 최적화: Facility 객체 전체를 로드하지 않고, values_list()와 distinct()를 사용하여
+      데이터베이스 레벨에서 중복을 제거한 필수 문자열 데이터만 메모리에 적재하여 쿼리 성능을 극대화했습니다.
+    - 동적 필터링: 사용자의 지역(시/도, 시/군/구) 및 종목 조건에 따라 QuerySet을 동적으로 체이닝하여 필터링합니다.
+    """
     #sports = Sports.objects.all()
 
 
@@ -127,7 +134,14 @@ def reservation_list(request):
 
 
 def reservation_detail(request, facility_id):
-    # 로그인 체크 (서버 사이드에서 처리)
+    """
+    특정 시설의 상세 정보와 현재 예약된 타임슬롯을 조회하는 뷰 함수입니다.
+    
+    [기술적 주안점]
+    - 페이로드(Payload) 최적화: 프론트엔드로 예약 시간표를 넘길 때 무거운 TimeSlot 객체 전체를
+      직렬화(Serialization)하지 않고, .values("date", "start_time", "end_time")를 통해
+      반드시 필요한 3개의 컬럼만 SELECT 하여 서버 응답 속도를 개선했습니다.
+    """
     res = check_login(request)
     if res:
         return res
@@ -156,7 +170,17 @@ def reservation_detail(request, facility_id):
 
 @csrf_exempt
 def reservation_save(request):
-        # 로그인 체크
+    """
+    클라이언트의 예약 요청을 받아 Reservation 및 다수의 TimeSlot을 생성하는 뷰 함수입니다.
+    
+    [기술적 주안점]
+    - 원자성(Atomicity) 보장: @transaction.atomic을 적용하여 Reservation 생성 후
+      TimeSlot들을 반복 생성하는 과정에서 예외가 발생하더라도 데이터가 안전하게 롤백되도록 처리했습니다.
+    - 서버 사이드 무결성 검증: 프론트엔드에서 전달된 결제 금액을 맹신하지 않고,
+      서버 단에서 예약 날짜의 요일을 파악해 해당 요일의 활성화 여부를 재검증하고 결제 금액을 직접 계산하여
+      비정상적인 요청이나 보안 취약점을 원천 차단했습니다.
+    """
+    
     res = check_login(request)
     if res:
         return res

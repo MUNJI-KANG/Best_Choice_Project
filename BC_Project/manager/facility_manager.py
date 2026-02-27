@@ -238,6 +238,12 @@ def facility_register(request):
 
 # 시설관리
 def facility_list(request):
+    """
+    시설 목록과 함께 시설별 실시간 및 누적 예약 통계를 제공하는 뷰 함수입니다.
+
+    [기술적 주안점]
+    - 관계형 데이터 집계: 개별 시설을 조회할 때, TimeSlot과 Reservation 테이블을 역참조(JOIN)하여 '오늘 발생한 예약'과 '누적 예약'을 distinct().count()로 정확히 분리 집계함으로써 관리자의 운영 가시성을 높였습니다.
+    """
     # 관리자 권한 확인
     if not is_manager(request):
         messages.error(request, "관리자 권한이 필요합니다.")
@@ -465,6 +471,13 @@ def facility_modify(request, id):
 
 @csrf_exempt
 def facility_delete(request):
+    """
+    예약된 다수의 시간대 중 특정 시간대만 부분 취소하고 결제 금액을 재계산하는 핵심 API입니다.
+
+    [기술적 주안점]
+    - 동적 요금 재계산 (Dynamic Price Recalculation): 사용자가 예약의 일부 슬롯만 취소할 경우, 삭제되지 않은 남은 슬롯(TimeSlot)들의 요일을 파악하고 시설의 요일별 단가(reservation_time JSON)를 서버 단에서 재조회하여 최종 결제 금액을 정확하게 재계산 및 갱신합니다.
+    - 상태 전이 자동화: 부분 취소를 진행하다가 남은 슬롯이 '0'이 되는 시점을 캐치하여, 부모 객체인 Reservation 자체의 상태를 '전체 취소(delete_yn=1)'로 자동 전이시키는 정교한 라이프사이클 관리를 구현했습니다.
+    """
     if request.method != "POST":
         return JsonResponse({"status": "error", "msg": "POST만 가능"}, status=405)
 
