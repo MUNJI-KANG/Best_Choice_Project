@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="BC_Project/common/static/common/img/logo.png" alt="Best Choice logo" width="220">
+</p>
+
 # 🏆 Best Choice (BC_Project) - 할래말래
 > **공공데이터 활용 공모전을 참가한 Django 기반 체육시설 예약 및 커뮤니티 서비스**
 ---
@@ -129,6 +133,7 @@ API Key는 환경변수로 관리하여 보안을 유지했습니다.
 - Community는 Article, Comment, Join_stat과 연결되어 모집 및 커뮤니티 활동을 구성합니다.
 - Add_file은 게시글 및 시설과 연결되어 파일 업로드 기능을 지원합니다.
 - 각 도메인은 상태(status) 및 날짜 필드를 활용하여 흐름 제어가 가능하도록 설계했습니다.
+
 ---
 
 ## 🧩 주요 App 구조
