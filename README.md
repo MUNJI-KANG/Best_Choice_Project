@@ -234,38 +234,6 @@ else:
 
 ---
 
-## 🚀 로컬 실행
-
-```powershell
-cd BC_Project
-python -m venv .venv
-.venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-```
-
-필수 환경변수 예시:
-
-```env
-OPENAI_API_KEY=
-KAKAO_REST_API_KEY=
-KAKAO_SCRIPT_KEY=
-NAVER_CLIENT_ID=
-NAVER_CLIENT_SECRET=
-OPEN_WEATHER_KEY=
-DATA_API_KEY=
-```
-
-주요 관리 명령:
-
-```powershell
-python manage.py update_facility
-python manage.py close_expired_recruitments
-```
-
----
-
 ## 🎥 발표 영상
 
 - 프로젝트 발표 영상 : [발표 영상 링크](https://www.youtube.com/watch?v=LaZt3GMA-yY&feature=youtu.be)
@@ -274,6 +242,59 @@ python manage.py close_expired_recruitments
 
 ---
 
-## 한 줄 정리
+## 🚀 로컬 실행 방법
 
-팀 프로젝트 내에서 **예약 시스템과 인증 흐름을 중심으로 핵심 사용자 플로우를 구현한 Django 프로젝트**입니다.
+이 프로젝트는 `BC_Project` 폴더에서 실행되는 Django 웹 애플리케이션 1개 프로세스로 구동됩니다.  
+Git에는 `.venv`와 `.env`가 포함되지 않으므로, 다른 PC에서 처음 실행할 때는 아래 준비가 필요합니다.
+
+### 1. 사전 준비
+
+- Python 3.12
+- 필요한 API 키가 포함된 `BC_Project/.env`
+
+`.env` 파일은 `BC_Project/.env.example`을 복사해서 작성할 수 있습니다.
+
+```powershell
+Copy-Item BC_Project\.env.example BC_Project\.env
+```
+
+### 2. 최초 1회 설치
+
+```powershell
+cd BC_Project
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+```
+
+### 3. 실행
+
+```powershell
+cd BC_Project
+.\.venv\Scripts\python.exe manage.py migrate
+.\.venv\Scripts\python.exe manage.py runserver
+```
+
+### 4. 접속 주소
+
+실행 후 접속 주소는 아래와 같습니다.
+
+- Web: http://127.0.0.1:8000
+- Admin: http://127.0.0.1:8000/admin
+
+### 5. 참고 사항
+
+- 환경변수 파일은 `BC_Project/BC_Contest/settings.py`에서 `BC_Project/.env` 경로를 읽습니다.
+- 기본 데이터베이스는 SQLite이며 `BC_Project/db.sqlite3`를 사용합니다.
+- 공공데이터 동기화가 필요하면 `python manage.py update_facility` 명령을 실행합니다.
+- 모집 마감 상태를 정리할 때는 `python manage.py close_expired_recruitments` 명령을 사용할 수 있습니다.
+- `OPENAI_API_KEY`, `KAKAO_REST_API_KEY`, `KAKAO_SCRIPT_KEY`, `NAVER_CLIENT_ID`, `NAVER_CLIENT_SECRET`, `OPEN_WEATHER_KEY`, `DATA_API_KEY`가 비어 있으면 일부 기능은 제한될 수 있습니다.
+
+---
+
+## Closing
+
+Best Choice는 공공 체육시설 탐색부터 예약, 운동 모집 커뮤니티, 관리자 운영까지 하나의 흐름으로 연결한 end-to-end Django 웹 서비스입니다.
+
+이 프로젝트에서 저는 예약 도메인 설계, 회원 인증과 세션 처리, 예약과 모집 데이터 연결 로직, 운영 관점의 관리자 기능까지 사용자 흐름이 끊기지 않도록 핵심 기능을 구현했습니다.
+
+특히 단순히 기능을 붙이는 데서 끝나지 않고, 예약 정책 검증, 결제 금액 계산, 부분 취소 이후 정합성 유지, 모집글과 예약 간 중복 연결 방지처럼 실제 서비스 운영에서 필요한 데이터 일관성까지 고려해 설계하고 구현했다는 점을 이 프로젝트의 핵심 가치로 두고 있습니다.
