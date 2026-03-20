@@ -43,10 +43,29 @@
 
 ## 🛠 Tech Stack
 
-- Backend: Python 3.12.5, Django 5.2.8
-- Database: SQLite, MySQL 확장 고려
-- Frontend: HTML, CSS, JavaScript, Django Template
-- External APIs: Kakao OAuth / Maps, OpenAI, Naver Search, OpenWeather, 공공데이터포털
+### Backend
+- ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) **3.12.5**
+- ![Django](https://img.shields.io/badge/Django-092E20?style=flat-square&logo=django&logoColor=white) **5.2.8**
+
+### Database
+- ![SQLite](https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white) **기본 개발 DB**
+- ![MySQL](https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=mysql&logoColor=white) **확장 고려**
+
+### Frontend
+- ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)
+- ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)
+- ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black)
+- ![Django Template](https://img.shields.io/badge/Django_Template-0C4B33?style=flat-square&logo=django&logoColor=white)
+
+### External APIs
+- ![Kakao](https://img.shields.io/badge/Kakao_OAuth%20%2F%20Maps-FFCD00?style=flat-square&logo=kakaotalk&logoColor=3C1E1E)
+- ![OpenAI](https://img.shields.io/badge/OpenAI-412991?style=flat-square&logo=openai&logoColor=white)
+- ![Naver](https://img.shields.io/badge/Naver_Search-03C75A?style=flat-square&logo=naver&logoColor=white)
+- ![OpenWeather](https://img.shields.io/badge/OpenWeather-EB6E4B?style=flat-square&logo=openweathermap&logoColor=white)
+- ![Public Data API](https://img.shields.io/badge/Public_Data_API-0A66C2?style=flat-square)
+
+### Collaboration
+- ![Git](https://img.shields.io/badge/Git-F05032?style=flat-square&logo=git&logoColor=white) / ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=github&logoColor=white)
 
 ---
 
