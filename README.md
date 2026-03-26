@@ -253,7 +253,7 @@ else:
 
 ---
 
-## 🎥 발표 영상
+## 🎥 발표 영상 / 자료
 
 - 프로젝트 발표 영상 : [발표 영상 링크](https://www.youtube.com/watch?v=LaZt3GMA-yY&feature=youtu.be)
 - 프로젝트 발표 화면 영상 : [발표 화면 영상 링크](https://www.youtube.com/watch?v=XAM7G9b4QOg&feature=youtu.be)
